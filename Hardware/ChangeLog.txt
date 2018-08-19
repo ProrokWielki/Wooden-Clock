@@ -1,0 +1,14 @@
+0.1.0
+  - first releas of the display board
+
+0.1.1
+  - fixed swapped drains and sources on the MOSFETs
+
+0.2.0
+  - changed P1 from 1x10 header to 2x8 header
+  - separated all I2C - all the TLCs can be programed at the same time
+  - all I2C are available on the P1
+
+0.2.1
+  - silk screens elements arranged
+  - added author, board name and board version on the bottom silk screen
