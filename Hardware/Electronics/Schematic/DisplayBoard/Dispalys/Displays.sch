@@ -1,13 +1,12 @@
 EESchema Schematic File Version 4
-LIBS:woodenClock-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 3 6
-Title "Wooden clock display board - Row driver"
-Date ""
-Rev "0.1.1"
+Sheet 4 6
+Title "Wooden clock - display board -display"
+Date "2018-10-21"
+Rev "1.0.0"
 Comp "Paweł Warzecha"
 Comment1 ""
 Comment2 ""

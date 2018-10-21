@@ -12,3 +12,7 @@
 0.2.1
   - silk screens elements arranged
   - added author, board name and board version on the bottom silk screen
+
+1.0.0
+  - moved vias from the capacitor pads
+  - added github link to silksreen
