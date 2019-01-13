@@ -63,11 +63,19 @@ template<const uint32_t REGISTER_ADDRESS>
       u32Register ^= ( 1U << u8Position );
     }
 
+    /** Sets single bit in register.
+     *
+     * @param u8Position Position of the bit to be toggled
+     */
     static void set_bit(uint8_t u8Position)
     {
       u32Register |= ( 1U << u8Position );
     }
 
+    /** Clears sing;e bit in register.
+     *
+     * @param u8Position Position of the bit to be toggled
+     */
     static void clear_bit(uint8_t u8Position)
     {
       u32Register &= ~( 1U << u8Position );
