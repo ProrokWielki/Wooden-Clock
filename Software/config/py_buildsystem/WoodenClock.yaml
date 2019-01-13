@@ -1,0 +1,37 @@
+defines:
+  - STM32L452xx
+
+includes:
+  - ../../LIB/CMSIS/Device/ST/STM32L4xx/Include
+  - ../../LIB/CMSIS/Include
+
+steps:
+  - compile MCU:
+    source_directories: 
+      - ../../MCU
+
+    output_direcotry: ../../Output/Obj/MCU
+
+    types:
+      - .c
+      - .s
+
+  - compile Main:
+    source_directories: 
+      - ../../
+
+    search_subdirectories: False
+
+    output_direcotry: ../../Output/Obj
+
+    types:
+      - .cpp
+
+  - link Everything:
+    source_directories:
+      -  ../../Output/Obj
+
+    output_file: ../../Output/file.elf
+
+    types:
+      - .o

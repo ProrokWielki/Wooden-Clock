@@ -1,0 +1,8 @@
+compiler: GCC_ARM
+
+compiler_flags:
+  - -mcpu=cortex-m4
+
+linker_flags:
+  - --specs=nosys.specs
+  - -T ../../MCU/STM32L452RETx_FLASH.ld
