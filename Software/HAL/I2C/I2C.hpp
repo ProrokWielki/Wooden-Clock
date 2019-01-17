@@ -20,6 +20,11 @@
 constexpr static uint8_t DIGITAL_FILTER_FIELD_BIT_LENGTH = 4;
 constexpr static uint8_t TRANSFER_SIZE_FIELD_BIT_LENGTH = 8;
 constexpr static uint8_t DATA_FIELD_BIT_LENGTH = 8;
+constexpr static uint8_t PRESCALER_FIELD_BIT_LENGTH = 4;
+constexpr static uint8_t DATA_SETUP_FIELD_BIT_LENGTH = 4;
+constexpr static uint8_t DATA_HOLD_FIELD_BIT_LENGT = 4;
+constexpr static uint8_t SCL_HIGH_FIELD_BIT_LENGT = 8;
+constexpr static uint8_t SCL_LOW_FIELD_BIT_LENGT = 8;
 
 constexpr static uint8_t REGISTER_OFFSET_7BIT_ADDRESS = 1;
 constexpr static uint8_t REGISTER_OFFSET_10BIT_ADDRESS = 0;
@@ -164,7 +169,14 @@ public:
 
   void read_data(uint8_t * pu8Data, uint16_t u8NumOfBytes);  //TODO: implement
 
-  void set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHold, uint8_t u8SCLHigh, uint8_t u8SCLLow); //TODO: implement
+  static void set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHold, uint8_t u8SCLHigh, uint8_t u8SCLLow)
+  {
+    TIMINGR::set_value(u8Prescaler, I2C_TIMINGR_PRESC_Pos, PRESCALER_FIELD_BIT_LENGTH);
+    TIMINGR::set_value(u8DataSetup, I2C_TIMINGR_SCLDEL_Pos, DATA_SETUP_FIELD_BIT_LENGTH);
+    TIMINGR::set_value(u8DataHold, I2C_TIMINGR_SDADEL_Pos, DATA_HOLD_FIELD_BIT_LENGT);
+    TIMINGR::set_value(u8SCLHigh, I2C_TIMINGR_SCLH_Pos, SCL_HIGH_FIELD_BIT_LENGT);
+    TIMINGR::set_value(u8SCLLow, I2C_TIMINGR_SCLL_Pos, SCL_LOW_FIELD_BIT_LENGT);
+  }
 
 protected:
 
