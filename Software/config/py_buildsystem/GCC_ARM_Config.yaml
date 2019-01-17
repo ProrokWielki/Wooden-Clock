@@ -2,7 +2,18 @@ compiler: GCC_ARM
 
 compiler_flags:
   - -mcpu=cortex-m4
+  - -specs=nano.specs
+  - -g
+  # - -Ofast
+  - -mthumb
+  # - -fdata-sections 
+  # - -ffunction-sections
 
 linker_flags:
-  - --specs=nosys.specs
+  - -specs=nosys.specs
+  - -specs=nano.specs
   - -T ../../MCU/STM32L452RETx_FLASH.ld
+  - -mcpu=cortex-m4
+  - -mthumb
+  # - -Wl,--gc-sections
+  - -Wl,--print-memory-usage
