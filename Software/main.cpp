@@ -252,7 +252,7 @@ void I2C_Init(void) {
   I2C_4::set_timing(0, 7, 0, 41, 145);
 
 	/* I2C periphery enable */
-	I2C_1::enable();
+  I2C_1::enable();
   I2C_2::enable();
   I2C_3::enable();
   I2C_4::enable();
@@ -267,9 +267,9 @@ int main(void) {
 
 	uint8_t sent;
 
-	RCC->APB1ENR1 |= (1 << 28);
-
-	RCC->APB2ENR |= (1 << 0);
+//	RCC->APB1ENR1 |= (1 << 28);
+//
+//	RCC->APB2ENR |= (1 << 0);
 
 	GPIO_Init();
 	I2C_Init();
@@ -304,19 +304,18 @@ int main(void) {
 	PC7::set_output_value(eHigh);
 
 	for (uint8_t i = 0; i < 32; i++) {
-		GPIOC->ODR &= ~(1 << 8);
+	  PC8::set_output_low();
 		for (uint32_t i = 0; i < 0xffff; i++) {
 			;
 		}
-		GPIOC->ODR |= (1 << 8);
+		PC8::set_output_high();
 		for (uint32_t i = 0; i < 0xffff; i++) {
 			;
 		}
 	}
 
-	GPIOC->ODR |= (1 << 9);
-
-	GPIOC->ODR |= (1 << 6);
+	PC9::set_output_high();
+	PC6::set_output_high();
 
 	for (uint32_t i = 0; i < 0xffff; i++) {
 		;
@@ -341,14 +340,14 @@ int main(void) {
 
   uint8_t current_line = 0;
 
-	GPIOB->ODR &= ~(1 << 14);
+  PB14::set_output_low();
 
 	for (;;) {
 		if (sent == 32) {
-			GPIOC->BRR = (1 << 7);
+		  PC7::set_output_low();
 			sent = 0;
 		} else
-			GPIOC->BSRR = (1 << 7);
+      PC7::set_output_high();
 
 	  I2C_1::write_data(data, 13);
 	  I2C_2::write_data(data, 13);
