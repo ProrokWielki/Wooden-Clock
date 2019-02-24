@@ -4,6 +4,7 @@ defines:
 includes:
   - ../../LIB/CMSIS/Device/ST/STM32L4xx/Include
   - ../../LIB/CMSIS/Include
+  - ../../HAL
 
 steps:
   - compile MCU:
@@ -15,6 +16,24 @@ steps:
     types:
       - .c
       - .s
+
+  - compile HAL:
+    source_directories:
+      - ../../HAL
+
+    output_direcotry: ../../Output/Obj/HAL
+
+    types:
+      - .cpp
+
+  - compile BSP:
+    source_directories:
+      - ../../BSP
+
+    output_direcotry: ../../Output/Obj/BSP
+
+    types:
+      - .cpp
 
   - compile Main:
     source_directories: 

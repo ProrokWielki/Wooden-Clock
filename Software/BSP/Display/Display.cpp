@@ -22,11 +22,13 @@ void Display::draw(void)
 void Display::draw_line(uint8_t lineNumber)
 {
   uint16_t framebufferOffset = lineNumber * displayWidth;
-  uint8_t framebufferParts = displayWidth / frameBuffer;
+  uint8_t framebufferParts = displayWidth / transferSize;
+
+  uint8_t transfer[transferSize + 1];
 
   for(uint8_t framebufferPart = 0 ; framebufferPart < framebufferParts ; framebufferPart++)
     {
-      memcpy(&( transfer1[1] ), &( frameBuffer[framebufferOffset +  framebufferPart * transferSize] ), sizeof(uint8_t) * transferSize);
+      memcpy(&( transfer[1] ), &( frameBuffer[framebufferOffset +  framebufferPart * transferSize] ), sizeof(uint8_t) * transferSize);
 //      send;
     }
 }

@@ -38,7 +38,7 @@ private:
 
 	uint8_t * frameBuffer;
 
-	constexpr uint8_t transferSize = 8;
+	constexpr static uint8_t transferSize = 8;
 };
 
 
