@@ -38,6 +38,4 @@ template<const uint32_t DMA_CHANNEL_ADDRESS>
 
 };
 
-
-
 #endif /* HAL_DMA_DMA_HPP_ */
