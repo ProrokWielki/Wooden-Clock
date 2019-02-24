@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-extern uint8_t * Mario_pixel_map;
+extern uint8_t Mario_pixel_map[];
 
 
 #endif /* APP_ASSETS_IMAGES_IMAGES_HPP_ */

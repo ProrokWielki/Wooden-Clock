@@ -35,6 +35,15 @@ steps:
     types:
       - .cpp
 
+  - compile Assets:
+    source_directories:
+      - ../../App/Assets
+
+    output_direcotry: ../../Output/Obj/App/Assets
+
+    types:
+      - .cpp
+
   - compile Main:
     source_directories: 
       - ../../
