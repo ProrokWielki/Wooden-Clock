@@ -86,56 +86,54 @@ namespace HAL
     /* Set I2C Pins */
 
     /* I2C1 SCL PA9 */
-    PA9::set_as_I2C_pin(eAF4);
+    I2C1_SCL::set_as_I2C_pin(eAF4);
 
     /* I2C1 SDA PA10 */
-    PA10::set_as_I2C_pin(eAF4);
+    I2C1_SDA::set_as_I2C_pin(eAF4);
 
     /* I2C2 SCL PB10 */
-    PB10::set_as_I2C_pin(eAF4);
+    I2C2_SCL::set_as_I2C_pin(eAF4);
 
     /* I2C2 SDA PB11 */
-    PB11::set_as_I2C_pin(eAF4);
+    I2C2_SDA::set_as_I2C_pin(eAF4);
     /* I2C3 SCL PC0 */
-    PC0::set_as_I2C_pin(eAF4);
+    I2C3_SCL::set_as_I2C_pin(eAF4);
 
     /* I2C3 SDA PC1 */
-    PC1::set_as_I2C_pin(eAF4);
+    I2C3_SDA::set_as_I2C_pin(eAF4);
 
     /* I2C4 SCL PB6 */
-    PB6::set_as_I2C_pin(eAF5);
+    I2C4_SCL::set_as_I2C_pin(eAF5);
 
     /* I2C4 SDA PB7 */
-    PB7::set_as_I2C_pin(eAF5);
+    I2C4_SDA::set_as_I2C_pin(eAF5);
+
+    /* I2C Reset PC6 */
+    TI_RESET::set_mode(eOutput);
+    TI_RESET::set_speed(eVeryHighSpeed);
 
     /* HC595 Pins */
 
     /* Reset PB15 */
-    PB15::set_mode(eOutput);
-    PB15::set_speed(eVeryHighSpeed);
+    RESET::set_mode(eOutput);
+    RESET::set_speed(eVeryHighSpeed);
 
     /* OutputEnable PB14 */
-    PB14::set_mode(eOutput);
-    PB14::set_speed(eVeryHighSpeed);
-
-    /* I2C Reset PC6 */
-    PC6::set_mode(eOutput);
-    PC6::set_speed(eVeryHighSpeed);
+    OUTPUT_EN::set_mode(eOutput);
+    OUTPUT_EN::set_speed(eVeryHighSpeed);
 
     /* DataIn PC7 */
-    PC7::set_mode(eOutput);
-    PC7::set_speed(eVeryHighSpeed);
+    DATA_IN::set_mode(eOutput);
+    DATA_IN::set_speed(eVeryHighSpeed);
 
     /* Clock PC8 */
-    PC8::set_mode(eOutput);
-    PC8::set_speed(eVeryHighSpeed);
+    CLOCK::set_mode(eOutput);
+    CLOCK::set_speed(eVeryHighSpeed);
 
     /* Latch PC9 */
-    PC9::set_mode(eOutput);
-    PC9::set_speed(eVeryHighSpeed);
-
+    TRIGGER::set_mode(eOutput);
+    TRIGGER::set_speed(eVeryHighSpeed);
   }
-
 
   void init(void)
   {
