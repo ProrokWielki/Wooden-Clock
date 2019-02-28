@@ -1,11 +1,19 @@
 ﻿---
+
+BreakBeforeBraces: Custom
+
+BraceWrapping:
+    AfterExternBlock: 'false'
+    AfterFunction: true
+    AfterNamespace: true
+    AfterClass: true
+    
 AccessModifierOffset: '-4'
 AlignTrailingComments: 'true'
 AllowAllParametersOfDeclarationOnNextLine: 'false'
 AllowShortBlocksOnASingleLine: 'false'
 AllowShortFunctionsOnASingleLine: None
 AlwaysBreakTemplateDeclarations: 'true'
-BreakBeforeBraces: Allman
 ColumnLimit: '160'
 ConstructorInitializerIndentWidth: '0'
 ContinuationIndentWidth: '0'
@@ -22,5 +30,8 @@ SpacesBeforeTrailingComments: '2'
 SpacesInParentheses: 'false'
 Standard: Auto
 UseTab: Never
+IndentPPDirectives: None
+SpaceBeforeInheritanceColon: false
+SpaceAfterTemplateKeyword: false
 
 ...
