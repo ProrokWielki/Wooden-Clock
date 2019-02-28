@@ -36,6 +36,11 @@
 			<locationURI>$%7BPARENT-2-PROJECT_LOC%7D/BSP</locationURI>
 		</link>
 		<link>
+			<name>DRV</name>
+			<type>2</type>
+			<locationURI>$%7BPARENT-2-PROJECT_LOC%7D/DRV</locationURI>
+		</link>
+		<link>
 			<name>HAL</name>
 			<type>2</type>
 			<locationURI>$%7BPARENT-2-PROJECT_LOC%7D/HAL</locationURI>
@@ -49,6 +54,11 @@
 			<name>MCU</name>
 			<type>2</type>
 			<locationURI>$%7BPARENT-2-PROJECT_LOC%7D/MCU</locationURI>
+		</link>
+		<link>
+			<name>_clang-format</name>
+			<type>1</type>
+			<locationURI>$%7BPARENT-2-PROJECT_LOC%7D/_clang-format</locationURI>
 		</link>
 		<link>
 			<name>main.cpp</name>

@@ -5,6 +5,7 @@ includes:
   - ../../LIB/CMSIS/Device/ST/STM32L4xx/Include
   - ../../LIB/CMSIS/Include
   - ../../HAL
+  - ../../DRV
 
 steps:
   - compile MCU:
