@@ -1,5 +1,3 @@
-//#define STM32L452xx
-
 #include <stdint.h>
 #include <string.h>
 
@@ -7,143 +5,79 @@
 
 #include "APP/Assets/Images/Images.hpp"
 
-uint8_t transfer1[9], transfer2[9], transfer3[9], transfer4[9];
-
-inline void
-HC595ToggleClk()
-{
-  HAL::CLOCK::set_output_low();
-  asm("nop");
-  HAL::CLOCK::set_output_high();
-}
-
-inline void
-HC595TriggerOutput()
-{
-  HAL::TRIGGER::set_output_high();
-  asm("nop");
-  HAL::TRIGGER::set_output_low();
-}
-
-int
-main(void)
+int main(void)
 {
 
-  HAL::init();
+    NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+    NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+    NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+    NVIC_EnableIRQ(DMA2_Channel2_IRQn);
 
-  SystemCoreClockUpdate();
+    HAL::init();
 
-  HAL::PB13::set_mode(eOutput);
-  HAL::PB13::set_speed(eVeryHighSpeed);
+    SystemCoreClockUpdate();
 
-  uint8_t data[] = {0x82, 125, 125, 125, 125, 125, 125, 125, 125, 0xff, 0x00,
-                    0b10101010,
-                    0b10101010};
-  uint8_t data1[] = {0x80, 0, 0x08};
+    HAL::ROW_MULTIPLEXER::init();
 
-  for(uint32_t i = 0 ; i < 0xffff ; i++)
-    {
-      ;
-    }
+    HAL::COLUIMNS_1::init();
+    HAL::COLUIMNS_2::init();
+    HAL::COLUIMNS_3::init();
+    HAL::COLUIMNS_4::init();
 
-  HAL::OUTPUT_EN::set_output_value(eLow);
-  HAL::RESET::set_output_value(eLow);
-  HAL::DATA_IN::set_output_value(eLow);
-  HAL::CLOCK::set_output_value(eLow);
-  HAL::TRIGGER::set_output_value(eLow);
+    HAL::PB13::set_mode(eOutput);
+    HAL::PB13::set_speed(eVeryHighSpeed);
 
-  for(uint32_t i = 0 ; i < 0xffff ; i++)
-    {
-      ;
-    }
+    HAL::COLUIMNS_1::set_register_value(0, 0);
+    HAL::COLUIMNS_2::set_register_value(0, 0);
+    HAL::COLUIMNS_3::set_register_value(0, 0);
+    HAL::COLUIMNS_4::set_register_value(0, 0);
 
-  HAL::RESET::set_output_value(eHigh);
-  HAL::TI_RESET::set_output_value(eLow);
-  HAL::DATA_IN::set_output_value(eHigh);
+    HAL::COLUIMNS_1::set_register_value(1, 0x08);
+    HAL::COLUIMNS_2::set_register_value(1, 0x08);
+    HAL::COLUIMNS_3::set_register_value(1, 0x08);
+    HAL::COLUIMNS_4::set_register_value(1, 0x08);
 
-  for(uint8_t i = 0 ; i < 32 ; i++)
-    {
-      HAL::CLOCK::set_output_low();
-      for(uint32_t i = 0 ; i < 0xffff ; i++)
-        {
-          ;
-        }
-      HAL::CLOCK::set_output_high();
-      for(uint32_t i = 0 ; i < 0xffff ; i++)
-        {
-          ;
-        }
-    }
+    HAL::COLUIMNS_1::set_register_value(0x0C, 0b10101010);
+    HAL::COLUIMNS_2::set_register_value(0x0C, 0xAA);
+    HAL::COLUIMNS_3::set_register_value(0x0C, 0b10101010);
+    HAL::COLUIMNS_4::set_register_value(0x0C, 0b10101010);
 
-  HAL::TRIGGER::set_output_high();
-  HAL::TI_RESET::set_output_high();
+    HAL::COLUIMNS_1::set_register_value(0x0D, 0b10101010);
+    HAL::COLUIMNS_2::set_register_value(0x0D, 0xAA);
+    HAL::COLUIMNS_3::set_register_value(0x0D, 0b10101010);
+    HAL::COLUIMNS_4::set_register_value(0x0D, 0b10101010);
 
-  for(uint32_t i = 0 ; i < 0xffff ; i++)
-    {
-      ;
-    }
+    uint32_t currentLine = 0;
 
-  HAL::I2C_1::set_slave_address(0x40 >> 1, e7bitAddress);
-  HAL::I2C_1::write_data(data1, 3);
+    //  DMA2_CSELR->CSELR;
+    DMA1_CSELR->CSELR |= ((3 << 20) | (3 << 12) | (3 << 4));
 
-  HAL::I2C_2::set_slave_address(0x42 >> 1, e7bitAddress);
-  HAL::I2C_2::write_data(data1, 3);
+    HAL::COLUIMNS_1::set_all_leds_value(&(Mario_pixel_map[0]));
+    HAL::COLUIMNS_2::set_all_leds_value(&(Mario_pixel_map[8]));
+    HAL::COLUIMNS_3::set_all_leds_value(&(Mario_pixel_map[16]));
+    HAL::COLUIMNS_4::set_all_leds_value(&(Mario_pixel_map[24]));
 
-  HAL::I2C_3::set_slave_address(0x44 >> 1, e7bitAddress);
-  HAL::I2C_3::write_data(data1, 3);
+    HAL::ROW_MULTIPLEXER::output_enable(false);
 
-  HAL::I2C_4::set_slave_address(0x46 >> 1, e7bitAddress);
-  HAL::I2C_4::write_data(data1, 3);
+    HAL::ROW_MULTIPLEXER::clear();
 
-  HAL::I2C_1::write_data(data, 13);
-  HAL::I2C_2::write_data(data, 13);
-  HAL::I2C_3::write_data(data, 13);
-  HAL::I2C_4::write_data(data, 13);
+    for (;;) {
 
-  uint32_t currentLine = 0;
+        HAL::ROW_MULTIPLEXER::output_enable(false);
 
-  HAL::OUTPUT_EN::set_output_low();
+        if (0 == currentLine) {
+            HAL::ROW_MULTIPLEXER::shift_bit(eLow);
+        } else
+            HAL::ROW_MULTIPLEXER::shift_bit(eHigh);
 
-  transfer1[0] = transfer2[0] = transfer3[0] = transfer4[0] = 0x82;
+        HAL::ROW_MULTIPLEXER::output_enable(true);
 
-  for(; ;)
-    {
+        for (uint32_t i = 0; i < 1500; i++)
+            ;
 
-      memcpy(&(transfer1[1]), &(Mario_pixel_map[currentLine * 32]),
-             8 * sizeof(uint8_t));
-      memcpy(&(transfer2[1]), &(Mario_pixel_map[currentLine * 32 + 8]),
-             8 * sizeof(uint8_t));
-      memcpy(&(transfer3[1]), &(Mario_pixel_map[currentLine * 32 + 16]),
-             8 * sizeof(uint8_t));
-      memcpy(&(transfer4[1]), &(Mario_pixel_map[currentLine * 32 + 24]),
-             8 * sizeof(uint8_t));
-
-      HAL::OUTPUT_EN::set_output_high();
-
-      HAL::I2C_1::write_data(transfer1, 9);
-      HAL::I2C_2::write_data(transfer2, 9);
-      HAL::I2C_3::write_data(transfer3, 9);
-      HAL::I2C_4::write_data(transfer4, 9);
-
-      if(0 == currentLine)
-        {
-          HAL::DATA_IN::set_output_low();
-        }
-      else
-        HAL::DATA_IN::set_output_high();
-
-      HC595ToggleClk();
-      HC595TriggerOutput();
-
-      HAL::OUTPUT_EN::set_output_low(); // output enable
-
-      for(uint32_t i = 0 ; i < 0xff ; i++)
-        ;
-
-      if(32 == ++currentLine)
-        {
-          currentLine = 0;
+        if (32 == ++currentLine) {
+            currentLine = 0;
         }
     }
-  return 0;
+    return 0;
 }

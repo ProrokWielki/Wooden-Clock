@@ -8,7 +8,9 @@
 #ifndef HAL_DMA_DMA_HPP_
 #define HAL_DMA_DMA_HPP_
 
+#include <functional>
 #include <stdint.h>
+
 #include <stm32l4xx.h>
 
 #include "../Register/Register.hpp"
@@ -33,8 +35,7 @@ constexpr static uint8_t MEMORY_SIZE_FIELD_BIT_LENGTH = 2;
  *  @tparam DMA_CHANNEL_ADDRESS address of the DMA channel.
  */
 template <const uint32_t DMA_CHANNEL_ADDRESS>
-class DMA
-{
+class DMA {
 public:
     /**
      * @brief Sets priority for the DMA channel.
@@ -86,14 +87,14 @@ public:
      */
     static void enable_memory_increment()
     {
-        CCR::set_value(eEnable, DMA_CCR_MINC_Pos);
+        CCR::set_bit(DMA_CCR_MINC_Pos);
     }
     /**
      * @brief Disables automatic memory increment.
      */
     static void disable__memory_incremen()
     {
-        CCR::set_value(eDisable, DMA_CCR_MINC_Pos);
+        CCR::clear_bit(DMA_CCR_MINC_Pos);
     }
 
     /**
@@ -101,14 +102,14 @@ public:
      */
     static void enable_peripheral_increment()
     {
-        CCR::set_value(eEnable, DMA_CCR_PINC_Pos);
+        CCR::set_bit(DMA_CCR_PINC_Pos);
     }
     /**
      * @brief Disables automatic peripheral increment.
      */
     static void disable_peripheral_incremen()
     {
-        CCR::set_value(eDisable, DMA_CCR_PINC_Pos);
+        CCR::clear_bit(DMA_CCR_PINC_Pos);
     }
 
     /**
@@ -116,14 +117,14 @@ public:
      */
     static void enable_circular_mode()
     {
-        CCR::set_value(eEnable, DMA_CCR_CIRC_Pos);
+        CCR::set_bit(DMA_CCR_CIRC_Pos);
     }
     /**
      * @brief Disables circular mode.
      */
     static void disable_circular_mode()
     {
-        CCR::set_value(eDisable, DMA_CCR_CIRC_Pos);
+        CCR::clear_bit(DMA_CCR_CIRC_Pos);
     }
 
     /**
