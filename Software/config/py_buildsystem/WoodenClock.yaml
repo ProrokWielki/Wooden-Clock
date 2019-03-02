@@ -6,6 +6,7 @@ includes:
   - ../../LIB/CMSIS/Include
   - ../../HAL
   - ../../DRV
+  - ../../BSP
 
 steps:
   - compile MCU:

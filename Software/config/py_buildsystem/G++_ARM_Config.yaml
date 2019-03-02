@@ -1,0 +1,29 @@
+compiler: G++_ARM
+
+compiler_flags:
+  - -mcpu=cortex-m4
+  - -specs=nano.specs
+  - -g
+  - -std=c++14
+  # - -Ofast
+  - -mthumb
+  - -Wall
+  - -Wextra
+  - -Wpedantic
+  - -Wsuggest-attribute=const
+  - -Wsuggest-attribute=noreturn
+  - -Wsuggest-attribute=format
+  - -Wsuggest-final-types
+  - -Wsuggest-final-methods
+  - -Wsuggest-override
+  # - -fdata-sections 
+  # - -ffunction-sections
+
+linker_flags:
+  - -specs=nosys.specs
+  - -specs=nano.specs
+  - -T../../MCU/STM32L452RETx_FLASH.ld
+  - -mcpu=cortex-m4
+  - -mthumb
+  # - -Wl,--gc-sections
+  - -Wl,--print-memory-usage
