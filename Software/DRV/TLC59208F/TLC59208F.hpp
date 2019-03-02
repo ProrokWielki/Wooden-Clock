@@ -37,8 +37,20 @@ public:
         I2C::write_data(dataToBeSend, 2);
     }
 
+    static void set_registers_values(const uint8_t registerStartAddress, const uint8_t * const valuesToBeSet, const uint8_t numberOfValues)
+    {
+
+        static uint8_t dataToBeSend[16];
+
+        dataToBeSend[0] = registerStartAddress | 0x80;
+        memcpy(&(dataToBeSend[1]), valuesToBeSet, (numberOfValues + 1) * sizeof(uint8_t));
+
+        I2C::write_data(dataToBeSend, numberOfValues + 1);
+    }
+
     static void set_all_leds_value(uint8_t * allLedsValues)
     {
+
         static uint8_t dataToBeSend[9] = {0x82};
 
         memcpy(&(dataToBeSend[1]), allLedsValues, 8 * sizeof(uint8_t));
