@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "Display/Display.hpp"
 #include "HAL.hpp"
 
 #include "APP/Assets/Images/Images.hpp"
@@ -10,7 +11,7 @@ int main(void)
 
     NVIC_EnableIRQ(DMA1_Channel2_IRQn);
     NVIC_EnableIRQ(DMA1_Channel4_IRQn);
-    NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+    NVIC_EnableIRQ(DMA2_Channel7_IRQn);
     NVIC_EnableIRQ(DMA2_Channel2_IRQn);
 
     HAL::init();
@@ -19,65 +20,56 @@ int main(void)
 
     HAL::ROW_MULTIPLEXER::init();
 
+    for (uint8_t i = 0; i < 32; i++)
+        HAL::ROW_MULTIPLEXER::shift_bit(eHigh);
+
     HAL::COLUIMNS_1::init();
     HAL::COLUIMNS_2::init();
     HAL::COLUIMNS_3::init();
     HAL::COLUIMNS_4::init();
 
+    HAL::DMA1_2::enable_interrupt(eTransferCompleted);
+    HAL::DMA1_4::enable_interrupt(eTransferCompleted);
+    HAL::DMA2_7::enable_interrupt(eTransferCompleted);
+    HAL::DMA2_2::enable_interrupt(eTransferCompleted);
+
     HAL::PB13::set_mode(eOutput);
     HAL::PB13::set_speed(eVeryHighSpeed);
 
-    HAL::COLUIMNS_1::set_register_value(0, 0);
-    HAL::COLUIMNS_2::set_register_value(0, 0);
-    HAL::COLUIMNS_3::set_register_value(0, 0);
-    HAL::COLUIMNS_4::set_register_value(0, 0);
+    uint8_t first[] = {0, 0x08};
+    uint8_t second[] = {0xAA, 0xAA};
 
-    HAL::COLUIMNS_1::set_register_value(1, 0x08);
-    HAL::COLUIMNS_2::set_register_value(1, 0x08);
-    HAL::COLUIMNS_3::set_register_value(1, 0x08);
-    HAL::COLUIMNS_4::set_register_value(1, 0x08);
+    HAL::COLUIMNS_1::set_registers_values(0x00, first, 2);
+    HAL::COLUIMNS_2::set_registers_values(0x00, first, 2);
+    HAL::COLUIMNS_3::set_registers_values(0x00, first, 2);
+    HAL::COLUIMNS_4::set_registers_values(0x00, first, 2);
 
-    HAL::COLUIMNS_1::set_register_value(0x0C, 0b10101010);
-    HAL::COLUIMNS_2::set_register_value(0x0C, 0xAA);
-    HAL::COLUIMNS_3::set_register_value(0x0C, 0b10101010);
-    HAL::COLUIMNS_4::set_register_value(0x0C, 0b10101010);
+    HAL::COLUIMNS_1::set_registers_values(0x0C, second, 2);
+    HAL::COLUIMNS_2::set_registers_values(0x0C, second, 2);
+    HAL::COLUIMNS_3::set_registers_values(0x0C, second, 2);
+    HAL::COLUIMNS_4::set_registers_values(0x0C, second, 2);
 
-    HAL::COLUIMNS_1::set_register_value(0x0D, 0b10101010);
-    HAL::COLUIMNS_2::set_register_value(0x0D, 0xAA);
-    HAL::COLUIMNS_3::set_register_value(0x0D, 0b10101010);
-    HAL::COLUIMNS_4::set_register_value(0x0D, 0b10101010);
+    uint32_t magic_counter = 0;
 
-    uint32_t currentLine = 0;
+    Display display(32, 32, Arrows2);
 
-    //  DMA2_CSELR->CSELR;
-    DMA1_CSELR->CSELR |= ((3 << 20) | (3 << 12) | (3 << 4));
-
-    HAL::COLUIMNS_1::set_all_leds_value(&(Mario_pixel_map[0]));
-    HAL::COLUIMNS_2::set_all_leds_value(&(Mario_pixel_map[8]));
-    HAL::COLUIMNS_3::set_all_leds_value(&(Mario_pixel_map[16]));
-    HAL::COLUIMNS_4::set_all_leds_value(&(Mario_pixel_map[24]));
-
-    HAL::ROW_MULTIPLEXER::output_enable(false);
-
-    HAL::ROW_MULTIPLEXER::clear();
+    DMA2_CSELR->CSELR |= (5 << 24);
+    DMA1_CSELR->CSELR |= ((3 << 12) | (3 << 4));
 
     for (;;) {
 
-        HAL::ROW_MULTIPLEXER::output_enable(false);
+        display.draw();
 
-        if (0 == currentLine) {
-            HAL::ROW_MULTIPLEXER::shift_bit(eLow);
-        } else
-            HAL::ROW_MULTIPLEXER::shift_bit(eHigh);
-
-        HAL::ROW_MULTIPLEXER::output_enable(true);
-
-        for (uint32_t i = 0; i < 1500; i++)
+        for (uint32_t i = 0; i < 2500; i++)
             ;
 
-        if (32 == ++currentLine) {
-            currentLine = 0;
+        if (magic_counter == 100) {
+            display.set_frame_buffer(Arrows1);
+        } else if (magic_counter == 200) {
+            display.set_frame_buffer(Arrows2);
+            magic_counter = 0;
         }
+        magic_counter++;
     }
     return 0;
 }
