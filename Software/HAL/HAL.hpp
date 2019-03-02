@@ -1,8 +1,8 @@
-/*
- * HAL.hpp
+/**
+ *  @file HAL.hpp
  *
  *  Created on: 21-11-2018
- *      Author: Pawe? Warzecha
+ *  @author: Paweł Warzecha
  */
 
 #ifndef HAL_HAL_HPP_
@@ -31,14 +31,14 @@ typedef GPIO<GPIOB_BASE, 13> PB13;
 typedef GPIO<GPIOC_BASE, 0> I2C3_SCL;
 typedef GPIO<GPIOC_BASE, 1> I2C3_SDA;
 
-typedef DMA<DMA1_Channel2_BASE> DMA1_2;
-typedef DMA<DMA1_Channel4_BASE> DMA1_4;
-typedef DMA<DMA1_Channel6_BASE> DMA1_6;
-typedef DMA<DMA2_Channel2_BASE> DMA2_2;
+typedef DMA<DMA1_BASE, 2, DMA1_Channel2_BASE> DMA1_2;
+typedef DMA<DMA1_BASE, 4, DMA1_Channel4_BASE> DMA1_4;
+typedef DMA<DMA2_BASE, 2, DMA2_Channel2_BASE> DMA2_2;
+typedef DMA<DMA2_BASE, 7, DMA2_Channel7_BASE> DMA2_7;
 
-typedef I2C<I2C1_BASE, DMA1_2> I2C_1;
+typedef I2C<I2C1_BASE, DMA2_7> I2C_1;
 typedef I2C<I2C2_BASE, DMA1_4> I2C_2;
-typedef I2C<I2C3_BASE, DMA1_6> I2C_3;
+typedef I2C<I2C3_BASE, DMA1_2> I2C_3;
 typedef I2C<I2C4_BASE, DMA2_2> I2C_4;
 
 typedef SR_74HC595<GPIO<GPIOC_BASE, 7>, GPIO<GPIOC_BASE, 8>, GPIO<GPIOC_BASE, 9>, GPIO<GPIOB_BASE, 14>, GPIO<GPIOB_BASE, 15>> ROW_MULTIPLEXER;
