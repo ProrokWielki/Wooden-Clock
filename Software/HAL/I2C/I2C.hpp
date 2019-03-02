@@ -40,6 +40,7 @@ constexpr static uint8_t REGISTER_OFFSET_10BIT_ADDRESS = 0;
  *  The class is static, it has a private constructor and can't be instantiated.
  *
  *  @tparam I2C_ADDRESS address of the I2C.
+ *  @tparam DMA type name of the DMA to be used..
  */
 template<const uint32_t I2C_ADDRESS, typename DMA = void>
 class I2C
