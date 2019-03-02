@@ -32,10 +32,13 @@ constexpr static uint8_t MEMORY_SIZE_FIELD_BIT_LENGTH = 2;
  *
  *  The class is static, it has a private constructor and can't be instantiated.
  *
+ *  @tparam DMA_ADDRESS base address of the DMA.
+ *  @tparam CHANNEL_NUMBER number of the DMA channel.
  *  @tparam DMA_CHANNEL_ADDRESS address of the DMA channel.
  */
-template <const uint32_t DMA_CHANNEL_ADDRESS>
-class DMA {
+template<const uint32_t DMA_ADDRESS, const uint32_t CHANNEL_NUMBER, const uint32_t DMA_CHANNEL_ADDRESS>
+class DMA
+{
 public:
     /**
      * @brief Sets priority for the DMA channel.
@@ -210,14 +213,45 @@ public:
         CMAR::set_value(DMARequest, DMA_CMAR_MA_Pos, MEMORY_ADDRESS_FIELD_BIT_LENGTH);
     }
 
+    /**
+     * @brief Sets callback function to be called when interrupt is received. Can be set only once!
+     *
+     * @param callback function to be called when interrupt is received.
+     * @return return the callback function.
+     */
+    static std::function<void()> set_transferf_complete_callback(std::function<void()> callback = nullptr)  // TODO: make it possible to change the callback.
+    {
+        static std::function<void()> callback_ = callback;
+        return callback_;
+    }
+
+    /**
+     * @brief function to be called to when interrupt is received. Has to be put to the IRQ handler!
+     */
+    static void transfer_complete_callback(void)
+    {
+        disable();
+        (set_transferf_complete_callback())();
+        clear_transfer_complete_interrupt();
+    }
+
 protected:
 private:
     DMA(){};
+
+    static void clear_transfer_complete_interrupt()
+    {
+        IFCR::set_bit((CHANNEL_NUMBER - 1) * 4 + 1);  // TODO: Magic numbers
+    }
+
+    constexpr volatile static uint32_t adrIFCR = (uint32_t)(&(((DMA_TypeDef *)DMA_ADDRESS)->IFCR));
 
     constexpr volatile static uint32_t adrCCR = (uint32_t)(&(((DMA_Channel_TypeDef *)DMA_CHANNEL_ADDRESS)->CCR));
     constexpr volatile static uint32_t adrCNDTR = (uint32_t)(&(((DMA_Channel_TypeDef *)DMA_CHANNEL_ADDRESS)->CNDTR));
     constexpr volatile static uint32_t adrCPAR = (uint32_t)(&(((DMA_Channel_TypeDef *)DMA_CHANNEL_ADDRESS)->CPAR));
     constexpr volatile static uint32_t adrCMAR = (uint32_t)(&(((DMA_Channel_TypeDef *)DMA_CHANNEL_ADDRESS)->CMAR));
+
+    typedef Register<adrIFCR> IFCR;
 
     typedef Register<adrCCR> CCR;
     typedef Register<adrCNDTR> CNDTR;
