@@ -1,8 +1,8 @@
-/*
- * GPIO.hpp
+/**
+ *  @file GPIO.hpp
  *
  *  Created on: 13-11-2018
- *      Author: Pawe? Warzecha
+ *  @author: Paweł Warzecha
  */
 
 #ifndef HAL_GPIO_GPIO_HPP_
