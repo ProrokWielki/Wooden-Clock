@@ -7,6 +7,11 @@
  *  @author: Paweł Warzecha
  */
 
+#ifndef HAL_REGISTER_REGISTER_HPP_
+#define HAL_REGISTER_REGISTER_HPP_
+
+#include <stdint.h>
+
 /**
  *  @brief Static class for operations on registers.
  *
@@ -19,13 +24,7 @@
  *
  *  @tparam REGISTER_ADDRESS address of the register
  */
-
-#ifndef HAL_REGISTER_REGISTER_HPP_
-#define HAL_REGISTER_REGISTER_HPP_
-
-#include <stdint.h>
-
-template <const uint32_t REGISTER_ADDRESS>
+template<const uint32_t REGISTER_ADDRESS>
 class Register
 {
 public:
@@ -106,7 +105,7 @@ private:
     static uint32_t & u32Register;
 };
 
-template <const uint32_t REGISTER_ADDRESS>
+template<const uint32_t REGISTER_ADDRESS>
 uint32_t & Register<REGISTER_ADDRESS>::u32Register = *((uint32_t *)REGISTER_ADDRESS);
 
 #endif /* HAL_REGISTER_REGISTER_HPP_ */
