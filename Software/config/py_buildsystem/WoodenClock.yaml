@@ -4,9 +4,12 @@ defines:
 includes:
   - ../../LIB/CMSIS/Device/ST/STM32L4xx/Include
   - ../../LIB/CMSIS/Include
+  - ../../LIB/FreeRTOS/Source/include
+  - ../../LIB/FreeRTOS/Source/portable/GCC/ARM_CM3
   - ../../HAL
   - ../../DRV
   - ../../BSP
+  - ../../APP
 
 steps:
   - compile MCU:
@@ -33,6 +36,17 @@ steps:
       - ../../BSP
 
     output_direcotry: ../../Output/Obj/BSP
+
+    types:
+      - .cpp
+
+  - compile APP:
+    source_directories:
+      - ../../APP
+
+    search_subdirectories: False
+
+    output_direcotry: ../../Output/Obj/APP
 
     types:
       - .cpp

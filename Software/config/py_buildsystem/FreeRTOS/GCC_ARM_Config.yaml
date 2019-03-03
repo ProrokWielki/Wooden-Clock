@@ -1,0 +1,7 @@
+compiler: GCC_ARM
+
+compiler_flags:
+  - -mcpu=cortex-m4
+  - -specs=nano.specs
+  - -g
+  - -mthumb
