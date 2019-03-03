@@ -46,6 +46,8 @@ template<const uint32_t I2C_ADDRESS, typename DMA = void>
 class I2C
 {
 public:
+    using get_DMA = DMA;
+
     /// Enables the I2C.
     static void enable(void)
     {

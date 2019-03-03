@@ -109,11 +109,21 @@ void GPIO_Init(void)
 
     /* I2C4 SDA PB7 */
     I2C4_SDA::set_as_I2C_pin(eAF5);
+
+    BUTTON::set_mode(eInput);
+    BUTTON::set_pullUp_pullDown(eNone);
+
+    BUTTON2::set_mode(eInput);
+    BUTTON2::set_pullUp_pullDown(eNone);
 }
 
 void DMA_init()
 {
     RCC->AHB1ENR |= ((1 << 0) | (1 << 1));
+}
+
+void TLC59208F_init(void)
+{
 }
 
 void init(void)

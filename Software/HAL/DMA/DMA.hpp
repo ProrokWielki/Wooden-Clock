@@ -219,7 +219,7 @@ public:
      * @param callback function to be called when interrupt is received.
      * @return return the callback function.
      */
-    static std::function<void()> set_transferf_complete_callback(std::function<void()> callback = nullptr)  // TODO: make it possible to change the callback.
+    static std::function<void()> set_transfer_complete_callback(std::function<void()> callback = nullptr)  // TODO: make it possible to change the callback.
     {
         static std::function<void()> callback_ = callback;
         return callback_;
@@ -231,7 +231,7 @@ public:
     static void transfer_complete_callback(void)
     {
         disable();
-        (set_transferf_complete_callback())();
+        (set_transfer_complete_callback())();
         clear_transfer_complete_interrupt();
     }
 

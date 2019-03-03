@@ -68,9 +68,12 @@ public:
      */
     static void set_alternate_function(AlteranteFunction_t u8AlternateFunction)
     {
-        if (PIN >= 8) {
+        if (PIN >= 8)
+        {
             AFRH::set_value(u8AlternateFunction, (PIN - AFRH_START_FIELD) * AFR_FIELD_BIT_LENGTH, AFR_FIELD_BIT_LENGTH);
-        } else {
+        }
+        else
+        {
             AFRL::set_value(u8AlternateFunction, PIN * AFR_FIELD_BIT_LENGTH, AFR_FIELD_BIT_LENGTH);
         }
     }
@@ -105,7 +108,7 @@ public:
      */
     static SignalLevel_t get_input_value(void)
     {
-        return IDR::get_value(PIN);
+        return IDR::get_value(PIN) > 0 ? eHigh : eLow;
     }
 
     /** Sets the GPIO as a I2C pin
