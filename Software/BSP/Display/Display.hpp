@@ -10,8 +10,6 @@
 
 #include <stdint.h>
 
-#include "HAL.hpp"
-
 class Display
 {
 public:
@@ -22,14 +20,7 @@ public:
      * @param height display height in pixels.
      * @param fameBuffer pointer to frame buffer.
      */
-    Display(uint8_t width, uint8_t height, uint8_t * fameBuffer)
-    : displayWidth(width), displayHeight(height), displayFrameBuffer(fameBuffer), transferComplete()
-    {
-        HAL::DMA1_2::set_transferf_complete_callback([this](void) { transferComplete[0] = true; });
-        HAL::DMA1_4::set_transferf_complete_callback([this](void) { transferComplete[1] = true; });
-        HAL::DMA2_2::set_transferf_complete_callback([this](void) { transferComplete[2] = true; });
-        HAL::DMA2_7::set_transferf_complete_callback([this](void) { transferComplete[3] = true; });
-    };
+    Display(uint8_t width, uint8_t height, uint8_t * fameBuffer);
 
     /**
      * @brief Destructor.
