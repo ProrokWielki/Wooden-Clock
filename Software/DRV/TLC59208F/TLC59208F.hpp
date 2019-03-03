@@ -48,7 +48,7 @@ public:
         I2C::write_data(dataToBeSend, numberOfValues + 1);
     }
 
-    static void set_all_leds_value(uint8_t * allLedsValues)
+    static void set_all_leds_values(uint8_t * allLedsValues)
     {
 
         static uint8_t dataToBeSend[9] = {0x82};
@@ -56,6 +56,12 @@ public:
         memcpy(&(dataToBeSend[1]), allLedsValues, 8 * sizeof(uint8_t));
 
         I2C::write_data_DMA(dataToBeSend, 9);
+    }
+
+    static void set_transfer_complete_callback(std::function<void()> callback)
+    {
+        I2C::get_DMA::set_transfer_complete_callback(callback);
+        I2C::get_DMA::enable_interrupt(eTransferCompleted);
     }
 
 protected:
