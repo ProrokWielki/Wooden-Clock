@@ -12,7 +12,7 @@
 
 #include "HAL.hpp"
 
-template<typename DATA_IN_PIN, typename REGISTER_CLOCK_PIN, typename STORAGE_CLOCK_PIN, typename OUTPUT_ENABLE_PIN, typename CLEAR_PIN>
+template<typename DATA_IN_PIN, typename REGISTER_CLOCK_PIN, typename STORAGE_CLOCK_PIN, typename OUTPUT_ENABLE_PIN, typename CLEAR_PIN, uint8_t BIT_LENGTH>
 class SR_74HC595
 {
 public:
@@ -55,6 +55,16 @@ public:
     {
         DATA_IN_PIN::set_output_value(bitValue);
         store_input();
+        show();
+    }
+
+    static void set_all_outputs_value(SignalLevel_t outputsValue)
+    {
+        for (uint8_t i = 0; i < BIT_LENGTH; i++)
+        {
+            DATA_IN_PIN::set_output_value(outputsValue);
+            store_input();
+        }
         show();
     }
 
