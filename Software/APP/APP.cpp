@@ -5,45 +5,37 @@
  *  @author: Paweł Warzecha
  */
 
-extern "C" {
 #include <FreeRTOS.h>
 #include <task.h>
-}
 
-#include "Display/Display.hpp"
+#include "BSP.hpp"
 
 #include "Assets/Images/Images.hpp"
 
+uint8_t * frames[] = {frame_1,  frame_2,  frame_3,  frame_4,  frame_5,  frame_6,  frame_7,  frame_8,  frame_9,  frame_10, frame_11,
+                      frame_12, frame_13, frame_14, frame_15, frame_16, frame_17, frame_18, frame_19, frame_20, frame_21};
+
 [[noreturn]] void display_task(void * pvParameters)
 {
-    const TickType_t xDelay = 20 / portTICK_PERIOD_MS / 32;
+    (void)(pvParameters);
 
-    Display display(32, 32, Arrows1);
+    const TickType_t xDelay = 100 / portTICK_PERIOD_MS;
 
-    uint32_t magicNumber = 0;
+    uint8_t currentFrame = 0;
 
     for (;;)
     {
-        display.draw();
+        BSP::display.set_frame_buffer(frames[currentFrame++]);
+        if (currentFrame == 21)
+            currentFrame = 0;
         vTaskDelay(xDelay);
-        if (magicNumber == 400)
-        {
-            display.set_frame_buffer(Arrows2);
-        }
-        else if (magicNumber == 800)
-        {
-            display.set_frame_buffer(Arrows1);
-            magicNumber = 0;
-        }
-
-        magicNumber++;
     }
 }
 
 void APP_init()
 {
 
-    xTaskCreate(display_task, "dispaly_task", 1024, NULL, 10, NULL);
+    xTaskCreate(display_task, "dispaly_task", 2048, NULL, 1, NULL);
 
     vTaskStartScheduler();
 }
