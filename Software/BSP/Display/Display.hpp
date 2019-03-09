@@ -8,6 +8,7 @@
 #ifndef BSP_DISPLAY_DISPLAY_HPP_
 #define BSP_DISPLAY_DISPLAY_HPP_
 
+#include <functional>
 #include <stdint.h>
 
 class Display
@@ -27,6 +28,8 @@ public:
      */
     ~Display(){};
 
+    void init(void);
+
     /**
      * @brief Sets the frame buffer to be displayed.
      *
@@ -42,10 +45,21 @@ public:
      */
     void draw(void);
 
+    /**
+     * @brief Sets function to be called every time the full display is redrawn.
+     *
+     * @param callback function to be called.
+     */
+    void set_dispaly_redrawn_callback(std::function<void()> callback);
+
+    bool is_line_drawn();
+    void draw_next_line();
+
 protected:
 private:
-    void draw_line(uint8_t line_number);
-    bool is_line_drawn();
+    void transfer_complete(const uint8_t transferNumber);
+
+    std::function<void()> display_redrawn_callback;
 
     uint8_t displayWidth;
     uint8_t displayHeight;
@@ -53,6 +67,8 @@ private:
     uint8_t * displayFrameBuffer;
 
     bool transferComplete[4];
+
+    uint8_t currentLine_;
 
     constexpr static uint8_t transferSize = 8;
 };
