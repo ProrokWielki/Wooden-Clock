@@ -20,11 +20,7 @@
  *  such as changing value of field, getting its value and toggling
  *  bit in register.
  *
- *  The class is static, it has a private constructor and can't be instantiated.
- *
- *  @tparam REGISTER_ADDRESS address of the register
  */
-template<const uint32_t REGISTER_ADDRESS>
 class Register
 {
 public:
@@ -34,7 +30,7 @@ public:
      * @param u8FielStartPosition Position in register from where to start writing the value
      * @param u8FieldBitLength Length in bits of the field to which the value is written.
      */
-    static void set_value(uint32_t u32Value, uint8_t u8FielStartPosition, uint8_t u8FieldBitLength = 1)
+    void set_value(uint32_t u32Value, uint8_t u8FielStartPosition, uint8_t u8FieldBitLength = 1)
     {
         u32Register = ((u32Register & ~(get_mask(u8FieldBitLength) << (u8FielStartPosition))) | (u32Value << (u8FielStartPosition)));
     }
@@ -46,7 +42,7 @@ public:
      *
      * @return Value of wanted field in register.
      */
-    static uint32_t get_value(uint8_t u8FielStartPosition, uint8_t u8FieldBitLength = 1)
+    uint32_t get_value(uint8_t u8FielStartPosition, uint8_t u8FieldBitLength = 1)
     {
         return (u32Register & (get_mask(u8FieldBitLength) << (u8FielStartPosition)));
     }
@@ -55,7 +51,7 @@ public:
      *
      * @param u8Position Position of bit to be toggled.
      */
-    static void toggle_bit(uint8_t u8Position)
+    void toggle_bit(uint8_t u8Position)
     {
         u32Register ^= (1U << u8Position);
     }
@@ -64,7 +60,7 @@ public:
      *
      * @param u8Position Position of the bit to be toggled
      */
-    static void set_bit(uint8_t u8Position)
+    void set_bit(uint8_t u8Position)
     {
         u32Register |= (1U << u8Position);
     }
@@ -73,18 +69,18 @@ public:
      *
      * @param u8Position Position of the bit to be toggled
      */
-    static void clear_bit(uint8_t u8Position)
+    void clear_bit(uint8_t u8Position)
     {
         u32Register &= ~(1U << u8Position);
     }
 
-protected:
-private:
-    /// Constructor, it is private so the class can't be instantiated.
-    Register()
+    /// Constructor.
+    explicit Register(volatile uint32_t & registerValue) : u32Register(registerValue)
     {
     }
 
+protected:
+private:
     /** Generates a bit mask.
      *
      * @param u8FieldBitLength length of the mask to be generated.
@@ -102,10 +98,6 @@ private:
     }
 
     /// Reference to register value.
-    static uint32_t & u32Register;
+    volatile uint32_t & u32Register;
 };
-
-template<const uint32_t REGISTER_ADDRESS>
-uint32_t & Register<REGISTER_ADDRESS>::u32Register = *((uint32_t *)REGISTER_ADDRESS);
-
 #endif /* HAL_REGISTER_REGISTER_HPP_ */

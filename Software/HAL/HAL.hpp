@@ -12,47 +12,56 @@
 #include "DMA/DMA.hpp"
 #include "GPIO/GPIO.hpp"
 #include "I2C/I2C.hpp"
+#include "Timer/Timer.hpp"
 
 #include "74HC595/74HC595.hpp"
 #include "TLC59208F/TLC59208F.hpp"
 
-namespace HAL
+class HAL
 {
+public:
+    static GPIO I2C1_SCL;
+    static GPIO I2C1_SDA;
+    static GPIO I2C4_SCL;
+    static GPIO I2C4_SDA;
+    static GPIO I2C2_SCL;
+    static GPIO I2C2_SDA;
+    static GPIO I2C3_SCL;
+    static GPIO I2C3_SDA;
+    static GPIO TLC_RESET;
+    static GPIO SR_DATAIN;
+    static GPIO SR_RCLOCK;
+    static GPIO SR_SCLOCK;
+    static GPIO SR_OE;
+    static GPIO SR_CLEAR;
+    static GPIO BUTTON;
+    static GPIO BUTTON2;
+    static GPIO BUTTON3;
+    static GPIO BUTTON4;
+    static DMA DMA1_2;
+    static DMA DMA1_4;
+    static DMA DMA2_2;
+    static DMA DMA2_7;
+    static I2C I2C_1;
+    static I2C I2C_2;
+    static I2C I2C_3;
+    static I2C I2C_4;
+    static SR_74HC595 SR_74HC595_1;
+    static TLC59208F TLC59208F_1;
+    static TLC59208F TLC59208F_2;
+    static TLC59208F TLC59208F_3;
+    static TLC59208F TLC59208F_4;
+    static Timer Timer2;
 
-typedef GPIO<GPIOA_BASE, 9> I2C1_SCL;
-typedef GPIO<GPIOA_BASE, 10> I2C1_SDA;
+    static void clock_init(void);
+    static void I2C_init(void);
+    static void GPIO_Init(void);
+    static void DMA_init();
+    static void Timer_init();
+    static void NVIC_init(void);
+    static void TLC59208F_init(void);
+    static void SR_74HC595_init(void);
 
-typedef GPIO<GPIOB_BASE, 6> I2C4_SCL;
-typedef GPIO<GPIOB_BASE, 7> I2C4_SDA;
-typedef GPIO<GPIOB_BASE, 10> I2C2_SCL;
-typedef GPIO<GPIOB_BASE, 11> I2C2_SDA;
-typedef GPIO<GPIOB_BASE, 13> PB13;
-
-typedef GPIO<GPIOC_BASE, 0> I2C3_SCL;
-typedef GPIO<GPIOC_BASE, 1> I2C3_SDA;
-
-typedef DMA<DMA1_BASE, 2, DMA1_Channel2_BASE> DMA1_2;
-typedef DMA<DMA1_BASE, 4, DMA1_Channel4_BASE> DMA1_4;
-typedef DMA<DMA2_BASE, 2, DMA2_Channel2_BASE> DMA2_2;
-typedef DMA<DMA2_BASE, 7, DMA2_Channel7_BASE> DMA2_7;
-
-typedef I2C<I2C1_BASE, DMA2_7> I2C_1;
-typedef I2C<I2C2_BASE, DMA1_4> I2C_2;
-typedef I2C<I2C3_BASE, DMA1_2> I2C_3;
-typedef I2C<I2C4_BASE, DMA2_2> I2C_4;
-
-typedef GPIO<GPIOC_BASE, 5> BUTTON;
-typedef GPIO<GPIOC_BASE, 13> BUTTON2;
-
-typedef SR_74HC595<GPIO<GPIOC_BASE, 7>, GPIO<GPIOC_BASE, 8>, GPIO<GPIOC_BASE, 9>, GPIO<GPIOB_BASE, 14>, GPIO<GPIOB_BASE, 15>, 32> ROW_MULTIPLEXER;
-
-typedef TLC59208F<I2C_1, 0x40, GPIO<GPIOC_BASE, 6>> COLUIMNS_1;
-typedef TLC59208F<I2C_2, 0x42, GPIO<GPIOC_BASE, 6>> COLUIMNS_2;
-typedef TLC59208F<I2C_3, 0x44, GPIO<GPIOC_BASE, 6>> COLUIMNS_3;
-typedef TLC59208F<I2C_4, 0x46, GPIO<GPIOC_BASE, 6>> COLUIMNS_4;
-
-void init(void);
-
-}  // namespace HAL
-
+    static void init(void);
+};
 #endif /* HAL_HAL_HPP_ */

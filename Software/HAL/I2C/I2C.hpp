@@ -32,85 +32,77 @@ constexpr static uint8_t REGISTER_OFFSET_7BIT_ADDRESS = 1;
 constexpr static uint8_t REGISTER_OFFSET_10BIT_ADDRESS = 0;
 
 /**
- *  @brief Static class for operations on I2Cs.
+ *  @brief Class for operations on I2Cs.
  *
  *  @details
  *  Class allows configuration and simple usage of the I2C.
- *
- *  The class is static, it has a private constructor and can't be instantiated.
- *
- *  @tparam I2C_ADDRESS address of the I2C.
- *  @tparam DMA type name of the DMA to be used..
  */
-template<const uint32_t I2C_ADDRESS, typename DMA = void>
 class I2C
 {
 public:
-    using get_DMA = DMA;
-
     /// Enables the I2C.
-    static void enable(void)
+    void enable(void)
     {
-        CR1::set_value(eEnable, I2C_CR1_PE_Pos);
+        CR1.set_value(eEnable, I2C_CR1_PE_Pos);
     }
     /// Disables the I2C.
-    static void disable(void)
+    void disable(void)
     {
-        CR1::set_value(eDisable, I2C_CR1_PE_Pos);
+        CR1.set_value(eDisable, I2C_CR1_PE_Pos);
     }
 
     /** Enables given interrupt.
      *
      * @param eI2CInterrupt The interrupt to be enabled.
      */
-    static void enable_interrupt(I2CInterrupts_t eI2CInterrupt)
+    void enable_interrupt(I2CInterrupts_t eI2CInterrupt)
     {
-        CR1::set_value(eEnable, eI2CInterrupt);
+        CR1.set_value(eEnable, eI2CInterrupt);
     }
     /** Disables given interrupt.
      *
      * @param eI2CInterrupt The interrupt to be disabled.
      */
-    static void disable_interrupt(I2CInterrupts_t eI2CInterrupt)
+    void disable_interrupt(I2CInterrupts_t eI2CInterrupt)
     {
-        CR1::set_value(eDisable, eI2CInterrupt);
+        CR1.set_value(eDisable, eI2CInterrupt);
     }
 
     /** Configures the digital filter.
      *
      * @param eI2CDigitalFilter Digital filter configuration.
      */
-    static void set_digital_filter(I2CDigitalFilter_t eI2CDigitalFilter)
+    void set_digital_filter(I2CDigitalFilter_t eI2CDigitalFilter)
     {
-        CR1::set_value(eI2CDigitalFilter, I2C_CR1_DNF_Pos, DIGITAL_FILTER_FIELD_BIT_LENGTH);
+        CR1.set_value(eI2CDigitalFilter, I2C_CR1_DNF_Pos, DIGITAL_FILTER_FIELD_BIT_LENGTH);
     }
 
     /// enables analog filter.
-    static void enable_analog_filter(void)
+    void enable_analog_filter(void)
     {
-        CR1::set_value(eAnalogFilterEnable, I2C_CR1_ANFOFF_Pos);
+        CR1.set_value(eAnalogFilterEnable, I2C_CR1_ANFOFF_Pos);
     }
     /// disables analog filter.
-    static void disable_analog_filter(void)
+    void disable_analog_filter(void)
     {
-        CR1::set_value(eAnalogFilterDisable, I2C_CR1_ANFOFF_Pos);
+        CR1.set_value(eAnalogFilterDisable, I2C_CR1_ANFOFF_Pos);
     }
 
     /** Enables given DMA request.
      *
      * @param eI2CDMARequest DMA request type.
      */
-    static void enable_DMA_request(I2CDMARequest_t eI2CDMARequest)
+    void enable_DMA_request(I2CDMARequest_t eI2CDMARequest)
     {
-        CR1::set_value(eEnable, eI2CDMARequest);
+        CR1.set_value(eEnable, eI2CDMARequest);
     }
     /** Disables given DMA request.
      *
      * @param eI2CDMARequest DMA request type.
      */
-    static void disable_DMA_request(I2CDMARequest_t eI2CDMARequest)
+    void disable_DMA_request(I2CDMARequest_t eI2CDMARequest)
     {
-        CR1::set_value(eDisable, eI2CDMARequest);
+        CR1.set_value(eDisable, eI2CDMARequest);
     }
 
     /** Sets the slave address.
@@ -118,14 +110,17 @@ public:
      * @param u16SlaveAddress The slave address.
      * @param eI2CAdressLength Lenggth of the slave address.
      */
-    static void set_slave_address(uint16_t u16SlaveAddress, I2CAddressLength eI2CAdressLength)
+    void set_slave_address(uint16_t u16SlaveAddress, I2CAddressLength eI2CAdressLength)
     {
-        if (eI2CAdressLength == e7bitAddress) {
-            CR2::set_value(u16SlaveAddress, REGISTER_OFFSET_7BIT_ADDRESS, eI2CAdressLength);
-            CR2::set_value(eDisable, I2C_CR2_ADD10_Pos);
-        } else {
-            CR2::set_value(u16SlaveAddress, REGISTER_OFFSET_10BIT_ADDRESS, eI2CAdressLength);
-            CR2::set_value(eEnable, I2C_CR2_ADD10_Pos);
+        if (eI2CAdressLength == e7bitAddress)
+        {
+            CR2.set_value(u16SlaveAddress, REGISTER_OFFSET_7BIT_ADDRESS, eI2CAdressLength);
+            CR2.set_value(eDisable, I2C_CR2_ADD10_Pos);
+        }
+        else
+        {
+            CR2.set_value(u16SlaveAddress, REGISTER_OFFSET_10BIT_ADDRESS, eI2CAdressLength);
+            CR2.set_value(eEnable, I2C_CR2_ADD10_Pos);
         }
     }
 
@@ -134,15 +129,19 @@ public:
      * @param pu8Data Pointer to the data to be sent.
      * @param u16NumberOfBytes Number of the bytes to be sent
      */
-    static void write_data(uint8_t * pu8Data, uint16_t u16NumberOfBytes)
+    void write_data(uint8_t * pu8Data, uint16_t u16NumberOfBytes)
     {
-        static uint8_t u8TransferSize;
+        uint8_t u8TransferSize;
 
-        while (u16NumberOfBytes > 0) {
-            if (u16NumberOfBytes > 255) {
+        while (u16NumberOfBytes > 0)
+        {
+            if (u16NumberOfBytes > 255)
+            {
                 u8TransferSize = 255;
                 enable_option(eReload);
-            } else {
+            }
+            else
+            {
                 u8TransferSize = u16NumberOfBytes;
                 disable_option(eReload);
             }
@@ -157,7 +156,8 @@ public:
 
             start_transfer();
 
-            while (u8TransferSize-- > 0) {
+            while (u8TransferSize-- > 0)
+            {
                 while (false == is_transfer_completed())
                     ;
                 set_data_to_be_send(*(pu8Data++));
@@ -171,21 +171,21 @@ public:
      * @param pu8Data Pointer to the data to be sent.
      * @param u16NumberOfBytes Number of the bytes to be sent.
      */
-    static void write_data_DMA(uint8_t * pu8Data, uint16_t NumberOfBytes)
+    void write_data_DMA(uint8_t * data, uint16_t numberOfBytes)
     {
-        DMA::enable_memory_increment();
-        DMA::set_memory_address(reinterpret_cast<uint32_t>(pu8Data));
-        DMA::set_periphearl_address(reinterpret_cast<uint32_t>(adrTXDR));
-        DMA::set_read_direction(eReadFromMemory);
-        DMA::set_memory_size(e8Bits);
-        DMA::set_peripheral_size(e8Bits);
-        DMA::set_transfer_size(NumberOfBytes);
+        dma_->enable_memory_increment();
+        dma_->set_memory_address(reinterpret_cast<uint32_t>(data));
+        dma_->set_periphearl_address(addressTXDR);
+        dma_->set_read_direction(eReadFromMemory);
+        dma_->set_memory_size(e8Bits);
+        dma_->set_peripheral_size(e8Bits);
+        dma_->set_transfer_size(numberOfBytes);
 
-        set_transfer_size(NumberOfBytes);
+        set_transfer_size(numberOfBytes);
         start_transfer();
 
         enable_DMA_request(eDMATransmitRequest);
-        DMA::enable();
+        dma_->enable();
     }
 
     void read_data(uint8_t * pu8Data, uint16_t u8NumOfBytes);  // TODO: implement
@@ -199,78 +199,77 @@ public:
      * @param u8SCLHigh
      * @param u8SCLLow
      */
-    static void set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHold, uint8_t u8SCLHigh, uint8_t u8SCLLow)
+    void set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHold, uint8_t u8SCLHigh, uint8_t u8SCLLow)
     {
-        TIMINGR::set_value(u8Prescaler, I2C_TIMINGR_PRESC_Pos, PRESCALER_FIELD_BIT_LENGTH);
-        TIMINGR::set_value(u8DataSetup, I2C_TIMINGR_SCLDEL_Pos, DATA_SETUP_FIELD_BIT_LENGTH);
-        TIMINGR::set_value(u8DataHold, I2C_TIMINGR_SDADEL_Pos, DATA_HOLD_FIELD_BIT_LENGT);
-        TIMINGR::set_value(u8SCLHigh, I2C_TIMINGR_SCLH_Pos, SCL_HIGH_FIELD_BIT_LENGT);
-        TIMINGR::set_value(u8SCLLow, I2C_TIMINGR_SCLL_Pos, SCL_LOW_FIELD_BIT_LENGT);
+        TIMINGR.set_value(u8Prescaler, I2C_TIMINGR_PRESC_Pos, PRESCALER_FIELD_BIT_LENGTH);
+        TIMINGR.set_value(u8DataSetup, I2C_TIMINGR_SCLDEL_Pos, DATA_SETUP_FIELD_BIT_LENGTH);
+        TIMINGR.set_value(u8DataHold, I2C_TIMINGR_SDADEL_Pos, DATA_HOLD_FIELD_BIT_LENGT);
+        TIMINGR.set_value(u8SCLHigh, I2C_TIMINGR_SCLH_Pos, SCL_HIGH_FIELD_BIT_LENGT);
+        TIMINGR.set_value(u8SCLLow, I2C_TIMINGR_SCLL_Pos, SCL_LOW_FIELD_BIT_LENGT);
+    }
+
+    DMA * get_DMA(void)
+    {
+        return dma_;
+    }
+
+    /// Constructor.
+    I2C(I2C_TypeDef * i2c, DMA * dma = nullptr)
+    : CR1(i2c->CR1), CR2(i2c->CR2), ICR(i2c->ICR), ISR(i2c->ISR), OAR1(i2c->OAR1), OAR2(i2c->OAR2), PECR(i2c->PECR), RXDR(i2c->RXDR), TIMEOUTR(i2c->TIMEOUTR),
+      TIMINGR(i2c->TIMINGR), TXDR(i2c->TXDR), dma_(dma), addressTXDR(reinterpret_cast<uint32_t>(&(i2c->TXDR)))
+    {
     }
 
 protected:
 private:
-    /// Constructor, it is private so the class can't be instantiated.
-    I2C()
+    bool is_transfer_completed(void)
     {
+        return ISR.get_value(I2C_ISR_TXIS_Pos);
     }
 
-    static bool is_transfer_completed(void)
+    void set_transfer_size(uint8_t u8TransferSize)
     {
-        return ISR::get_value(I2C_ISR_TXIS_Pos);
+        CR2.set_value(u8TransferSize, I2C_CR2_NBYTES_Pos, TRANSFER_SIZE_FIELD_BIT_LENGTH);
     }
 
-    static void set_transfer_size(uint8_t u8TransferSize)
+    void set_data_to_be_send(uint8_t u8DataToSend)
     {
-        CR2::set_value(u8TransferSize, I2C_CR2_NBYTES_Pos, TRANSFER_SIZE_FIELD_BIT_LENGTH);
+        TXDR.set_value(u8DataToSend, I2C_TXDR_TXDATA_Pos, DATA_FIELD_BIT_LENGTH);
     }
 
-    static void set_data_to_be_send(uint8_t u8DataToSend)
+    void enable_option(I2COptions eI2COption)
     {
-        TXDR::set_value(u8DataToSend, I2C_TXDR_TXDATA_Pos, DATA_FIELD_BIT_LENGTH);
+        CR2.set_value(eEnable, eI2COption);
+    }
+    void disable_option(I2COptions eI2COption)
+    {
+        CR2.set_value(eDisable, eI2COption);
     }
 
-    static void enable_option(I2COptions eI2COption)
+    void start_transfer()
     {
-        CR2::set_value(eEnable, eI2COption);
+        CR2.set_bit(I2C_CR2_START_Pos);
     }
-    static void disable_option(I2COptions eI2COption)
+    void stop_transfer()
     {
-        CR2::set_value(eDisable, eI2COption);
-    }
-
-    static void start_transfer()
-    {
-        CR2::set_bit(I2C_CR2_START_Pos);
-    }
-    static void stop_transfer()
-    {
-        CR2::set_bit(I2C_CR2_START_Pos);
+        CR2.set_bit(I2C_CR2_START_Pos);
     }
 
-    constexpr volatile static uint32_t adrCR1 = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->CR1));
-    constexpr volatile static uint32_t adrCR2 = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->CR2));
-    constexpr volatile static uint32_t adrICR = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->ICR));
-    constexpr volatile static uint32_t adrISR = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->ISR));
-    constexpr volatile static uint32_t adrOAR1 = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->OAR1));
-    constexpr volatile static uint32_t adrOAR2 = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->OAR2));
-    constexpr volatile static uint32_t adrPECR = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->PECR));
-    constexpr volatile static uint32_t adrRXDR = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->RXDR));
-    constexpr volatile static uint32_t adrTIMEOUTR = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->TIMEOUTR));
-    constexpr volatile static uint32_t adrTIMINGR = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->TIMINGR));
-    constexpr volatile static uint32_t adrTXDR = (uint32_t)(&(((I2C_TypeDef *)I2C_ADDRESS)->TXDR));
+    Register CR1;
+    Register CR2;
+    Register ICR;
+    Register ISR;
+    Register OAR1;
+    Register OAR2;
+    Register PECR;
+    Register RXDR;
+    Register TIMEOUTR;
+    Register TIMINGR;
+    Register TXDR;
 
-    typedef Register<adrCR1> CR1;
-    typedef Register<adrCR2> CR2;
-    typedef Register<adrICR> ICR;
-    typedef Register<adrISR> ISR;
-    typedef Register<adrOAR1> OAR1;
-    typedef Register<adrOAR2> OAR2;
-    typedef Register<adrPECR> PECR;
-    typedef Register<adrRXDR> RXDR;
-    typedef Register<adrTIMEOUTR> TIMEOUTR;
-    typedef Register<adrTIMINGR> TIMINGR;
-    typedef Register<adrTXDR> TXDR;
+    DMA * dma_;
+
+    uint32_t addressTXDR;
 };
 
 #endif /* HAL_I2C_I2C_HPP_ */

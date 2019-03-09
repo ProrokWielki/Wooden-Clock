@@ -30,13 +30,7 @@ constexpr static uint8_t MEMORY_SIZE_FIELD_BIT_LENGTH = 2;
  *  @details
  *  Class allows configuration and simple usage of the DMA.
  *
- *  The class is static, it has a private constructor and can't be instantiated.
- *
- *  @tparam DMA_ADDRESS base address of the DMA.
- *  @tparam CHANNEL_NUMBER number of the DMA channel.
- *  @tparam DMA_CHANNEL_ADDRESS address of the DMA channel.
  */
-template<const uint32_t DMA_ADDRESS, const uint32_t CHANNEL_NUMBER, const uint32_t DMA_CHANNEL_ADDRESS>
 class DMA
 {
 public:
@@ -45,24 +39,24 @@ public:
      *
      * @param eDMAPriority priority to be set.
      */
-    static void set_priority(DMAPriority_t eDMAPriority)
+    void set_priority(DMAPriority_t eDMAPriority)
     {
-        CCR::set_value(eDMAPriority, DMA_CCR_PL_Pos, PRIORITY_LEVEL_FIELD_BIT_LENGTH);
+        CCR.set_value(eDMAPriority, DMA_CCR_PL_Pos, PRIORITY_LEVEL_FIELD_BIT_LENGTH);
     }
 
     /**
      * @brief Enables memory-to-memory DMA transfer.
      */
-    static void enable_mem2mem()
+    void enable_mem2mem()
     {
-        CCR::set_bit(DMA_CCR_MEM2MEM_Pos);
+        CCR.set_bit(DMA_CCR_MEM2MEM_Pos);
     }
     /**
      * @brief Disables memory-to-memory DMA transfer.
      */
-    static void disable_mem2mem()
+    void disable_mem2mem()
     {
-        CCR::clear_bit(DMA_CCR_MEM2MEM_Pos);
+        CCR.clear_bit(DMA_CCR_MEM2MEM_Pos);
     }
 
     /**
@@ -70,9 +64,9 @@ public:
      *
      * @param eDMAMemorySize size of the data
      */
-    static void set_memory_size(DMASize_t eDMAMemorySize)
+    void set_memory_size(DMASize_t eDMAMemorySize)
     {
-        CCR::set_value(eDMAMemorySize, DMA_CCR_MSIZE_Pos, MEMORY_SIZE_FIELD_BIT_LENGTH);
+        CCR.set_value(eDMAMemorySize, DMA_CCR_MSIZE_Pos, MEMORY_SIZE_FIELD_BIT_LENGTH);
     }
 
     /**
@@ -80,63 +74,63 @@ public:
      *
      * @param eDMAPeripheralSize size of the data
      */
-    static void set_peripheral_size(DMASize_t eDMAPeripheralSize)
+    void set_peripheral_size(DMASize_t eDMAPeripheralSize)
     {
-        CCR::set_value(eDMAPeripheralSize, DMA_CCR_PSIZE_Pos, PERIHERAL_SIZE_FIELD_BIT_LENGTH);
+        CCR.set_value(eDMAPeripheralSize, DMA_CCR_PSIZE_Pos, PERIHERAL_SIZE_FIELD_BIT_LENGTH);
     }
 
     /**
      * @brief Enables automatic memory increment.
      */
-    static void enable_memory_increment()
+    void enable_memory_increment()
     {
-        CCR::set_bit(DMA_CCR_MINC_Pos);
+        CCR.set_bit(DMA_CCR_MINC_Pos);
     }
     /**
      * @brief Disables automatic memory increment.
      */
-    static void disable__memory_incremen()
+    void disable__memory_incremen()
     {
-        CCR::clear_bit(DMA_CCR_MINC_Pos);
+        CCR.clear_bit(DMA_CCR_MINC_Pos);
     }
 
     /**
      * @brief Enables automatic peripheral increment.
      */
-    static void enable_peripheral_increment()
+    void enable_peripheral_increment()
     {
-        CCR::set_bit(DMA_CCR_PINC_Pos);
+        CCR.set_bit(DMA_CCR_PINC_Pos);
     }
     /**
      * @brief Disables automatic peripheral increment.
      */
-    static void disable_peripheral_incremen()
+    void disable_peripheral_incremen()
     {
-        CCR::clear_bit(DMA_CCR_PINC_Pos);
+        CCR.clear_bit(DMA_CCR_PINC_Pos);
     }
 
     /**
      * @brief Enables circular mode.
      */
-    static void enable_circular_mode()
+    void enable_circular_mode()
     {
-        CCR::set_bit(DMA_CCR_CIRC_Pos);
+        CCR.set_bit(DMA_CCR_CIRC_Pos);
     }
     /**
      * @brief Disables circular mode.
      */
-    static void disable_circular_mode()
+    void disable_circular_mode()
     {
-        CCR::clear_bit(DMA_CCR_CIRC_Pos);
+        CCR.clear_bit(DMA_CCR_CIRC_Pos);
     }
 
     /**
      * @brief Sets from where the data is read.
      * @param eDMAReadDirection direction of read.
      */
-    static void set_read_direction(DMAReadDirection_t eDMAReadDirection)
+    void set_read_direction(DMAReadDirection_t eDMAReadDirection)
     {
-        CCR::set_value(eDMAReadDirection, DMA_CCR_DIR_Pos);
+        CCR.set_value(eDMAReadDirection, DMA_CCR_DIR_Pos);
     }
 
     /**
@@ -144,33 +138,33 @@ public:
      *
      * @param DMAInterrupt interrupt to be enabled.
      */
-    static void enable_interrupt(DMAInterrupts_t DMAInterrupt)
+    void enable_interrupt(DMAInterrupts_t DMAInterrupt)
     {
-        CCR::set_bit(DMAInterrupt);
+        CCR.set_bit(DMAInterrupt);
     }
     /**
      * @brief Disables interrupt.
      *
      * @param DMAInterrupt interrupt to be disabled.
      */
-    static void disable_interrupt(DMAInterrupts_t DMAInterrupt)
+    void disable_interrupt(DMAInterrupts_t DMAInterrupt)
     {
-        CCR::clear_bit(DMAInterrupt);
+        CCR.clear_bit(DMAInterrupt);
     }
 
     /**
      * @brief Enables DMA channel.
      */
-    static void enable()
+    void enable()
     {
-        CCR::set_bit(DMA_CCR_EN_Pos);
+        CCR.set_bit(DMA_CCR_EN_Pos);
     }
     /**
      * @brief Disables DMA channel.
      */
-    static void disable()
+    void disable()
     {
-        CCR::clear_bit(DMA_CCR_EN_Pos);
+        CCR.clear_bit(DMA_CCR_EN_Pos);
     }
 
     /**
@@ -178,9 +172,9 @@ public:
      *
      * @param TransferSize number of transfer to be made.
      */
-    static void set_transfer_size(uint16_t TransferSize)
+    void set_transfer_size(uint16_t TransferSize)
     {
-        CNDTR::set_value(TransferSize, DMA_CNDTR_NDT_Pos, MEMORY_TRANSFER_SIZE_FIELD_BIT_LENGTH);
+        CNDTR.set_value(TransferSize, DMA_CNDTR_NDT_Pos, MEMORY_TRANSFER_SIZE_FIELD_BIT_LENGTH);
     }
 
     /**
@@ -188,9 +182,9 @@ public:
      *
      * @param PeripheralAddress peripheral address.
      */
-    static void set_periphearl_address(uint32_t PeripheralAddress)
+    void set_periphearl_address(uint32_t PeripheralAddress)
     {
-        CPAR::set_value(PeripheralAddress, DMA_CPAR_PA_Pos, PERIPHERAL_ADDRESS_FIELD_BIT_LENGTH);
+        CPAR.set_value(PeripheralAddress, DMA_CPAR_PA_Pos, PERIPHERAL_ADDRESS_FIELD_BIT_LENGTH);
     }
 
     /**
@@ -198,9 +192,9 @@ public:
      *
      * @param MemoryAddress memory address.
      */
-    static void set_memory_address(uint32_t MemoryAddress)
+    void set_memory_address(uint32_t MemoryAddress)
     {
-        CMAR::set_value(MemoryAddress, DMA_CMAR_MA_Pos, MEMORY_ADDRESS_FIELD_BIT_LENGTH);
+        CMAR.set_value(MemoryAddress, DMA_CMAR_MA_Pos, MEMORY_ADDRESS_FIELD_BIT_LENGTH);
     }
 
     /**
@@ -208,9 +202,9 @@ public:
      *
      * @param DMARequest DMA request to be enabled.
      */
-    static void set_request(DMARequest_t DMARequest)
+    void set_request(DMARequest_t DMARequest)
     {
-        CMAR::set_value(DMARequest, DMA_CMAR_MA_Pos, MEMORY_ADDRESS_FIELD_BIT_LENGTH);
+        CMAR.set_value(DMARequest, DMA_CMAR_MA_Pos, MEMORY_ADDRESS_FIELD_BIT_LENGTH);
     }
 
     /**
@@ -219,44 +213,41 @@ public:
      * @param callback function to be called when interrupt is received.
      * @return return the callback function.
      */
-    static std::function<void()> set_transfer_complete_callback(std::function<void()> callback = nullptr)  // TODO: make it possible to change the callback.
+    void set_transfer_complete_callback(std::function<void()> callback)  // TODO: make it possible to change the callback.
     {
-        static std::function<void()> callback_ = callback;
-        return callback_;
+        callback_ = std::move(callback);
     }
 
     /**
      * @brief function to be called to when interrupt is received. Has to be put to the IRQ handler!
      */
-    static void transfer_complete_callback(void)
+    void transfer_complete_callback(void)
     {
         disable();
-        (set_transfer_complete_callback())();
+        callback_();
         clear_transfer_complete_interrupt();
     }
 
+    DMA(DMA_TypeDef * dma, DMA_Channel_TypeDef * dmaChannel, const uint8_t channelNumber)
+    : IFCR(dma->IFCR), CCR(dmaChannel->CCR), CNDTR(dmaChannel->CNDTR), CPAR(dmaChannel->CPAR), CMAR(dmaChannel->CMAR), channelNumber_(channelNumber){};
+
 protected:
 private:
-    DMA(){};
-
-    static void clear_transfer_complete_interrupt()
+    void clear_transfer_complete_interrupt()
     {
-        IFCR::set_bit((CHANNEL_NUMBER - 1) * 4 + 1);  // TODO: Magic numbers
+        IFCR.set_bit((channelNumber_ - 1) * 4 + 1);  // TODO: Magic numbers
     }
 
-    constexpr volatile static uint32_t adrIFCR = (uint32_t)(&(((DMA_TypeDef *)DMA_ADDRESS)->IFCR));
+    Register IFCR;
 
-    constexpr volatile static uint32_t adrCCR = (uint32_t)(&(((DMA_Channel_TypeDef *)DMA_CHANNEL_ADDRESS)->CCR));
-    constexpr volatile static uint32_t adrCNDTR = (uint32_t)(&(((DMA_Channel_TypeDef *)DMA_CHANNEL_ADDRESS)->CNDTR));
-    constexpr volatile static uint32_t adrCPAR = (uint32_t)(&(((DMA_Channel_TypeDef *)DMA_CHANNEL_ADDRESS)->CPAR));
-    constexpr volatile static uint32_t adrCMAR = (uint32_t)(&(((DMA_Channel_TypeDef *)DMA_CHANNEL_ADDRESS)->CMAR));
+    Register CCR;
+    Register CNDTR;
+    Register CPAR;
+    Register CMAR;
 
-    typedef Register<adrIFCR> IFCR;
+    const uint8_t channelNumber_;
 
-    typedef Register<adrCCR> CCR;
-    typedef Register<adrCNDTR> CNDTR;
-    typedef Register<adrCPAR> CPAR;
-    typedef Register<adrCMAR> CMAR;
+    std::function<void()> callback_;
 };
 
 #endif /* HAL_DMA_DMA_HPP_ */
