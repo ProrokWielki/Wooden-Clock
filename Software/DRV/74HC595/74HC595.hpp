@@ -12,80 +12,75 @@
 
 #include "HAL.hpp"
 
-template<typename DATA_IN_PIN, typename REGISTER_CLOCK_PIN, typename STORAGE_CLOCK_PIN, typename OUTPUT_ENABLE_PIN, typename CLEAR_PIN, uint8_t BIT_LENGTH>
 class SR_74HC595
 {
 public:
-    static void init()
+    SR_74HC595(GPIO & dataInPin, GPIO & registerClockPin, GPIO & storageClockPin, GPIO & outputEnablePin, GPIO & clearPin)
+    : dataInPin_(dataInPin), registerClockPin_(registerClockPin), storageClockPin_(storageClockPin), outputEnablePin_(outputEnablePin), clearPin_(clearPin)
     {
-        DATA_IN_PIN::set_mode(eOutput);
-        DATA_IN_PIN::set_speed(eVeryHighSpeed);
+    }
 
-        REGISTER_CLOCK_PIN::set_mode(eOutput);
-        REGISTER_CLOCK_PIN::set_speed(eVeryHighSpeed);
+    void init()
+    {
+        dataInPin_.set_mode(eOutput);
+        dataInPin_.set_speed(eVeryHighSpeed);
 
-        STORAGE_CLOCK_PIN::set_mode(eOutput);
-        STORAGE_CLOCK_PIN::set_speed(eVeryHighSpeed);
+        registerClockPin_.set_mode(eOutput);
+        registerClockPin_.set_speed(eVeryHighSpeed);
 
-        OUTPUT_ENABLE_PIN::set_mode(eOutput);
-        OUTPUT_ENABLE_PIN::set_speed(eVeryHighSpeed);
+        storageClockPin_.set_mode(eOutput);
+        storageClockPin_.set_speed(eVeryHighSpeed);
 
-        CLEAR_PIN::set_mode(eOutput);
-        CLEAR_PIN::set_speed(eVeryHighSpeed);
+        outputEnablePin_.set_mode(eOutput);
+        outputEnablePin_.set_speed(eVeryHighSpeed);
+
+        clearPin_.set_mode(eOutput);
+        clearPin_.set_speed(eVeryHighSpeed);
 
         output_enable(false);
         clear();
     }
 
-    static void clear(void)
+    void clear(void)
     {
-        CLEAR_PIN::set_output_low();
+        clearPin_.set_output_low();
         asm("nop");
-        CLEAR_PIN::set_output_high();
+        clearPin_.set_output_high();
     }
 
-    static void output_enable(bool enable)
+    void output_enable(bool enable)
     {
-        SignalLevel_t outputValue = enable ? eLow : eHigh;
 
-        OUTPUT_ENABLE_PIN::set_output_value(outputValue);
+        outputEnablePin_.set_output_value(enable ? eLow : eHigh);
     }
 
-    static void shift_bit(SignalLevel_t bitValue)
+    void shift_bit(SignalLevel_t bitValue)
     {
-        DATA_IN_PIN::set_output_value(bitValue);
+        dataInPin_.set_output_value(bitValue);
         store_input();
         show();
     }
 
-    static void set_all_outputs_value(SignalLevel_t outputsValue)
-    {
-        for (uint8_t i = 0; i < BIT_LENGTH; i++)
-        {
-            DATA_IN_PIN::set_output_value(outputsValue);
-            store_input();
-        }
-        show();
-    }
-
 private:
-    SR_74HC595()
+    void store_input()
     {
+        registerClockPin_.set_output_low();
+        asm("nop");
+        registerClockPin_.set_output_high();
     }
 
-    static void store_input()
+    void show()
     {
-        REGISTER_CLOCK_PIN::set_output_low();
+        storageClockPin_.set_output_low();
         asm("nop");
-        REGISTER_CLOCK_PIN::set_output_high();
+        storageClockPin_.set_output_high();
     }
 
-    static void show()
-    {
-        STORAGE_CLOCK_PIN::set_output_low();
-        asm("nop");
-        STORAGE_CLOCK_PIN::set_output_high();
-    }
+    GPIO dataInPin_;
+    GPIO registerClockPin_;
+    GPIO storageClockPin_;
+    GPIO outputEnablePin_;
+    GPIO clearPin_;
 };
 
 #endif /* DRV_74HC595_74HC595_HPP_ */
