@@ -44,21 +44,21 @@ steps:
     source_directories:
       - ../../APP
 
-    search_subdirectories: False
+    search_subdirectories: True
 
     output_direcotry: ../../Output/Obj/APP
 
     types:
       - .cpp
 
-  - compile Assets:
-    source_directories:
-      - ../../App/Assets
+  # - compile Assets:
+  #   source_directories:
+  #     - ../../App/Assets
 
-    output_direcotry: ../../Output/Obj/App/Assets
+  #   output_direcotry: ../../Output/Obj/App/Assets
 
-    types:
-      - .cpp
+  #   types:
+  #     - .cpp
 
   - compile Main:
     source_directories: 
