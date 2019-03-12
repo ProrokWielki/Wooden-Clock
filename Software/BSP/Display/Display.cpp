@@ -34,7 +34,6 @@ void Display::set_dispaly_redrawn_callback(std::function<void()> callback)
 
 void Display::draw_next_line(void)
 {
-    __disable_irq();
     if (true == is_line_drawn())
     {
         for (uint8_t i = 0; i < 4; i++)
@@ -49,7 +48,6 @@ void Display::draw_next_line(void)
         HAL::TLC59208F_3.set_all_leds_values(&(displayFrameBuffer[32 * currentLine_ + 16]));
         HAL::TLC59208F_4.set_all_leds_values(&(displayFrameBuffer[32 * currentLine_ + 24]));
     }
-    __enable_irq();
 }
 
 bool Display::is_line_drawn()
