@@ -10,6 +10,7 @@
 
 #include "Button/Button.hpp"
 #include "Display/Display.hpp"
+#include "Magnetometer/Magnetometer.hpp"
 
 class BSP
 {

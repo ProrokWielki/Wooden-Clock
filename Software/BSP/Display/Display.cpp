@@ -34,8 +34,15 @@ void Display::set_dispaly_redrawn_callback(std::function<void()> callback)
 
 void Display::draw_next_line(void)
 {
+
     if (true == is_line_drawn())
     {
+
+        if (0 == currentLine_)
+        {
+            display_redrawn_callback();
+        }
+
         for (uint8_t i = 0; i < 4; i++)
         {
             transferComplete[i] = false;
@@ -71,10 +78,5 @@ void Display::transfer_complete(const uint8_t transferNumber)
 
         currentLine_++;
         currentLine_ %= 32;
-
-        if (0 == currentLine_)
-        {
-            //        display_redrawn_callback();
-        }
     }
 }

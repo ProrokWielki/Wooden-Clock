@@ -14,3 +14,4 @@ StateMachine DataContainer::stateMachine(&Hourglass);
 StateMario DataContainer::Mario;
 StateArrows DataContainer::Arrows;
 StateHourglass DataContainer::Hourglass;
+StateNorth DataContainer::North(HAL::LSM9DS1_1);

@@ -46,5 +46,9 @@ void TIM2_IRQHandler(void)
     BSP::display.draw_next_line();
 }
 
+void Dispaly_Redrawn(void)
+{
+}
+
 }  // namespace ISR
 }  // namespace ISR

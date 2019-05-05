@@ -74,6 +74,42 @@ public:
         u32Register &= ~(1U << u8Position);
     }
 
+    /**
+     * @brief Writes data to register
+     * @param value: value to be writen to register
+     */
+    void write(uint32_t value)
+    {
+        *reinterpret_cast<volatile uint32_t *>(&u32Register) = value;
+    }
+
+    /**
+     * @brief Writes data to register
+     * @param value: value to be writen to register
+     */
+    void write(uint16_t value)
+    {
+        *reinterpret_cast<volatile uint16_t *>(&u32Register) = value;
+    }
+
+    /**
+     * @brief Writes data to register
+     * @param value: value to be writen to register
+     */
+    void write(uint8_t value)
+    {
+        *reinterpret_cast<volatile uint8_t *>(&u32Register) = value;
+    }
+
+    /**
+     * @brief Reads data from the register.
+     * @return Register value.
+     */
+    uint32_t read(void)
+    {
+        return u32Register;
+    }
+
     /// Constructor.
     explicit Register(volatile uint32_t & registerValue) : u32Register(registerValue)
     {

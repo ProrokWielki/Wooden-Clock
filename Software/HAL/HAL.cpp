@@ -11,35 +11,56 @@
 
 GPIO HAL::I2C1_SCL(GPIOA, 9);
 GPIO HAL::I2C1_SDA(GPIOA, 10);
-GPIO HAL::I2C4_SCL(GPIOB, 6);
-GPIO HAL::I2C4_SDA(GPIOB, 7);
+
 GPIO HAL::I2C2_SCL(GPIOB, 10);
 GPIO HAL::I2C2_SDA(GPIOB, 11);
+
 GPIO HAL::I2C3_SCL(GPIOC, 0);
 GPIO HAL::I2C3_SDA(GPIOC, 1);
+
+GPIO HAL::I2C4_SCL(GPIOB, 6);
+GPIO HAL::I2C4_SDA(GPIOB, 7);
+
+GPIO HAL::SPI1_MISO(GPIOA, 6);
+GPIO HAL::SPI1_MOSI(GPIOA, 7);
+GPIO HAL::SPI1_SCK(GPIOA, 1);
+GPIO HAL::SPI1_CS1(GPIOA, 4);
+GPIO HAL::SPI1_CS2(GPIOB, 1);
+
 GPIO HAL::TLC_RESET(GPIOC, 6);
+
 GPIO HAL::SR_DATAIN(GPIOC, 7);
 GPIO HAL::SR_RCLOCK(GPIOC, 8);
 GPIO HAL::SR_SCLOCK(GPIOC, 9);
 GPIO HAL::SR_OE(GPIOB, 14);
 GPIO HAL::SR_CLEAR(GPIOB, 15);
+
 GPIO HAL::BUTTON(GPIOA, 2);
 GPIO HAL::BUTTON2(GPIOA, 3);
 GPIO HAL::BUTTON3(GPIOC, 4);
 GPIO HAL::BUTTON4(GPIOA, 12);
+
 DMA HAL::DMA1_2(DMA1, DMA1_Channel2, 2);
 DMA HAL::DMA1_4(DMA1, DMA1_Channel4, 4);
 DMA HAL::DMA2_2(DMA2, DMA2_Channel2, 2);
 DMA HAL::DMA2_7(DMA2, DMA2_Channel7, 7);
+
 I2C HAL::I2C_1(I2C1, &DMA2_7);
 I2C HAL::I2C_2(I2C2, &DMA1_4);
 I2C HAL::I2C_3(I2C3, &DMA1_2);
 I2C HAL::I2C_4(I2C4, &DMA2_2);
-TLC59208F HAL::TLC59208F_4(I2C_4, 0x46, TLC_RESET);
+
+SPI HAL::SPI_1(SPI1);
+
 SR_74HC595 HAL::SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR);
+
+TLC59208F HAL::TLC59208F_4(I2C_4, 0x46, TLC_RESET);
 TLC59208F HAL::TLC59208F_3(I2C_3, 0x44, TLC_RESET);
 TLC59208F HAL::TLC59208F_2(I2C_2, 0x42, TLC_RESET);
 TLC59208F HAL::TLC59208F_1(I2C_1, 0x40, TLC_RESET);
+
+LSM9DS1 HAL::LSM9DS1_1(SPI_1, SPI1_CS1, SPI1_CS2);
+
 Timer HAL::Timer2(TIM2);
 
 void HAL::init()
@@ -51,9 +72,11 @@ void HAL::init()
     GPIO_Init();
     DMA_init();
     I2C_init();
+    SPI_init();
 
     TLC59208F_init();
     SR_74HC595_init();
+    LSM9DS1_init();
 
     DMA2_CSELR->CSELR |= (5 << 24);
     DMA1_CSELR->CSELR |= ((3 << 12) | (3 << 4));
@@ -126,6 +149,13 @@ void HAL::I2C_init(void)
     I2C_4.enable();
 }
 
+void HAL::SPI_init(void)
+{
+    RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+
+    SPI_1.configure(SPIMode::master, SPIDataSize::_8bits, SPIPolarity::idle_high, SPIPhase::data_on_second_edge, SPIForamt::MSB_first);
+}
+
 void HAL::GPIO_Init(void)
 {
     /* Clock enable */
@@ -133,30 +163,29 @@ void HAL::GPIO_Init(void)
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;  // Enable clock for GPIOB
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN;  // Enable clock for GPIOC
 
-    /* Set I2C Pins */
-
-    /* I2C1 SCL PA9 */
     I2C1_SCL.set_as_I2C_pin(eAF4);
-
-    /* I2C1 SDA PA10 */
     I2C1_SDA.set_as_I2C_pin(eAF4);
 
-    /* I2C2 SCL PB10 */
     I2C2_SCL.set_as_I2C_pin(eAF4);
-
-    /* I2C2 SDA PB11 */
     I2C2_SDA.set_as_I2C_pin(eAF4);
-    /* I2C3 SCL PC0 */
-    I2C3_SCL.set_as_I2C_pin(eAF4);
 
-    /* I2C3 SDA PC1 */
+    I2C3_SCL.set_as_I2C_pin(eAF4);
     I2C3_SDA.set_as_I2C_pin(eAF4);
 
-    /* I2C4 SCL PB6 */
     I2C4_SCL.set_as_I2C_pin(eAF5);
-
-    /* I2C4 SDA PB7 */
     I2C4_SDA.set_as_I2C_pin(eAF5);
+
+    SPI1_MISO.set_as_SPI_pin(eAF5);
+    SPI1_MOSI.set_as_SPI_pin(eAF5);
+    SPI1_SCK.set_as_SPI_pin(eAF5);
+
+    SPI1_CS1.set_mode(eOutput);
+    SPI1_CS1.set_output_type(ePushPull);
+    SPI1_CS1.set_pullUp_pullDown(eNone);
+
+    SPI1_CS2.set_mode(eOutput);
+    SPI1_CS2.set_output_type(ePushPull);
+    SPI1_CS2.set_pullUp_pullDown(eNone);
 
     BUTTON.set_mode(eInput);
     BUTTON.set_pullUp_pullDown(eNone);
@@ -220,4 +249,14 @@ void HAL::SR_74HC595_init(void)
     SR_74HC595_1.init();
     for (uint8_t i = 0; i < 32; i++)
         SR_74HC595_1.shift_bit(eHigh);
+}
+
+void HAL::LSM9DS1_init()
+{
+    LSM9DS1_1.init();
+
+    LSM9DS1_1.set_data_rate(MagnetometerDataRate::Hz_80);
+    LSM9DS1_1.set_XY_operation_mode(MagnetometerXYOperationMode::ultra_perforamnce);
+    LSM9DS1_1.set_full_scale(MagnetometerFullScale::Gs_16);
+    LSM9DS1_1.set_operation_mode(MagnetometerOperationMode::continuous_conversion);
 }

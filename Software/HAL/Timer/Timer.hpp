@@ -26,7 +26,7 @@ public:
      *
      * @param timer pointer to timer structure.
      */
-    Timer(volatile TIM_TypeDef * timer) : ARR(timer->ARR), PSC(timer->PSC), CR1(timer->CR1)
+    explicit Timer(volatile TIM_TypeDef * timer) : ARR(timer->ARR), PSC(timer->PSC), CR1(timer->CR1)
     {
     }
 

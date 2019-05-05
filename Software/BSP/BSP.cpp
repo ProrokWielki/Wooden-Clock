@@ -8,6 +8,11 @@
 #include "BSP.hpp"
 #include "HAL.hpp"
 
+namespace ISR
+{
+extern "C" void Dispaly_Redrawn(void);
+}
+
 Display BSP::display(32, 32, nullptr);
 
 Button BSP::buton1(HAL::BUTTON, eHigh);
@@ -18,4 +23,5 @@ Button BSP::buton4(HAL::BUTTON4, eHigh);
 void BSP::init()
 {
     display.init();
+    display.set_dispaly_redrawn_callback(ISR::Dispaly_Redrawn);
 }

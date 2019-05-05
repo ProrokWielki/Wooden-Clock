@@ -129,6 +129,15 @@ public:
         set_speed(eVeryHighSpeed);
     }
 
+    void set_as_SPI_pin(AlteranteFunction_t u8AlternateFunction)
+    {
+        set_alternate_function(u8AlternateFunction);
+        set_mode(eAlternate);
+        set_output_type(ePushPull);
+        set_pullUp_pullDown(eNone);
+        set_speed(eVeryHighSpeed);
+    }
+
     GPIO(GPIO_TypeDef * gpio, const uint8_t pinNumber)
     : MODER(gpio->MODER), OTYPER(gpio->OTYPER), OSPEEDR(gpio->OSPEEDR), PUPDR(gpio->PUPDR), AFRL(gpio->AFR[0]), AFRH(gpio->AFR[1]), BSRR(gpio->BSRR),
       BRR(gpio->BRR), ODR(gpio->ODR), IDR(gpio->IDR), pinNumber_(pinNumber){};

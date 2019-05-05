@@ -46,7 +46,6 @@
 
 void APP_init()
 {
-
     xTaskCreate(display_task, "dispaly_task", 2048, NULL, 2, NULL);
 
     vTaskStartScheduler();

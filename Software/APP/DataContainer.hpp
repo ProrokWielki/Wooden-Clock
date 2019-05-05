@@ -13,6 +13,7 @@
 #include "StateMachine/States/StateArrows.hpp"
 #include "StateMachine/States/StateHourglass.hpp"
 #include "StateMachine/States/StateMario.hpp"
+#include "StateMachine/States/StateNorth.hpp"
 
 class DataContainer
 {
@@ -22,6 +23,7 @@ public:
     static StateMario Mario;
     static StateArrows Arrows;
     static StateHourglass Hourglass;
+    static StateNorth North;
 };
 
 #endif /* APP_DATACONTAINER_HPP_ */
