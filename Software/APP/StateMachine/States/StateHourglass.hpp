@@ -17,6 +17,9 @@
 class StateHourglass: public State
 {
 public:
+    /**
+     * @brief Constructor
+     */
     StateHourglass()
     : frames{frame_1,  frame_2,  frame_3,  frame_4,  frame_5,  frame_6,  frame_7,  frame_8,  frame_9,  frame_10, frame_11,
              frame_12, frame_13, frame_14, frame_15, frame_16, frame_17, frame_18, frame_19, frame_20, frame_21}
@@ -24,6 +27,9 @@ public:
     {
     }
 
+    /**
+     * @brief Execution of the State action.
+     */
     virtual void execute() override
     {
         static uint8_t currentFrame = 0;

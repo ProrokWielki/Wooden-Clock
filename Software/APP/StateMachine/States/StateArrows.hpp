@@ -16,17 +16,23 @@
 class StateArrows: public State
 {
 public:
+    /**
+     * @brief Constructor.
+     */
     StateArrows() : frames{Arrows1, Arrows2}
     {
     }
 
+    /**
+     * @brief Execution of the State action.
+     */
     virtual void execute() override
     {
         static uint8_t currentFrame = 0;
 
-        BSP::display.set_frame_buffer(frames[currentFrame++]);
+        BSP::display.set_frame_buffer(frames[currentFrame++ > 10 ? 0 : 1]);
 
-        currentFrame %= 2;
+        currentFrame %= 20;
     }
 
 private:
