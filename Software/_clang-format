@@ -8,6 +8,7 @@ BraceWrapping:
  AfterClass: true
  AfterControlStatement: true
  BeforeElse: true
+ AfterEnum: true
 
 AccessModifierOffset: -4 
 AlignTrailingComments: true 
