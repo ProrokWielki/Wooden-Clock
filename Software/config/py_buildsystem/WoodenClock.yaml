@@ -51,6 +51,17 @@ steps:
     types:
       - .cpp
 
+  - compile DRV:
+    source_directories:
+      - ../../DRV
+
+    search_subdirectories: True
+
+    output_direcotry: ../../Output/Obj/DRV
+
+    types:
+      - .cpp
+
   # - compile Assets:
   #   source_directories:
   #     - ../../App/Assets
