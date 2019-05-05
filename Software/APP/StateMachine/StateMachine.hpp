@@ -14,12 +14,19 @@
 #include "BSP.hpp"
 #include "State.hpp"
 
-enum signal { BUTTON1, BUTTON2, BUTTON3, BUTTON4, NONE };
+enum signal
+{
+    BUTTON1,
+    BUTTON2,
+    BUTTON3,
+    BUTTON4,
+    NONE
+};
 
 class StateMachine
 {
 public:
-    StateMachine(State * startState);
+    explicit StateMachine(State * startState);
 
     void update(void)
     {

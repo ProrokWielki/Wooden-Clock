@@ -12,5 +12,6 @@ StateMachine::StateMachine(State * startState) : currentState_(startState)
 {
     TransitionMatrix_ = {{{&(DataContainer::Arrows), BUTTON1}, &(DataContainer::Mario)},
                          {{&(DataContainer::Mario), BUTTON1}, &(DataContainer::Hourglass)},
-                         {{&(DataContainer::Hourglass), BUTTON1}, &(DataContainer::Arrows)}};
+                         {{&(DataContainer::Hourglass), BUTTON1}, &(DataContainer::North)},
+                         {{&(DataContainer::North), BUTTON1}, &(DataContainer::Arrows)}};
 }
