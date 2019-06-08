@@ -8,10 +8,8 @@
 #include "StateMachine.hpp"
 #include "DataContainer.hpp"
 
-StateMachine::StateMachine(State * startState) : currentState_(startState)
+#include "StateMachine.hpp"
+
+StateMachine::StateMachine(TransitionMatrix transitionMatrix, State * startState) : transitionMatrix_(transitionMatrix), currentState_(startState)
 {
-    TransitionMatrix_ = {{{&(DataContainer::Arrows), BUTTON1}, &(DataContainer::Mario)},
-                         {{&(DataContainer::Mario), BUTTON1}, &(DataContainer::Hourglass)},
-                         {{&(DataContainer::Hourglass), BUTTON1}, &(DataContainer::North)},
-                         {{&(DataContainer::North), BUTTON1}, &(DataContainer::Arrows)}};
 }

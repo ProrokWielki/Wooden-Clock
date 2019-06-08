@@ -26,6 +26,15 @@
         BSP::buton3.update();
         BSP::buton4.update();
 
+        if (BSP::buton1.wasPressed())
+            DataContainer::stateMachine.signal_callback(Signal::BUTTON1);
+        if (BSP::buton2.wasPressed())
+            DataContainer::stateMachine.signal_callback(Signal::BUTTON2);
+        if (BSP::buton3.wasPressed())
+            DataContainer::stateMachine.signal_callback(Signal::BUTTON3);
+        if (BSP::buton4.wasPressed())
+            DataContainer::stateMachine.signal_callback(Signal::BUTTON4);
+
         DataContainer::stateMachine.update();
         vTaskDelay(xDelay);
     }

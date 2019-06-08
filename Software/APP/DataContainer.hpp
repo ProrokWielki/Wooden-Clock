@@ -15,6 +15,14 @@
 #include "StateMachine/States/StateMario.hpp"
 #include "StateMachine/States/StateNorth.hpp"
 
+enum class Signal
+{
+    BUTTON1,
+    BUTTON2,
+    BUTTON3,
+    BUTTON4
+};
+
 class DataContainer
 {
 public:

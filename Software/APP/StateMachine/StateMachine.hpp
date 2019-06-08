@@ -14,46 +14,52 @@
 #include "BSP.hpp"
 #include "State.hpp"
 
-enum signal
-{
-    BUTTON1,
-    BUTTON2,
-    BUTTON3,
-    BUTTON4,
-    NONE
-};
+enum class Signal;
+
+typedef std::map<std::pair<State *, Signal>, State *> TransitionMatrix;
 
 class StateMachine
 {
 public:
-    explicit StateMachine(State * startState);
+    explicit StateMachine(TransitionMatrix transitionMatrix, State * startState);
 
     void update(void)
     {
-        if (BSP::buton1.wasReleased())
+        if (updateNedded)
         {
-            recieved_ = BUTTON1;
-        }
-
-        if (recieved_ != NONE)
-        {
-            currentState_ = transiton(currentState_, recieved_);
-            recieved_ = NONE;
+            currentState_ = transiton(recieved_);
+            updateNedded = false;
         }
         currentState_->execute();
     }
 
-private:
-    typedef std::pair<State *, signal> Input;
-
-    std::map<Input, State *> TransitionMatrix_;
-
-    State * transiton(State * current, signal signal)
+    void signal_callback(const Signal & signal)
     {
-        return TransitionMatrix_.at(std::make_pair(current, signal));
+        recieved_ = signal;
+        updateNedded = true;
     }
 
-    signal recieved_{NONE};
+private:
+    TransitionMatrix transitionMatrix_;
+
+    State * transiton(Signal signal)
+    {
+
+        State * state_to_retrun;
+        try
+        {
+            state_to_retrun = transitionMatrix_.at(std::make_pair(currentState_, signal));
+        } catch (...)
+        {
+            state_to_retrun = currentState_;
+        }
+
+        return state_to_retrun;
+    }
+
+    Signal recieved_{};
+
+    bool updateNedded{false};
 
     State * currentState_;
 };
