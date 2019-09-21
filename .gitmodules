@@ -1,0 +1,3 @@
+[submodule "Software/LIB/EmbedGUI"]
+	path = Software/LIB/EmbedGUI
+	url = https://github.com/ProrokWielki/EmbedGUI.git
