@@ -1,0 +1,8 @@
+Config:
+  output: ../../APP/Assets/Text
+Defaults:
+  size: 13
+  font: Zachery.otf
+Texts:
+  - id: hour_13_57
+    text: "13:57"
