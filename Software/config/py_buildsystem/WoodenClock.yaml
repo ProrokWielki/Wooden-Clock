@@ -5,6 +5,7 @@ includes:
   - ../../LIB/CMSIS/Device/ST/STM32L4xx/Include
   - ../../LIB/CMSIS/Include
   - ../../LIB/FreeRTOS/Source/include
+  - ../../LIB/EmbedGUI
   - ../../LIB/FreeRTOS/Source/portable/GCC/ARM_CM3
   - ../../HAL
   - ../../DRV
@@ -47,6 +48,17 @@ steps:
     search_subdirectories: True
 
     output_direcotry: ../../Output/Obj/APP
+
+    types:
+      - .cpp
+
+  - compile EmbedGUI:
+    source_directories:
+      - ../../LIB/EmbedGUI
+
+    search_subdirectories: True
+
+    output_direcotry: ../../Output/Obj/LIB/EmbedGUI
 
     types:
       - .cpp
