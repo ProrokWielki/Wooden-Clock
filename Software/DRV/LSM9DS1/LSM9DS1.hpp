@@ -23,6 +23,17 @@ public:
     {
         gyro_cs_.set_output_high();
         magneto_cs_.set_output_high();
+        // TODO: make it better
+        write_register(GyroscopeRegister::CTRL_REG1, 0b11011011);
+    }
+
+    uint8_t get_who_am_i_m()
+    {
+        return static_cast<uint8_t>(read_register(MagnetometerRegister::WHO_AM_I));
+    }
+    uint8_t get_who_am_i_g()
+    {
+        return static_cast<uint8_t>(read_register(GyroscopeRegister::WHO_AM_I));
     }
 
     void set_operation_mode(MagnetometerOperationMode operation_mode)

@@ -24,6 +24,9 @@ enum class Axis
 enum class GyroscopeRegister : uint8_t
 {
     CTRL_REG1 = 0x10,
+    CTRL_REG4 = 0x1E,
+
+    WHO_AM_I = 0x0F,
 
     OUT_X_G_L = 0x18,
     OUT_X_G_H = 0x19,
@@ -39,6 +42,8 @@ enum class MagnetometerRegister : uint8_t
     CTRL_REG1 = 0x20,
     CTRL_REG2 = 0x21,
     CTRL_REG3 = 0x22,
+
+    WHO_AM_I = 0x0F,
 
     OUT_X_L_M = 0x28,
     OUT_X_H_M = 0x29,
