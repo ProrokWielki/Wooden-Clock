@@ -16,6 +16,7 @@
 #include "Timer/Timer.hpp"
 
 #include "74HC595/74HC595.hpp"
+#include "BME280/BME280.hpp"
 #include "LSM9DS1/LSM9DS1.hpp"
 #include "TLC59208F/TLC59208F.hpp"
 
@@ -41,6 +42,20 @@ public:
     static GPIO SPI1_SCK;
     static GPIO SPI1_CS1;
     static GPIO SPI1_CS2;
+    static GPIO SPI1_CS3;
+
+    static GPIO QSPI_IO0;
+    static GPIO QSPI_IO1;
+    static GPIO QSPI_IO2;
+    static GPIO QSPI_IO3;
+    static GPIO QSPI_CLK;
+    static GPIO QSPI_CS;
+
+    static GPIO UART3_TX;
+    static GPIO UART3_RX;
+
+    static GPIO UART4_TX;
+    static GPIO UART4_RX;
 
     static GPIO TLC_RESET;
 
@@ -76,9 +91,12 @@ public:
 
     static LSM9DS1 LSM9DS1_1;
 
+    static BME280 BME280_1;
+
     static Timer Timer2;
 
     static void clock_init(void);
+    static void QSPI_init(void);
     static void I2C_init(void);
     static void SPI_init(void);
     static void GPIO_Init(void);
@@ -90,6 +108,11 @@ public:
     static void LSM9DS1_init();
 
     static void init(void);
+
+    static bool up;
+    static bool down;
+    static bool left;
+    static bool right;
 
 private:
     HAL() = delete;

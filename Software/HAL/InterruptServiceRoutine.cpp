@@ -33,6 +33,26 @@ void DMA2_Channel2_IRQHandler(void)
 {
     HAL::DMA2_2.transfer_complete_callback();
 }
+void USART3_IRQHandler(void)
+{
+    uint8_t a = USART3->RDR;
+    switch (a)
+    {
+        case 'u':
+            HAL::up = true;
+            break;
+        case 'd':
+            HAL::down = true;
+            break;
+        case 'l':
+            HAL::left = true;
+            break;
+        case 'r':
+            HAL::right = true;
+            break;
+    }
+    USART3->ICR |= (1 << 3);
+}
 
 void SysTick_Handler(void)
 {
