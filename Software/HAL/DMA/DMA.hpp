@@ -211,11 +211,20 @@ public:
      * @brief Sets callback function to be called when interrupt is received. Can be set only once!
      *
      * @param callback function to be called when interrupt is received.
-     * @return return the callback function.
      */
     void set_transfer_complete_callback(std::function<void()> callback)  // TODO: make it possible to change the callback.
     {
-        callback_ = std::move(callback);
+        complete_transfer_callback_ = std::move(callback);
+    }
+
+    /**
+     * @brief Sets callback function to be called when interrupt is received. Can be set only once!
+     *
+     * @param callback function to be called when interrupt is received.
+     */
+    void set_half_transfer_callback(std::function<void()> callback)  // TODO: make it possible to change the callback.
+    {
+        half_transfer_callback_ = std::move(callback);
     }
 
     /**
@@ -224,12 +233,32 @@ public:
     void transfer_complete_callback(void)
     {
         disable();
-        callback_();
+        complete_transfer_callback_();
         clear_transfer_complete_interrupt();
     }
 
+    /**
+     * @brief function to be called to when interrupt is received. Has to be put to the IRQ handler!
+     */
+    void half_transfer_callback(void)
+    {
+        disable();
+        half_transfer_callback_();
+        clear_half_transfer_interrupt();
+    }
+
+    bool is_half_transfer_interrupt()
+    {
+        return ISR.read() & (1 << ((channelNumber_ - 1) * 4 + 2));
+    }
+    bool is_transfer_complete_interrupt()
+    {
+        return ISR.read() & (1 << ((channelNumber_ - 1) * 4 + 1));
+    }
+
     DMA(DMA_TypeDef * dma, DMA_Channel_TypeDef * dmaChannel, const uint8_t channelNumber)
-    : IFCR(dma->IFCR), CCR(dmaChannel->CCR), CNDTR(dmaChannel->CNDTR), CPAR(dmaChannel->CPAR), CMAR(dmaChannel->CMAR), channelNumber_(channelNumber){};
+    : IFCR(dma->IFCR), ISR(dma->ISR), CCR(dmaChannel->CCR), CNDTR(dmaChannel->CNDTR), CPAR(dmaChannel->CPAR), CMAR(dmaChannel->CMAR),
+      channelNumber_(channelNumber){};
 
 protected:
 private:
@@ -238,7 +267,13 @@ private:
         IFCR.set_bit((channelNumber_ - 1) * 4 + 1);  // TODO: Magic numbers
     }
 
+    void clear_half_transfer_interrupt()
+    {
+        IFCR.set_bit((channelNumber_ - 1) * 4 + 2);  // TODO: Magic numbers
+    }
+
     Register IFCR;
+    Register ISR;
 
     Register CCR;
     Register CNDTR;
@@ -247,7 +282,8 @@ private:
 
     const uint8_t channelNumber_;
 
-    std::function<void()> callback_;
+    std::function<void()> complete_transfer_callback_;
+    std::function<void()> half_transfer_callback_;
 };
 
 #endif /* HAL_DMA_DMA_HPP_ */
