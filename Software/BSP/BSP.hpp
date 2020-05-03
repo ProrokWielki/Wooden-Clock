@@ -14,7 +14,6 @@
 
 class BSP
 {
-
 public:
     static void init();
 

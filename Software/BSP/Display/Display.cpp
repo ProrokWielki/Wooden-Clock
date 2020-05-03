@@ -40,7 +40,8 @@ void Display::draw_next_line(void)
 
         if (0 == currentLine_)
         {
-            display_redrawn_callback();
+            if (display_redrawn_callback)
+                display_redrawn_callback();
         }
 
         for (uint8_t i = 0; i < 4; i++)
@@ -48,12 +49,19 @@ void Display::draw_next_line(void)
             transferComplete[i] = false;
         }
 
-        HAL::SR_74HC595_1.output_enable(false);
+        uint16_t current_line_offset = 32 * currentLine_;
 
-        HAL::TLC59208F_1.set_all_leds_values(&(displayFrameBuffer[32 * currentLine_ + 0]));
-        HAL::TLC59208F_2.set_all_leds_values(&(displayFrameBuffer[32 * currentLine_ + 8]));
-        HAL::TLC59208F_3.set_all_leds_values(&(displayFrameBuffer[32 * currentLine_ + 16]));
-        HAL::TLC59208F_4.set_all_leds_values(&(displayFrameBuffer[32 * currentLine_ + 24]));
+        HAL::TLC59208F_1.cashe_all_leds_values(&(displayFrameBuffer[current_line_offset + 0]));
+        HAL::TLC59208F_2.cashe_all_leds_values(&(displayFrameBuffer[current_line_offset + 8]));
+        HAL::TLC59208F_3.cashe_all_leds_values(&(displayFrameBuffer[current_line_offset + 16]));
+        HAL::TLC59208F_4.cashe_all_leds_values(&(displayFrameBuffer[current_line_offset + 24]));
+
+        HAL::TLC59208F_1.send_cashed_leds_values();
+        HAL::TLC59208F_2.send_cashed_leds_values();
+        HAL::TLC59208F_3.send_cashed_leds_values();
+        HAL::TLC59208F_4.send_cashed_leds_values();
+
+        HAL::SR_74HC595_1.output_enable(false);
     }
 }
 

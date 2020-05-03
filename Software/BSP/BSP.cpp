@@ -23,5 +23,4 @@ Button BSP::buton4(HAL::BUTTON4, eHigh);
 void BSP::init()
 {
     display.init();
-    display.set_dispaly_redrawn_callback(ISR::Dispaly_Redrawn);
 }
