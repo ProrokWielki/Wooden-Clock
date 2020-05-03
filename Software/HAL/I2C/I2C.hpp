@@ -252,7 +252,7 @@ private:
     }
     void stop_transfer()
     {
-        CR2.set_bit(I2C_CR2_START_Pos);
+        CR2.set_bit(I2C_CR2_STOP_Pos);
     }
 
     Register CR1;
