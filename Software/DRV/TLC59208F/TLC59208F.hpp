@@ -16,7 +16,8 @@
 class TLC59208F
 {
 public:
-    TLC59208F(I2C & i2c, const uint8_t deviceAddress, GPIO & resetPin) : i2c_(i2c), deviceAddress_(deviceAddress), resetPin_(resetPin), ledValues_{0x82}
+    TLC59208F(I2C & i2c, const uint8_t deviceAddress, GPIO & resetPin)
+    : i2c_(i2c), deviceAddress_(deviceAddress), resetPin_(resetPin), ledValues_{0x82}, cashedLedValues_{0x82}
     {
     }
 
@@ -58,10 +59,26 @@ public:
         i2c_.write_data_DMA(ledValues_, 9);
     }
 
+    void cashe_all_leds_values(uint8_t * allLedsValues)
+    {
+        memcpy(&(cashedLedValues_[1]), allLedsValues, 8 * sizeof(uint8_t));
+    }
+
+    void send_cashed_leds_values()
+    {
+        i2c_.write_data_DMA(cashedLedValues_, 9);
+    }
+
     void set_transfer_complete_callback(std::function<void()> callback)
     {
         i2c_.get_DMA()->set_transfer_complete_callback(std::move(callback));
         i2c_.get_DMA()->enable_interrupt(eTransferCompleted);
+    }
+
+    void set_half_transfer_callback(std::function<void()> callback)
+    {
+        i2c_.get_DMA()->set_half_transfer_callback(std::move(callback));
+        i2c_.get_DMA()->enable_interrupt(eHalfTransfer);
     }
 
 protected:
@@ -71,6 +88,7 @@ private:
     GPIO & resetPin_;
 
     uint8_t ledValues_[9];
+    uint8_t cashedLedValues_[9];
 };
 
 #endif /* DRV_TLC59208F_TLC59208F_HPP_ */
