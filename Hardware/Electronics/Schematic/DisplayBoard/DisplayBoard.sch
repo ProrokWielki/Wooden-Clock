@@ -1,9 +1,10 @@
 EESchema Schematic File Version 4
+LIBS:woodenClock-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 2 8
+Sheet 2 9
 Title "Wooden clock - display board"
 Date "2018-10-21"
 Rev "1.0.0"
@@ -1739,9 +1740,9 @@ F 3 "" H 9850 5600 50  0000 C CNN
 	1    9850 5600
 	-1   0    0    -1  
 $EndComp
-Text Label 9200 4900 2    50   ~ 0
+Text Label 9200 5500 2    50   ~ 0
 SDA4
-Text Label 9200 4800 2    50   ~ 0
+Text Label 9200 5400 2    50   ~ 0
 SCL4
 Text Label 7950 4350 0    60   ~ 0
 RESET
@@ -1751,21 +1752,21 @@ Text Label 7950 2150 0    60   ~ 0
 RESET
 Text Label 7950 1050 0    60   ~ 0
 RESET
-Text Label 7950 950  0    60   ~ 0
-SCL1
 Text Label 7950 2050 0    60   ~ 0
+SCL1
+Text Label 7950 4250 0    60   ~ 0
 SCL2
 Text Label 7950 3150 0    60   ~ 0
 SCL3
-Text Label 7950 4250 0    60   ~ 0
+Text Label 7950 950  0    60   ~ 0
 SCL4
-Text Label 7950 4150 0    60   ~ 0
+Text Label 7950 850  0    60   ~ 0
 SDA4
 Text Label 7950 3050 0    60   ~ 0
 SDA3
-Text Label 7950 1950 0    60   ~ 0
+Text Label 7950 4150 0    60   ~ 0
 SDA2
-Text Label 7950 850  0    60   ~ 0
+Text Label 7950 1950 0    60   ~ 0
 SDA1
 Text Label 1650 6050 3    60   ~ 0
 SIN
@@ -1872,15 +1873,15 @@ Entry Wire Line
 	8750 5000 8850 5100
 Entry Wire Line
 	8750 5100 8850 5200
-Text Label 9200 5500 2    50   ~ 0
-SDA1
 Text Label 9200 5300 2    50   ~ 0
+SDA1
+Text Label 9200 4900 2    50   ~ 0
 SDA2
 Text Label 9200 5100 2    50   ~ 0
 SDA3
-Text Label 9200 5400 2    50   ~ 0
-SCL1
 Text Label 9200 5200 2    50   ~ 0
+SCL1
+Text Label 9200 4800 2    50   ~ 0
 SCL2
 Text Label 9200 5000 2    50   ~ 0
 SCL3
@@ -1941,17 +1942,17 @@ Text HLabel 9900 5650 2    50   UnSpc ~ 0
 3V3
 Text HLabel 10200 4600 2    50   UnSpc ~ 0
 GND
-Text HLabel 8750 5400 0    50   BiDi ~ 0
-SDA1
-Text HLabel 8750 5300 0    50   Input ~ 0
-SCL1
 Text HLabel 8750 5200 0    50   BiDi ~ 0
+SDA1
+Text HLabel 8750 5100 0    50   Input ~ 0
+SCL1
+Text HLabel 8750 5400 0    50   BiDi ~ 0
 SDA2
 Text HLabel 8750 5000 0    50   BiDi ~ 0
 SDA3
 Text HLabel 8750 4800 0    50   BiDi ~ 0
 SDA4
-Text HLabel 8750 5100 0    50   Input ~ 0
+Text HLabel 8750 5300 0    50   Input ~ 0
 SCL2
 Text HLabel 8750 4900 0    50   Input ~ 0
 SCL3

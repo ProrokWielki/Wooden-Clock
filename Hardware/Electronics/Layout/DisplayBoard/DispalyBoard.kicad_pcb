@@ -18,7 +18,7 @@
   )
 
   (layers
-    (0 F.Cu signal)
+    (0 F.Cu signal hide)
     (31 B.Cu signal)
     (32 B.Adhes user)
     (33 F.Adhes user)
@@ -553,8 +553,8 @@
       (net 49 /R24))
     (pad 12 thru_hole circle (at 10.16 10.16) (size 1.524 1.524) (drill 0.762) (layers *.Cu *.Mask)
       (net 50 /R29))
-    (model "D:/Moje/Projects/Biblioteki KiCad/LM1616.step"
-      (offset (xyz 0 0 3.5))
+    (model "D:/Programy/Biblioteki KiCad/LM1616.step"
+      (offset (xyz 0 0 1))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -637,8 +637,8 @@
       (net 33 /R8))
     (pad 12 thru_hole circle (at 10.16 10.16) (size 1.524 1.524) (drill 0.762) (layers *.Cu *.Mask)
       (net 34 /R13))
-    (model "D:/Moje/Projects/Biblioteki KiCad/LM1616.step"
-      (offset (xyz 0 0 3.5))
+    (model "D:/Programy/Biblioteki KiCad/LM1616.step"
+      (offset (xyz 0 0 1))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -721,8 +721,8 @@
       (net 33 /R8))
     (pad 12 thru_hole circle (at 10.16 10.16) (size 1.524 1.524) (drill 0.762) (layers *.Cu *.Mask)
       (net 34 /R13))
-    (model "D:/Moje/Projects/Biblioteki KiCad/LM1616.step"
-      (offset (xyz 0 0 3.5))
+    (model "D:/Programy/Biblioteki KiCad/LM1616.step"
+      (offset (xyz 0 0 1))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -805,8 +805,8 @@
       (net 49 /R24))
     (pad 12 thru_hole circle (at 10.16 10.16) (size 1.524 1.524) (drill 0.762) (layers *.Cu *.Mask)
       (net 50 /R29))
-    (model "D:/Moje/Projects/Biblioteki KiCad/LM1616.step"
-      (offset (xyz 0 0 3.5))
+    (model "D:/Programy/Biblioteki KiCad/LM1616.step"
+      (offset (xyz 0 0 1))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
     )
@@ -931,7 +931,7 @@
       (net 155 "Net-(R69-Pad2)"))
     (pad 1 smd rect (at -2.2733 -2.97434 90) (size 0.4191 1.778) (layers B.Cu B.Paste B.Mask)
       (net 154 "Net-(R68-Pad2)"))
-    (model "D:/Moje/Projects/Biblioteki KiCad/kicad-libraries-master/3d/Housing_SSOP/TSSOP-16.wrl"
+    (model "D:/Programy/Biblioteki KiCad/kicad-libraries-master/3d/Housing_SSOP/TSSOP-16.step"
       (at (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz -90 0 0))

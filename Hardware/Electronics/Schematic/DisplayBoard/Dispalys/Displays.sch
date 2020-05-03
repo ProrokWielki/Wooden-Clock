@@ -1,9 +1,10 @@
 EESchema Schematic File Version 4
+LIBS:woodenClock-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
-Sheet 4 8
+Sheet 4 9
 Title "Wooden clock - display board -display"
 Date "2018-10-21"
 Rev "1.0.0"
