@@ -42,6 +42,7 @@ MEMORY
 {
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 160K
 FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 512K
+/*MEMORY_B1 (rx)  : ORIGIN = 0x90000000, LENGTH = 16M*/
 }
 
 /* Define output sections */
@@ -152,6 +153,10 @@ SECTIONS
     . = ALIGN(4);
   } >RAM
 
+  /*.external_flash :
+  {
+    *(.ExteranalFlash*);
+  } > MEMORY_B1*/
   
 
   /* Remove information from the standard libraries */
