@@ -50,6 +50,13 @@ public:
         return returnValue;
     }
 
+    bool isPressed()
+    {
+        auto currentLevel = buttonGpio_.get_input_value();
+
+        return currentLevel == pressedLevel_;
+    }
+
 private:
     GPIO & buttonGpio_;
     SignalLevel_t pressedLevel_;

@@ -13,6 +13,7 @@
 #include "Screens/Counter.hpp"
 #include "Screens/StateAccel.hpp"
 #include "Screens/StateArrows.hpp"
+#include "Screens/StateButtons.hpp"
 #include "Screens/StateHourglass.hpp"
 #include "Screens/StateMario.hpp"
 #include "Screens/StateNorth.hpp"
@@ -41,6 +42,7 @@ public:
     static StateText Text;
     static Counter CounterView;
     static StateAccel Accel;
+    static StateButtons Buttons;
 };
 
 #endif /* APP_DATACONTAINER_HPP_ */

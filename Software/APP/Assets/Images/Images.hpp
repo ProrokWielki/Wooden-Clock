@@ -14,6 +14,9 @@ extern uint8_t Mario_pixel_map[];
 extern uint8_t Arrows1[];
 extern uint8_t Arrows2[];
 
+extern uint8_t up_arrow[];
+extern uint8_t down_arrow[];
+
 extern uint8_t frame_1[];
 extern uint8_t frame_2[];
 extern uint8_t frame_3[];

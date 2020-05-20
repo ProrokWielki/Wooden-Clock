@@ -74,6 +74,7 @@ public:
     static DMA DMA1_4;
     static DMA DMA2_2;
     static DMA DMA2_7;
+    static DMA DMA2_4;
 
     static I2C I2C_1;
     static I2C I2C_2;

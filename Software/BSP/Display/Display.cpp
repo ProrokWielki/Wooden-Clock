@@ -14,8 +14,8 @@
 
 #include "Display.hpp"
 
-Display::Display(uint8_t width, uint8_t height, uint8_t * fameBuffer)
-: displayWidth(width), displayHeight(height), displayFrameBuffer(fameBuffer), transferComplete{true, true, true, true}, currentLine_(0)
+Display::Display(uint8_t width, uint8_t height, uint8_t * frameBuffer)
+: displayWidth(width), displayHeight(height), displayFrameBuffer(frameBuffer), transferComplete{true, true, true, true}, currentLine_(0)
 {
 }
 
