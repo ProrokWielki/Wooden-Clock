@@ -13,8 +13,31 @@ includes:
   - ../../APP
 
 steps:
+  - compile FreeRTOS:
+    source_directories:
+      - ../../LIB/FreeRTOS/Source
+      - ../../LIB/FreeRTOS/Source/portable/GCC/ARM_CM3
+
+    search_subdirectories: False
+
+    output_direcotry: ../../Output/Obj/LIB/FreeRTOS
+
+    types:
+      - .c
+
+  - compile FreeRTOS_heap:
+    source_directories:
+      - ../../LIB/FreeRTOS/Source/portable/MemMang
+
+    search_subdirectories: False
+
+    output_direcotry: ../../Output/Obj/LIB/FreeRTOS
+
+    types:
+      - _3.c
+
   - compile MCU:
-    source_directories: 
+    source_directories:
       - ../../MCU
 
     output_direcotry: ../../Output/Obj/MCU
@@ -84,7 +107,7 @@ steps:
   #     - .cpp
 
   - compile Main:
-    source_directories: 
+    source_directories:
       - ../../
 
     search_subdirectories: False
