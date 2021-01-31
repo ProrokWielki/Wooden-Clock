@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.2.0
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.4.3
+ * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,11 +19,17 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  *
  * 1 tab == 4 spaces!
  */
+/* Including FreeRTOSConfig.h here will cause build errors if the header file
+contains code not understood by the assembler - for example the 'extern' keyword.
+To avoid errors place any such code inside a #ifdef __ICCARM__/#endif block so
+the code is included in C files but excluded by the preprocessor in assembly
+files (__ICCARM__ is defined by the IAR C compiler but not by the IAR assembler. */
+#include "FreeRTOSConfig.h"
 
 	EXTERN pxCurrentTCB
 	EXTERN vTaskSwitchContext
@@ -34,8 +40,8 @@
 	PUBLIC vRestoreContextOfFirstTask
 	PUBLIC vRaisePrivilege
 	PUBLIC vStartFirstTask
-	PUBLIC ulSetInterruptMaskFromISR
-	PUBLIC vClearInterruptMaskFromISR
+	PUBLIC ulSetInterruptMask
+	PUBLIC vClearInterruptMask
 	PUBLIC PendSV_Handler
 	PUBLIC SVC_Handler
 /*-----------------------------------------------------------*/
@@ -78,6 +84,12 @@ vRestoreContextOfFirstTask:
 	ldr  r0, [r1]							/* Read top of stack from TCB - The first item in pxCurrentTCB is the task top of stack. */
 
 #if ( configENABLE_MPU == 1 )
+	dmb										/* Complete outstanding transfers before disabling MPU. */
+	ldr r2, =0xe000ed94						/* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	ldr r4, [r2]							/* Read the value of MPU_CTRL. */
+	bic r4, r4, #1							/* r4 = r4 & ~1 i.e. Clear the bit 0 in r4. */
+	str r4, [r2]							/* Disable MPU. */
+
 	adds r1, #4								/* r1 = r1 + 4. r1 now points to MAIR0 in TCB. */
 	ldr r3, [r1]							/* r3 = *r1 i.e. r3 = MAIR0. */
 	ldr r2, =0xe000edc0						/* r2 = 0xe000edc0 [Location of MAIR0]. */
@@ -89,6 +101,12 @@ vRestoreContextOfFirstTask:
 	ldr r2, =0xe000ed9c						/* r2 = 0xe000ed9c [Location of RBAR]. */
 	ldmia r1!, {r4-r11}						/* Read 4 sets of RBAR/RLAR registers from TCB. */
 	stmia r2!, {r4-r11}						/* Write 4 set of RBAR/RLAR registers using alias registers. */
+
+	ldr r2, =0xe000ed94						/* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	ldr r4, [r2]							/* Read the value of MPU_CTRL. */
+	orr r4, r4, #1							/* r4 = r4 | 1 i.e. Set the bit 0 in r4. */
+	str r4, [r2]							/* Enable MPU. */
+	dsb										/* Force memory writes before continuing. */
 #endif /* configENABLE_MPU */
 
 #if ( configENABLE_MPU == 1 )
@@ -98,6 +116,8 @@ vRestoreContextOfFirstTask:
 	adds r0, #32							/* Discard everything up to r0. */
 	msr  psp, r0							/* This is now the new top of stack to use in the task. */
 	isb
+	mov  r0, #0
+	msr  basepri, r0						/* Ensure that interrupts are enabled when the first task starts. */
 	bx   r3									/* Finally, branch to EXC_RETURN. */
 #else /* configENABLE_MPU */
 	ldm  r0!, {r1-r2}						/* Read from stack - r1 = PSPLIM and r2 = EXC_RETURN. */
@@ -107,6 +127,8 @@ vRestoreContextOfFirstTask:
 	adds r0, #32							/* Discard everything up to r0. */
 	msr  psp, r0							/* This is now the new top of stack to use in the task. */
 	isb
+	mov  r0, #0
+	msr  basepri, r0						/* Ensure that interrupts are enabled when the first task starts. */
 	bx   r2									/* Finally, branch to EXC_RETURN. */
 #endif /* configENABLE_MPU */
 /*-----------------------------------------------------------*/
@@ -130,15 +152,20 @@ vStartFirstTask:
 	svc 2									/* System call to start the first task. portSVC_START_SCHEDULER = 2. */
 /*-----------------------------------------------------------*/
 
-ulSetInterruptMaskFromISR:
-	mrs r0, PRIMASK
-	cpsid i
-	bx lr
+ulSetInterruptMask:
+	mrs r0, basepri							/* r0 = basepri. Return original basepri value. */
+	mov r1, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr basepri, r1							/* Disable interrupts upto configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+	dsb
+	isb
+	bx lr									/* Return. */
 /*-----------------------------------------------------------*/
 
-vClearInterruptMaskFromISR:
-	msr PRIMASK, r0
-	bx lr
+vClearInterruptMask:
+	msr basepri, r0							/* basepri = ulMask. */
+	dsb
+	isb
+	bx lr									/* Return. */
 /*-----------------------------------------------------------*/
 
 PendSV_Handler:
@@ -163,15 +190,25 @@ PendSV_Handler:
 	ldr r1, [r2]							/* Read pxCurrentTCB. */
 	str r0, [r1]							/* Save the new top of stack in TCB. */
 
-	cpsid i
+	mov r0, #configMAX_SYSCALL_INTERRUPT_PRIORITY
+	msr basepri, r0							/* Disable interrupts upto configMAX_SYSCALL_INTERRUPT_PRIORITY. */
+	dsb
+	isb
 	bl vTaskSwitchContext
-	cpsie i
+	mov r0, #0								/* r0 = 0. */
+	msr basepri, r0							/* Enable interrupts. */
 
 	ldr r2, =pxCurrentTCB					/* Read the location of pxCurrentTCB i.e. &( pxCurrentTCB ). */
 	ldr r1, [r2]							/* Read pxCurrentTCB. */
 	ldr r0, [r1]							/* The first item in pxCurrentTCB is the task top of stack. r0 now points to the top of stack. */
 
 #if ( configENABLE_MPU == 1 )
+	dmb										/* Complete outstanding transfers before disabling MPU. */
+	ldr r2, =0xe000ed94						/* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	ldr r4, [r2]							/* Read the value of MPU_CTRL. */
+	bic r4, r4, #1							/* r4 = r4 & ~1 i.e. Clear the bit 0 in r4. */
+	str r4, [r2]							/* Disable MPU. */
+
 	adds r1, #4								/* r1 = r1 + 4. r1 now points to MAIR0 in TCB. */
 	ldr r3, [r1]							/* r3 = *r1 i.e. r3 = MAIR0. */
 	ldr r2, =0xe000edc0						/* r2 = 0xe000edc0 [Location of MAIR0]. */
@@ -183,6 +220,12 @@ PendSV_Handler:
 	ldr r2, =0xe000ed9c						/* r2 = 0xe000ed9c [Location of RBAR]. */
 	ldmia r1!, {r4-r11}						/* Read 4 sets of RBAR/RLAR registers from TCB. */
 	stmia r2!, {r4-r11}						/* Write 4 set of RBAR/RLAR registers using alias registers. */
+
+	ldr r2, =0xe000ed94						/* r2 = 0xe000ed94 [Location of MPU_CTRL]. */
+	ldr r4, [r2]							/* Read the value of MPU_CTRL. */
+	orr r4, r4, #1							/* r4 = r4 | 1 i.e. Set the bit 0 in r4. */
+	str r4, [r2]							/* Enable MPU. */
+	dsb										/* Force memory writes before continuing. */
 #endif /* configENABLE_MPU */
 
 #if ( configENABLE_MPU == 1 )
