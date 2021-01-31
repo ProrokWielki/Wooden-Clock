@@ -16,6 +16,8 @@ extern uint8_t Arrows2[];
 
 extern uint8_t up_arrow[];
 extern uint8_t down_arrow[];
+extern uint8_t left_arrow[];
+extern uint8_t right_arrow[];
 
 extern uint8_t frame_1[];
 extern uint8_t frame_2[];
