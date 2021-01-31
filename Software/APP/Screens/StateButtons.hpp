@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <Canvas.hpp>
+#include <widgets/Image.hpp>
 
 #include "Assets/Images/Images.hpp"
 
@@ -17,7 +17,7 @@ public:
     /**
      * @brief Constructor.
      */
-    StateButtons() : up_arrow_(12, 16, up_arrow), down_arrow_(12, 16, down_arrow)
+    StateButtons() : up_arrow_(12, 14, up_arrow), down_arrow_(12, 14, down_arrow), left_arrow_(14, 12, left_arrow),right_arrow_(14, 12, right_arrow)
     {
     }
 
@@ -28,9 +28,13 @@ public:
     {
         up_arrow_.hide();
         down_arrow_.hide();
+        left_arrow_.hide();
+        right_arrow_.hide();
 
         add(&up_arrow_, 10, 0);
-        add(&down_arrow_, 10, 16);
+        add(&down_arrow_, 10, 18);
+        add(&left_arrow_, 0, 10);
+        add(&right_arrow_, 18, 10);
 
         validate();
     }
@@ -39,6 +43,8 @@ public:
     {
         up_arrow_.hide();
         down_arrow_.hide();
+        left_arrow_.hide();
+        right_arrow_.hide();
 
         if (BSP::buton2.isPressed())
         {
@@ -48,6 +54,14 @@ public:
         {
             up_arrow_.show();
         }
+        if (BSP::buton1.isPressed())
+        {
+            left_arrow_.show();
+        }
+        if (BSP::buton4.isPressed())
+        {
+            right_arrow_.show();
+        }
 
         validate();
     }
@@ -55,4 +69,6 @@ public:
 private:
     Image up_arrow_;
     Image down_arrow_;
+    Image left_arrow_;
+    Image right_arrow_;
 };
