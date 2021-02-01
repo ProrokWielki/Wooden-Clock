@@ -23,7 +23,7 @@ compiler_flags:
 linker_flags:
   - -specs=nosys.specs
   # - -specs=nano.specs
-  - -T../../MCU/STM32L452RETx_FLASH.ld
+  - -TMCU/STM32L452RETx_FLASH.ld
   - -mcpu=cortex-m4
   # - -mthumb
   # - -Wl,--gc-sections
