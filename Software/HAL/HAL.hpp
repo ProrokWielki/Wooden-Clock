@@ -65,7 +65,7 @@ public:
     static GPIO SR_OE;
     static GPIO SR_CLEAR;
 
-    static GPIO BUTTON;
+    static GPIO BUTTON1;
     static GPIO BUTTON2;
     static GPIO BUTTON3;
     static GPIO BUTTON4;

@@ -49,7 +49,7 @@ GPIO HAL::SR_SCLOCK(GPIOC, 6);
 GPIO HAL::SR_OE(GPIOB, 15);
 GPIO HAL::SR_CLEAR(GPIOC, 8);
 
-GPIO HAL::BUTTON(GPIOA, 8);
+GPIO HAL::BUTTON1(GPIOA, 8);
 GPIO HAL::BUTTON2(GPIOB, 8);
 GPIO HAL::BUTTON3(GPIOC, 2);
 GPIO HAL::BUTTON4(GPIOE, 2);
@@ -437,8 +437,8 @@ void HAL::GPIO_Init(void)
     UART4_RX.set_as_SPI_pin(eAF7);  // ToDo not spi :)
     UART4_TX.set_as_SPI_pin(eAF7);
 
-    BUTTON.set_mode(eInput);
-    BUTTON.set_pullUp_pullDown(eNone);
+    BUTTON1.set_mode(eInput);
+    BUTTON1.set_pullUp_pullDown(eNone);
 
     BUTTON2.set_mode(eInput);
     BUTTON2.set_pullUp_pullDown(eNone);
