@@ -21,10 +21,10 @@
 
 enum class Signal
 {
-    BUTTON1,
-    BUTTON2,
-    BUTTON3,
-    BUTTON4
+    BUTTON_LEFT,
+    BUTTON_RIGHT,
+    BUTTON_UP,
+    BUTTON_DOWN
 };
 
 class DataContainer

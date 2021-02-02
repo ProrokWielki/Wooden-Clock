@@ -37,29 +37,29 @@
 
     for (;;)
     {
-        BSP::buton1.update();
-        BSP::buton2.update();
-        BSP::buton3.update();
-        BSP::buton4.update();
+        BSP::button_up.update();
+        BSP::button_down.update();
+        BSP::button_left.update();
+        BSP::button_right.update();
 
-        if (BSP::buton1.wasPressed() || HAL::up)
+        if (BSP::button_up.wasPressed() || HAL::up)
         {
-            DataContainer::stateMachine.signal_callback(Signal::BUTTON1);
+            DataContainer::stateMachine.signal_callback(Signal::BUTTON_UP);
             HAL::up = false;
         }
-        if (BSP::buton2.wasPressed() || HAL::down)
+        if (BSP::button_down.wasPressed() || HAL::down)
         {
-            DataContainer::stateMachine.signal_callback(Signal::BUTTON2);
+            DataContainer::stateMachine.signal_callback(Signal::BUTTON_DOWN);
             HAL::down = false;
         }
-        if (BSP::buton3.wasPressed() || HAL::left)
+        if (BSP::button_left.wasPressed() || HAL::left)
         {
-            DataContainer::stateMachine.signal_callback(Signal::BUTTON3);
+            DataContainer::stateMachine.signal_callback(Signal::BUTTON_LEFT);
             HAL::left = false;
         }
-        if (BSP::buton4.wasPressed() || HAL::right)
+        if (BSP::button_right.wasPressed() || HAL::right)
         {
-            DataContainer::stateMachine.signal_callback(Signal::BUTTON4);
+            DataContainer::stateMachine.signal_callback(Signal::BUTTON_RIGHT);
             HAL::right = false;
         }
         vTaskDelay(xDelay);

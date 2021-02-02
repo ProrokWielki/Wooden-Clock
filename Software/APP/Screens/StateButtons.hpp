@@ -46,19 +46,19 @@ public:
         left_arrow_.hide();
         right_arrow_.hide();
 
-        if (BSP::buton2.isPressed())
+        if (BSP::button_down.isPressed())
         {
             down_arrow_.show();
         }
-        if (BSP::buton3.isPressed())
+        if (BSP::button_up.isPressed())
         {
             up_arrow_.show();
         }
-        if (BSP::buton1.isPressed())
+        if (BSP::button_left.isPressed())
         {
             left_arrow_.show();
         }
-        if (BSP::buton4.isPressed())
+        if (BSP::button_right.isPressed())
         {
             right_arrow_.show();
         }

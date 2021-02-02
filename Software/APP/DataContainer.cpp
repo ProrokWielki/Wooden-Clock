@@ -9,14 +9,14 @@
 
 #include <GUI.hpp>
 
-GUI DataContainer::stateMachine({{{&(DataContainer::Text), Signal::BUTTON1}, &(DataContainer::Mario)},
-                                 {{&(DataContainer::Mario), Signal::BUTTON1}, &(DataContainer::Hourglass)},
-                                 {{&(DataContainer::Hourglass), Signal::BUTTON1}, &(DataContainer::North)},
-                                 {{&(DataContainer::North), Signal::BUTTON1}, &(DataContainer::Arrows)},
-                                 {{&(DataContainer::Arrows), Signal::BUTTON1}, &(DataContainer::Accel)},
-                                 {{&(DataContainer::Accel), Signal::BUTTON1}, &(DataContainer::CounterView)},
-                                 {{&(DataContainer::CounterView), Signal::BUTTON1}, &(DataContainer::Buttons)},
-                                 {{&(DataContainer::Buttons), Signal::BUTTON1}, &(DataContainer::Text)}},
+GUI DataContainer::stateMachine({{{&(DataContainer::Text), Signal::BUTTON_UP}, &(DataContainer::Mario)},
+                                 {{&(DataContainer::Mario), Signal::BUTTON_UP}, &(DataContainer::Hourglass)},
+                                 {{&(DataContainer::Hourglass), Signal::BUTTON_UP}, &(DataContainer::North)},
+                                 {{&(DataContainer::North), Signal::BUTTON_UP}, &(DataContainer::Arrows)},
+                                 {{&(DataContainer::Arrows), Signal::BUTTON_UP}, &(DataContainer::Accel)},
+                                 {{&(DataContainer::Accel), Signal::BUTTON_UP}, &(DataContainer::CounterView)},
+                                 {{&(DataContainer::CounterView), Signal::BUTTON_UP}, &(DataContainer::Buttons)},
+                                 {{&(DataContainer::Buttons), Signal::BUTTON_UP}, &(DataContainer::Text)}},
                                 &Text);
 
 StateMario DataContainer::Mario;

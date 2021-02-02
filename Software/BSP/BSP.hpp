@@ -19,10 +19,10 @@ public:
 
     static Display display;
 
-    static Button buton1;
-    static Button buton2;
-    static Button buton3;
-    static Button buton4;
+    static Button button_right;
+    static Button button_left;
+    static Button button_up;
+    static Button button_down;
 
 private:
     BSP() = delete;
