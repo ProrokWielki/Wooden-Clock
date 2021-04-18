@@ -28,3 +28,5 @@ _autosave-*
 .DAV/
 
 Output/
+build/
+.vscode/
