@@ -85,6 +85,7 @@ bool HAL::up;
 bool HAL::down;
 bool HAL::left;
 bool HAL::right;
+bool HAL::reset;
 
 void HAL::init()
 {
@@ -104,6 +105,7 @@ void HAL::init()
     DMA_init();
     I2C_init();
     SPI_init();
+    RTC_init();
 
     uint8_t who_am_i_m;
     uint8_t who_am_i_g;
@@ -343,6 +345,11 @@ void HAL::clock_init(void)
     while ((RCC->CR & RCC_CR_PLLRDY) == 0)
         ;
 
+    RCC->CSR |= 1;
+
+    while ((RCC->CSR & 2) == 0)
+        ;
+
     RCC->CFGR |= (3 << 0);
 }
 
@@ -509,4 +516,54 @@ void HAL::LSM9DS1_init()
     LSM9DS1_1.set_XY_operation_mode(MagnetometerXYOperationMode::ultra_perforamnce);
     LSM9DS1_1.set_full_scale(MagnetometerFullScale::Gs_16);
     LSM9DS1_1.set_operation_mode(MagnetometerOperationMode::continuous_conversion);
+}
+
+void HAL::RTC_init()
+{
+	// Enable the PWR clock
+	RCC->APB1ENR1 |= RCC_APB1ENR1_PWREN;
+
+	// Enable access to RTC and Backup registers
+	PWR->CR1 |= PWR_CR1_DBP;
+
+	// Resets Backup Domain Config
+	RCC->BDCR |= RCC_BDCR_BDRST;
+	RCC->BDCR &= ~RCC_BDCR_BDRST;
+
+	// Set driving capability to medium high
+	RCC->BDCR &= ~RCC_BDCR_LSEDRV_Msk;
+	RCC->BDCR |= (0x02 <<RCC_BDCR_LSEDRV_Pos);
+
+	// Start LSE clock
+	RCC->BDCR |= RCC_BDCR_LSEON;
+
+	// Wait until LSE is ready
+	while ( (RCC->BDCR & RCC_BDCR_LSERDY) != RCC_BDCR_LSERDY);
+
+	// Select LSE as RTC clock source
+	RCC->BDCR &= ~RCC_BDCR_RTCSEL_Msk;
+	RCC->BDCR |= 1<<8;
+
+	// Enable RTC clock
+	RCC->BDCR |= RCC_BDCR_RTCEN;
+
+    	RTC->WPR = 0xCA;
+	RTC->WPR = 0x53;
+
+	// Enter Init
+	RTC->ISR |= RTC_ISR_INIT;
+	while ((RTC->ISR & RTC_ISR_INITF) != RTC_ISR_INITF);
+
+	// Setup prescalers for 1s RTC clock
+	RTC->PRER = 0x007F00FF;
+
+	// Set time
+	RTC->TR = 1<<20 | 1 << 16 | 2 << 12 | 5 << 8;
+
+	// Exit Init
+	RTC->ISR &= ~RTC_ISR_INIT;
+
+	// Disable Write access for RTC registers
+	RTC->WPR = 0xFE;
+	RTC->WPR = 0x64;
 }

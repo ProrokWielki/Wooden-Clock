@@ -14,6 +14,8 @@
 
 #include "DataContainer.hpp"
 
+void flash()  __attribute__((section(".flasher_section")));
+
 [[noreturn]] void display_task(void * pvParameters)
 {
     (void)(pvParameters);
@@ -62,7 +64,38 @@
             DataContainer::stateMachine.signal_callback(Signal::BUTTON_RIGHT);
             HAL::right = false;
         }
+        if(HAL::reset)
+        {
+            flash();
+        }
         vTaskDelay(xDelay);
+    }
+}
+
+
+
+void flash()
+{
+    // disable screen and stop everything.
+    HAL::SR_74HC595_1.output_enable(false);
+    __disable_irq();
+    vTaskSuspendAll();
+
+    // erase 254 pages - in the 255th is this function :)
+
+
+    // write recived data to the flash
+    uint8_t dupa[200];
+    for(uint8_t i =0; i< 200; i++)
+    {
+        dupa[i] = i+1;
+    }
+
+    SCB->AIRCR  = ((0x5FAUL << 16) | (1<<2));
+
+    for(;;)
+    {
+        asm("nop");
     }
 }
 

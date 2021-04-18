@@ -103,6 +103,7 @@ public:
     static void GPIO_Init(void);
     static void DMA_init();
     static void Timer_init();
+    static void RTC_init();
     static void NVIC_init(void);
     static void TLC59208F_init(void);
     static void SR_74HC595_init(void);
@@ -114,6 +115,7 @@ public:
     static bool down;
     static bool left;
     static bool right;
+    static bool reset;
 
 private:
     HAL() = delete;

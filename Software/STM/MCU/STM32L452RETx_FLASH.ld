@@ -40,8 +40,9 @@ _Min_Stack_Size = 0x4000; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 160K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 512K
+RAM (xrw)         : ORIGIN = 0x20000000, LENGTH = 160K
+FLASH (rx)        : ORIGIN = 0x8000000, LENGTH = 512K - 2K
+FLASHER(rx)       : ORIGIN = 0x807F800, LENGTH = 2K
 /*MEMORY_B1 (rx)  : ORIGIN = 0x90000000, LENGTH = 16M*/
 }
 
@@ -114,7 +115,7 @@ SECTIONS
   _sidata = LOADADDR(.data);
 
   /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data : 
+  .data :
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
@@ -125,7 +126,7 @@ SECTIONS
     _edata = .;        /* define a global symbol at data end */
   } >RAM AT> FLASH
 
-  
+
   /* Uninitialized data section */
   . = ALIGN(4);
   .bss :
@@ -153,11 +154,16 @@ SECTIONS
     . = ALIGN(4);
   } >RAM
 
+  .flasher_section 0x807F800 :
+  {
+    KEEP(*(.flasher_section)) /* keep my variable even if not referenced */
+  } > FLASHER
+
   /*.external_flash :
   {
     *(.ExteranalFlash*);
   } > MEMORY_B1*/
-  
+
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
