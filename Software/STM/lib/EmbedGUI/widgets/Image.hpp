@@ -19,7 +19,7 @@ public:
     /**
      * @brief Constructor.
      */
-    Image(uint8_t width, uint8_t height, uint8_t * raw_image)
+    Image(uint8_t width, uint8_t height, const uint8_t * raw_image)
     {
         setWidth(width);
         setHeight(height);

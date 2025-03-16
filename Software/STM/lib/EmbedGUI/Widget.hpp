@@ -25,7 +25,7 @@ public:
         return height_;
     }
 
-    uint8_t * get_pixel_map()
+    const uint8_t * get_pixel_map()
     {
         return pixel_map_;
     }
@@ -43,7 +43,7 @@ public:
     {
     }
 
-    void setPixelMap(uint8_t * width)
+    void setPixelMap(const uint8_t * width)
     {
         pixel_map_ = width;
     }
@@ -76,7 +76,7 @@ protected:
     uint8_t width_{};
     uint8_t height_{};
 
-    uint8_t * pixel_map_{};
+    const uint8_t * pixel_map_{};
 
     bool is_visible_{true};
 };

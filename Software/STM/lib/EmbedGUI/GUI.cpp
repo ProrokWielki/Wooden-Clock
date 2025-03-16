@@ -1,6 +1,6 @@
 #include "GUI.hpp"
-#include "BSP.hpp"
 #include "Canvas.hpp"
+#include <BSP/BSP.hpp>
 
 uint8_t GUI::width_ = 32;
 uint8_t GUI::height_ = 32;

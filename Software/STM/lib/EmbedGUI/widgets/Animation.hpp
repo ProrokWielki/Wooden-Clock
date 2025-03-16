@@ -17,7 +17,7 @@ template<uint8_t NUM_OF_FRAMES>
 class Animation: public Widget
 {
 public:
-    Animation(uint8_t width, uint8_t height, std::array<uint8_t *, NUM_OF_FRAMES> frames) : frames_{frames}
+    Animation(uint8_t width, uint8_t height, std::array<const uint8_t *, NUM_OF_FRAMES> frames) : frames_{frames}
     {
         setWidth(width);
         setHeight(height);
@@ -39,7 +39,7 @@ public:
 
 private:
     uint8_t current_frame{0};
-    std::array<uint8_t *, NUM_OF_FRAMES> frames_;
+    std::array<const uint8_t *, NUM_OF_FRAMES> frames_;
 };
 
 #endif /* APP_GUI_WIDGETS_ANIMATION_HPP_ */
