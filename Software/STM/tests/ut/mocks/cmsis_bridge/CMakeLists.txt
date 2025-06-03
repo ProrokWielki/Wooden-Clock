@@ -1,0 +1,4 @@
+ADD_LIBRARY(
+  CmsisBridgeMock INTERFACE)
+
+TARGET_INCLUDE_DIRECTORIES(CmsisBridgeMock INTERFACE include)
