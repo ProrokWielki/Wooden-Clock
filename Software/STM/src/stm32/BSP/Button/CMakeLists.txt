@@ -1,0 +1,9 @@
+ADD_LIBRARY(
+  Button STATIC EXCLUDE_FROM_ALL
+  Button.cpp include/BSP/Button.hpp)
+
+TARGET_LINK_LIBRARIES(
+  Button
+  PUBLIC GPIO)
+
+TARGET_INCLUDE_DIRECTORIES(Button PUBLIC include)

@@ -1,0 +1,9 @@
+ADD_LIBRARY(
+  Display STATIC EXCLUDE_FROM_ALL
+  Display.cpp include/BSP/Display.hpp)
+
+TARGET_LINK_LIBRARIES(
+  Display
+  PUBLIC HAL)
+
+TARGET_INCLUDE_DIRECTORIES(Display PUBLIC include)

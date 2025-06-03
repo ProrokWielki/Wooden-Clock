@@ -1,8 +1,0 @@
-
-class RTC
-{
-    public:
-
-               private:
-
-};

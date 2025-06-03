@@ -1,7 +1,0 @@
-ADD_LIBRARY(
-  MCU
-  startup_stm32l452xx.s SystemInit.c)
-
-TARGET_LINK_LIBRARIES(
-  MCU
-  PRIVATE CMSIS)
