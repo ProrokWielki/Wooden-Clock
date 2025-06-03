@@ -7,6 +7,6 @@
 [submodule "Software/STM/lib/CMSIS/CMSIS-CORE"]
 	path = Software/STM/lib/CMSIS/CMSIS-CORE
 	url = https://github.com/STMicroelectronics/cmsis-core.git
-[submodule "Software/stm/lib/FreeRTOS/FreeRTOS"]
+[submodule "Software/STM/lib/FreeRTOS/FreeRTOS"]
 	path = Software/STM/lib/FreeRTOS/FreeRTOS
 	url = https://github.com/FreeRTOS/FreeRTOS-LTS.git
