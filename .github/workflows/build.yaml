@@ -15,7 +15,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
       with:
-        submodules: 'true'
+        submodules: recursive
         token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_Clang .. && make
@@ -29,7 +29,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
       with:
-        submodules: 'true'
+        submodules: recursive
         token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_GCC .. && make
@@ -43,7 +43,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
       with:
-        submodules: 'true'
+        submodules: recursive
         token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Debug .. && make
@@ -55,7 +55,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
       with:
-        submodules: 'true'
+        submodules: recursive
         token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Release .. && make
@@ -67,7 +67,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
       with:
-        submodules: 'true'
+        submodules: recursive
         token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Size .. && make
@@ -79,7 +79,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
       with:
-        submodules: 'true'
+        submodules: recursive
         token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Speed .. && make
