@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build_x86_Clang:
+  x86_Clang:
     runs-on: ubuntu-latest
     container:
       image: pawelwarzecha/wooden_clock:0.1.0
@@ -15,8 +15,10 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
     - name: build 
-      run: mkdir -p Software/STM/build && cd Software/STM/Build && cmake -DCMAKE_BUILD_TYPE=x86_Clang .. && make
-  build_x86_Gcc:
+      run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_Clang .. && make
+    - name: test 
+      run: cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_GCC .. && make test
+  x86_GCC:
     runs-on: ubuntu-latest
     container:
       image: pawelwarzecha/wooden_clock:0.1.0
@@ -24,6 +26,42 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
     - name: build 
-      run: mkdir -p Software/STM/build && cd Software/STM/Build && cmake -DCMAKE_BUILD_TYPE=x86_GCC .. && make
- 
-
+      run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_GCC .. && make
+    - name: test 
+      run: cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_GCC .. && make test
+  ARM_Debug:
+    runs-on: ubuntu-latest
+    container:
+      image: pawelwarzecha/wooden_clock:0.1.0
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+    - name: build 
+      run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Debug .. && make
+  ARM_Release:
+    runs-on: ubuntu-latest
+    container:
+      image: pawelwarzecha/wooden_clock:0.1.0
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+    - name: build 
+      run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Release .. && make
+  ARM_Size:
+    runs-on: ubuntu-latest
+    container:
+      image: pawelwarzecha/wooden_clock:0.1.0
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+    - name: build 
+      run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Size .. && make
+  ARM_Speed:
+    runs-on: ubuntu-latest
+    container:
+      image: pawelwarzecha/wooden_clock:0.1.0
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+    - name: build 
+      run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Speed .. && make
