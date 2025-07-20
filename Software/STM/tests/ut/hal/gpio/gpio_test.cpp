@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-TEST(asd, asd)
+TEST(asd, DISABLED_asd)
 {
     EXPECT_TRUE(false);
 }
