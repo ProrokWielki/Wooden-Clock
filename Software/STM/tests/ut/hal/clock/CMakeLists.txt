@@ -11,10 +11,7 @@ IF((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
 
   ADD_EXECUTABLE(UtClockTest ${UPDATED_SOURCES} clock_test.cpp)
   TARGET_LINK_LIBRARIES(UtClockTest GTest::gtest_main GTest::gmock RegisterMock
-                        CmsisBridgeMock HalTypes Clock)
-
-  TARGET_INCLUDE_DIRECTORIES(UtClockTest
-                             PUBLIC ${CMAKE_SOURCE_DIR}/src/HAL/Clock/include)
+                        CmsisBridgeMock HalTypes)
 
   INCLUDE(GoogleTest)
   GTEST_DISCOVER_TESTS(UtClockTest)

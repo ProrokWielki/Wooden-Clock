@@ -1,10 +1,9 @@
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <HAL/Clock.hpp>
 #include <HAL/types.hpp>
 
+#include "../../../../src/stm32/HAL/Clock/include/HAL/Clock.hpp"
 struct SetClockSourceData {
     PeripheralWithSelectableClockSource peripheral;
     ClockSource clock_source;
