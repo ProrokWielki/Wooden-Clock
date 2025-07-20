@@ -1,0 +1,7 @@
+ADD_LIBRARY(
+  TEXTS
+  texts.cpp)
+
+TARGET_LINK_LIBRARIES(
+  TEXTS
+  PUBLIC EmbedGUI)
