@@ -153,11 +153,11 @@ Timer HAL::Timer2(timer_types::Timer_number::Timer_2);
 
 RTC_ HAL::rtc{clock};
 
-volatile bool HAL::up;
-volatile bool HAL::down;
-volatile bool HAL::left;
-volatile bool HAL::right;
-volatile bool HAL::reset;
+bool HAL::up;
+bool HAL::down;
+bool HAL::left;
+bool HAL::right;
+bool HAL::reset;
 
 std::array<volatile uint8_t, HAL::UART_BUFFER_SIZE> HAL::uart_buffer{};
 volatile uint8_t HAL::head{0};

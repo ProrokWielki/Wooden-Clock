@@ -10,7 +10,7 @@
 
 #include <Canvas.hpp>
 
-#include <DRV/LSM9DS1.hpp>
+#include <BSP/Accelerometer.hpp>
 
 #include <BSP/BSP.hpp>
 #include <cstdint>
@@ -19,7 +19,7 @@
 class StateAccel: public Canvas
 {
 public:
-    explicit StateAccel(LSM9DS1 & accel) : accel_(accel), magnet(32, 32, &empty_frame_buffer[0][0])
+    explicit StateAccel(BSP2::Accelerometer & accel) : accel_(accel), magnet(32, 32, &empty_frame_buffer[0][0])
     {
     }
 
@@ -33,7 +33,7 @@ public:
     {
         memset(empty_frame_buffer, 0, get_height() * get_width());
 
-        const auto [x, y, z] = accel_.get_linear_acceleration();
+        const auto [x, y, z] = accel_.get_linear_accelerations();
 
         const double scaled_x = (-x * 16.0) + 15.0;
         const double scaled_y = (y * 16.0) + 15.0;
@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    LSM9DS1 & accel_;
+    BSP2::Accelerometer & accel_;
     uint8_t empty_frame_buffer[get_height()][get_width()] = {};
     Image magnet;
 };

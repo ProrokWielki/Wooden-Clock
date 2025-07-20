@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "../Assets/Text/texts.h"
+#include "../Assets/Text/texts.hpp"
 #include <Canvas.hpp>
-#include <widgets/Image.hpp>
+#include <widgets/Text.hpp>
 
-#include <HAL/HAL.hpp>
+#include <BSP/Clock.hpp>
 
 class Hour: public Canvas
 {
@@ -19,73 +19,22 @@ public:
     /**
      * @brief Constructor
      */
-    Hour() : first{7, 10, zero}, second{7, 10, zero}, colon_{4, 10, colon}, third{7, 10, zero}, forth{7, 10, zero}
-
-    {
-    }
-
-    const uint8_t * to_text(uint8_t value)
-    {
-        switch (value)
-        {
-            case 0:
-                return zero;
-            case 1:
-                return one;
-            case 2:
-                return two;
-            case 3:
-                return three;
-            case 4:
-                return four;
-            case 5:
-                return five;
-            case 6:
-                return six;
-            case 7:
-                return seven;
-            case 8:
-                return eight;
-            case 9:
-                return nine;
-            default:
-                return nullptr;
-        }
-    }
+    Hour() = default;
 
     /**
      * @brief Execution of the State action.
      */
     void init() override
     {
-        add(&first, 0, 0);
-        add(&second, first.getWidth(), 0);
-        add(&colon_, first.getWidth() + second.getWidth(), 0);
-        add(&third, first.getWidth() + second.getWidth() + colon_.getWidth(), 0);
-        add(&forth, first.getWidth() + second.getWidth() + colon_.getWidth() + third.getWidth(), 0);
-        // validate();
+        add(&time_text, 0, 0);
     }
 
     void up_date() override
     {
-        first.setPixelMap(to_text(HAL::rtc.get_hours() / 10));
-        second.setPixelMap(to_text(HAL::rtc.get_hours() % 10));
-        if (HAL::rtc.get_seconds() % 2)
-        {
-            colon_.hide();
-        }
-        else
-        {
-            colon_.show();
-        }
-        third.setPixelMap(to_text(HAL::rtc.get_minutes() / 10));
-        forth.setPixelMap(to_text(HAL::rtc.get_minutes() % 10));
+        BSP2::Time time = BSP2::Clock::get_time();
+        time_text.setText(std::to_string(time.hours) + ":" + (time.minutes < 10 ? "0" + std::to_string(time.minutes) : std::to_string(time.minutes)));
     }
 
 private:
-    Image first;
-    Image second;
-    Image colon_;
-    Image third;
-    Image forth;
+    Text time_text{"00:00"};
 };

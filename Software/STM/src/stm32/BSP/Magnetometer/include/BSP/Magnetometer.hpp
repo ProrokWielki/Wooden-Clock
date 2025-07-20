@@ -11,23 +11,22 @@
 #include <cstdint>
 #include <functional>
 
+namespace BSP2
+{
+struct MagneticField {
+    int16_t x;
+    int16_t y;
+    int16_t z;
+};
+
 class Magnetometer
 {
 public:
-    Magnetometer(std::function<int16_t()> get_x, std::function<int16_t()> get_y);
-
+    [[nodiscard]] MagneticField get_magnetic_filed() const;
     void update();
 
-    int16_t get_x();
-
-    int16_t get_y();
-
 private:
-    int16_t x_{0};
-    int16_t y_{0};
-
-    std::function<int16_t()> get_x_;
-    std::function<int16_t()> get_y_;
+    MagneticField magnetic_filed_{};
 };
-
+}  // namespace BSP2
 #endif /* BSP_MAGNETOMETER_MAGNETOMETER_HPP_ */

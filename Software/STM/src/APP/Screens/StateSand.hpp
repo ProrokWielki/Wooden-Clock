@@ -13,7 +13,7 @@
 
 #include "Canvas.hpp"
 
-#include <DRV/LSM9DS1.hpp>
+#include <BSP/Accelerometer.hpp>
 #include <array>
 #include <limits>
 #include <stddef.h>
@@ -163,7 +163,7 @@ private:
 class StateSand: public Canvas
 {
 public:
-    StateSand(LSM9DS1 & accel) : accel_(accel), magnet(get_width(), get_height(), empty_frame_buffer[0])
+    StateSand(BSP2::Accelerometer & accel) : accel_(accel), magnet(get_width(), get_height(), empty_frame_buffer[0])
     {
     }
 
@@ -177,7 +177,7 @@ public:
     {
         memset(empty_frame_buffer, 0, get_width() * get_height());
 
-        auto [x, y, z] = accel_.get_linear_acceleration();
+        auto [x, y, z] = accel_.get_linear_accelerations();
         particles_.update(-x, y);
 
         auto paricless = particles_.get_particles();
@@ -197,7 +197,7 @@ public:
     }
 
 private:
-    LSM9DS1 & accel_;
+    BSP2::Accelerometer & accel_;
     uint8_t empty_frame_buffer[32][32] = {};
     Image magnet;
     ParticleContainer<1> particles_{};

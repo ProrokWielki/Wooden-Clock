@@ -122,11 +122,11 @@ public:
 
     static void init();
 
-    static volatile bool up;
-    static volatile bool down;
-    static volatile bool left;
-    static volatile bool right;
-    static volatile bool reset;
+    static bool up;
+    static bool down;
+    static bool left;
+    static bool right;
+    static bool reset;
 
     static constexpr uint8_t UART_BUFFER_SIZE{50};
 

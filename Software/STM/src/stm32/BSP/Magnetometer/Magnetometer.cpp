@@ -5,27 +5,19 @@
  *  @author: Paweł Warzecha
  */
 
-#include <cstdint>
-#include <functional>
+#include <DRV/LSM9DS1.hpp>
+#include <HAL/HAL.hpp>
 
-#include "include/BSP/Magnetometer.hpp"
+#include <BSP/Magnetometer.hpp>
 
-Magnetometer::Magnetometer(std::function<int16_t()> get_x, std::function<int16_t()> get_y) : get_x_(std::move(get_x)), get_y_(std::move(get_y))
+BSP2::MagneticField BSP2::Magnetometer::get_magnetic_filed() const
 {
+    return magnetic_filed_;
 }
 
-void Magnetometer::update()
+void BSP2::Magnetometer::update()
 {
-    x_ = get_x_();
-    y_ = get_y_();
-}
-
-int16_t Magnetometer::get_x()
-{
-    return x_;
-}
-
-int16_t Magnetometer::get_y()
-{
-    return y_;
+    magnetic_filed_.x = HAL::LSM9DS1_1.get_magnetic_field(Axis::X); 
+    magnetic_filed_.y = HAL::LSM9DS1_1.get_magnetic_field(Axis::Y);   
+    magnetic_filed_.z = HAL::LSM9DS1_1.get_magnetic_field(Axis::Z);   
 }

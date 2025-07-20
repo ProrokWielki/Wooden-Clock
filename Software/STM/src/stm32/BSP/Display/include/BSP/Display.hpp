@@ -39,7 +39,7 @@ public:
     /**
      * @brief draws next line, has to be called periodically.
      */
-    void draw();
+    void draw(){}
 
     /**
      * @brief Sets function to be called every time the full display is redrawn.

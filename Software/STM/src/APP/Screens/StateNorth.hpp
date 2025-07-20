@@ -10,7 +10,7 @@
 
 #include <Canvas.hpp>
 
-#include <DRV/LSM9DS1.hpp>
+#include <BSP/Magnetometer.hpp>
 
 #include <BSP/BSP.hpp>
 #include <array>
@@ -19,7 +19,7 @@
 class StateNorth: public Canvas
 {
 public:
-    explicit StateNorth(LSM9DS1 & magneto) : magneto_(magneto), magnet(32, 32, &empty_frame_buffer[0][0])
+    explicit StateNorth(BSP2::Magnetometer & magneto) : magneto_(magneto), magnet(32, 32, &empty_frame_buffer[0][0])
     {
     }
 
@@ -31,8 +31,10 @@ public:
 
     void up_date() override
     {
-        int16_t x = magneto_.get_magnetic_field(Axis::X);
-        int16_t y = magneto_.get_magnetic_field(Axis::Y);
+        BSP2::MagneticField magnetic_field = magneto_.get_magnetic_filed();
+
+        int16_t x = magnetic_field.x;
+        int16_t y = magnetic_field.y;
 
         constexpr static uint8_t INDEX_HALF_SCREEN{static_cast<uint8_t>(get_width()/2U)};
 
@@ -51,7 +53,7 @@ public:
     }
 
 private:
-    LSM9DS1 & magneto_;
+    BSP2::Magnetometer & magneto_;
     std::array<std::array<uint8_t, get_width()>,get_height()> empty_frame_buffer{};
     Image magnet;
 };

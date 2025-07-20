@@ -1,21 +1,24 @@
-SET(FreeRTOS_SRC_DIR
-    ${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOS/FreeRTOS/FreeRTOS-Kernel)
+IF(NOT ((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
+                                                    "x86_GCC")))
 
-FILE(
-  GLOB
-  SRCS
-  ${FreeRTOS_SRC_DIR}/*.c
-  ${FreeRTOS_SRC_DIR}/portable/MemMang/heap_3.c
-  ${FreeRTOS_SRC_DIR}/portable/GCC/ARM_CM4F/*
-  ${FreeRTOS_SRC_DIR}/include/*
-  ${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOSConfig.h)
+  SET(FreeRTOS_SRC_DIR
+      ${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOS/FreeRTOS/FreeRTOS-Kernel)
 
-ADD_LIBRARY(
-  FreeRTOS STATIC EXCLUDE_FROM_ALL
-  ${SRCS})
+  FILE(
+    GLOB
+    SRCS
+    ${FreeRTOS_SRC_DIR}/*.c
+    ${FreeRTOS_SRC_DIR}/portable/MemMang/heap_3.c
+    ${FreeRTOS_SRC_DIR}/portable/GCC/ARM_CM4F/*
+    ${FreeRTOS_SRC_DIR}/include/*
+    ${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOSConfig.h)
 
-TARGET_INCLUDE_DIRECTORIES(
-  FreeRTOS PUBLIC ${FreeRTOS_SRC_DIR}/include .
-                  ${FreeRTOS_SRC_DIR}/portable/GCC/ARM_CM4F)
+  ADD_LIBRARY(FreeRTOS STATIC EXCLUDE_FROM_ALL ${SRCS})
 
-SET_TARGET_PROPERTIES(FreeRTOS PROPERTIES LINKER_LANGUAGE C)
+  TARGET_INCLUDE_DIRECTORIES(
+    FreeRTOS PUBLIC ${FreeRTOS_SRC_DIR}/include .
+                    ${FreeRTOS_SRC_DIR}/portable/GCC/ARM_CM4F)
+
+  SET_TARGET_PROPERTIES(FreeRTOS PROPERTIES LINKER_LANGUAGE C)
+
+ENDIF()
