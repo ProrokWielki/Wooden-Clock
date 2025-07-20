@@ -14,6 +14,9 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+        token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_Clang .. && make
     - name: test 
@@ -25,6 +28,9 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+        token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_GCC .. && make
     - name: test 
@@ -36,6 +42,9 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+        token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Debug .. && make
   ARM_Release:
@@ -45,6 +54,9 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+        token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Release .. && make
   ARM_Size:
@@ -54,6 +66,9 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+        token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Size .. && make
   ARM_Speed:
@@ -63,5 +78,8 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+        token: ${{ secrets.PAT_TOKEN }}
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Speed .. && make
