@@ -1,7 +1,5 @@
 {
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
+    "image": "pawelwarzecha/wooden_clock:0.1.0",
     "customizations": {
         "vscode": {
             "extensions": [
