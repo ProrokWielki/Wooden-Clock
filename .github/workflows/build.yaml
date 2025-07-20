@@ -10,7 +10,7 @@ jobs:
   build_x86_Clang:
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden-clock:latest
+      image: pawelwarzecha/wooden_clock:latest
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -19,7 +19,7 @@ jobs:
   build_x86_Gcc:
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden-clock:latest
+      image: pawelwarzecha/wooden_clock:latest
     steps:
     - name: Check out code
       uses: actions/checkout@v3
