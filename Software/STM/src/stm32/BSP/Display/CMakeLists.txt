@@ -1,0 +1,9 @@
+ADD_LIBRARY(
+  StmDisplay STATIC EXCLUDE_FROM_ALL
+  Display.cpp include/BSP/Display.hpp)
+
+TARGET_LINK_LIBRARIES(
+  StmDisplay
+  PRIVATE HAL)
+
+TARGET_INCLUDE_DIRECTORIES(StmDisplay PUBLIC include)

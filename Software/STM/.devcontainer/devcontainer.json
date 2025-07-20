@@ -1,0 +1,31 @@
+{
+    "image": "pawelwarzecha/wooden_clock:0.1.0",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "wayou.vscode-todo-highlight",
+                "Gruntfuggly.todo-tree",
+                "xaver.clang-format",
+                "llvm-vs-code-extensions.vscode-clangd",
+                "twxs.cmake",
+                "ms-vscode.cmake-tools",
+                "cschlosser.doxdocgen",
+                "streetsidesoftware.code-spell-checker",
+                "cheshirekow.cmake-format",
+                "ms-python.python",
+                "ms-azuretools.vscode-docker",
+                "Glasslabs.arm-developer-toolkit"
+            ]
+        }
+    },
+    "mounts": [
+        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
+    ],
+    "runArgs": [
+        "--privileged",
+        "-v", "/dev/bus/usb:/dev/bus/usb",
+        "-e", "DISPLAY=:0",
+        "-e", "XAUTHORITY=/tmp/.Xauthority",
+        "-v", "${localEnv:HOME}/.Xauthority:/tmp/.Xauthority"
+    ]
+}

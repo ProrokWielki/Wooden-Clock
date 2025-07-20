@@ -1,0 +1,9 @@
+ADD_LIBRARY(
+  StmClock STATIC EXCLUDE_FROM_ALL
+  Clock.cpp include/BSP/Clock.hpp)
+
+TARGET_LINK_LIBRARIES(
+  StmClock
+  PRIVATE HAL)
+
+TARGET_INCLUDE_DIRECTORIES(StmClock PUBLIC include)

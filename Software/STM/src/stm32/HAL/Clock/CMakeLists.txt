@@ -1,0 +1,10 @@
+ADD_LIBRARY(
+  Clock STATIC EXCLUDE_FROM_ALL
+  Clock.cpp include/HAL/Clock.hpp)
+
+TARGET_LINK_LIBRARIES(
+  Clock
+  PRIVATE CmsisBridge
+  PUBLIC Register)
+
+TARGET_INCLUDE_DIRECTORIES(Clock PUBLIC include)

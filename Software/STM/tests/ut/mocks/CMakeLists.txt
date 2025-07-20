@@ -1,0 +1,2 @@
+ADD_SUBDIRECTORY(hal)
+ADD_SUBDIRECTORY(cmsis_bridge)

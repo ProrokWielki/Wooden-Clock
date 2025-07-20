@@ -1,7 +1,0 @@
-eclipse.preferences.version=1
-environment/project/preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1745928861/PATH/delimiter=;
-environment/project/preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1745928861/PATH/operation=append
-environment/project/preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1745928861/PATH/value=C\:\\Program Files (x86)\\GNU Tools Arm Embedded\\7 2018-q2-update\\bin
-environment/project/preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1745928861/append=true
-environment/project/preference.org.eclipse.cdt.managedbuilder.core.configurationDataProvider.1745928861/appendContributed=true
-org.eclipse.cdt.core.code_formatter=org.eclipse.cdt.core.defaultCodeFormatter

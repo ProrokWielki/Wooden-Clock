@@ -1,0 +1,2 @@
+ADD_SUBDIRECTORY(register)
+ADD_SUBDIRECTORY(clock)
