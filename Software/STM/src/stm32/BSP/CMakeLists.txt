@@ -3,12 +3,21 @@ ADD_LIBRARY(
   BSP.cpp include/BSP/BSP.hpp)
 
 TARGET_LINK_LIBRARIES(
-  StmBSP Button StmDisplay APP HAL Magnetometer StmClock StmAccelerometer)
+  StmBSP
+  Button
+  StmDisplay
+  APP
+  HAL
+  Magnetometer
+  StmClock
+  StmAccelerometer
+  StmThermometer)
 
 TARGET_INCLUDE_DIRECTORIES(StmBSP PUBLIC include)
 
 ADD_SUBDIRECTORY(Display)
 ADD_SUBDIRECTORY(Magnetometer)
 ADD_SUBDIRECTORY(Accelerometer)
+ADD_SUBDIRECTORY(Thermometer)
 ADD_SUBDIRECTORY(Button)
 ADD_SUBDIRECTORY(Clock)

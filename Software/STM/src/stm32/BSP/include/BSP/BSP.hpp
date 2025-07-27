@@ -12,6 +12,7 @@
 #include <BSP/Display.hpp>
 #include <BSP/Magnetometer.hpp>
 #include <BSP/Accelerometer.hpp>
+#include <BSP/Thermometer.hpp>
 
 
 class BSP
@@ -23,6 +24,7 @@ public:
 
     static BSP2::Magnetometer magnetometer;
     static BSP2::Accelerometer accelerometer;
+    static BSP2::Thermometer thermometer;
     static Clock clock;
 
     static Button button_right;

@@ -37,6 +37,7 @@ bool& BSP::right{HAL::right};
 
 BSP2::Magnetometer BSP::magnetometer;
 BSP2::Accelerometer BSP::accelerometer;
+BSP2::Thermometer BSP::thermometer;
 Clock BSP::clock;
 
 void BSP::init()

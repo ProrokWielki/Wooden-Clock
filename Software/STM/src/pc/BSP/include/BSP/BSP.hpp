@@ -13,16 +13,20 @@
 #include <BSP/Clock.hpp>
 #include <BSP/Display.hpp>
 #include <BSP/Magnetometer.hpp>
+#include <BSP/Thermometer.hpp>
 
 class BSP
 {
 public:
+    BSP() = delete;
+
     static void init();
 
     static Display display;
     static BSP2::Magnetometer magnetometer;
     static BSP2::Accelerometer accelerometer;
     static BSP2::Clock clock;
+    static BSP2::Thermometer thermometer;
 
     static Button button_right;
     static Button button_left;
@@ -34,11 +38,7 @@ public:
     static bool left;
     static bool right;
 
-    // static uint8_t frame_buffer1[32 * 32];
-
 private:
-    BSP() = delete;
-
     static void display_init();
 };
 

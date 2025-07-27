@@ -4,7 +4,7 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   PcBSP
-  PUBLIC PcDisplay PcClock PcAccelerometer PcMagnetometer PcButton)
+  PUBLIC PcDisplay PcClock PcAccelerometer PcMagnetometer PcButton PcThermometer)
 
 TARGET_INCLUDE_DIRECTORIES(PcBSP PUBLIC include)
 
@@ -13,3 +13,4 @@ ADD_SUBDIRECTORY(Accelerometer)
 ADD_SUBDIRECTORY(Magnetometer)
 ADD_SUBDIRECTORY(Clock)
 ADD_SUBDIRECTORY(Button)
+ADD_SUBDIRECTORY(Thermometer)

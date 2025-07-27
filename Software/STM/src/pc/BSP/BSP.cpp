@@ -7,6 +7,7 @@ Display BSP::display(32, 32, frame_buffer1.data());
 BSP2::Magnetometer BSP::magnetometer;
 BSP2::Accelerometer BSP::accelerometer;
 BSP2::Clock BSP::clock;
+BSP2::Thermometer BSP::thermometer;
 
 Button BSP::button_right{"right"};
 Button BSP::button_left{"left"};
