@@ -32,7 +32,7 @@ void Display::ShowExampleAppCustomRendering() const
     ImDrawList * draw_list = ImGui::GetWindowDrawList();
 
     // Primitives
-    static float sz = 10.0f;
+    static const float sz {10.0f};
 
     const ImVec2 p = ImGui::GetCursorScreenPos();
 
@@ -47,9 +47,9 @@ void Display::ShowExampleAppCustomRendering() const
         {
             for (uint32_t y{0}; y < displayHeight; ++y)
             {
-                ImVec4 col_on = ImVec4(displayFrameBuffer[y * displayWidth + x] / 255.0, displayFrameBuffer[y * displayWidth + x] / 255.0,
-                                       displayFrameBuffer[y * displayWidth + x] / 255.0, 1.0f);
-                const ImU32 off_col = ImColor(col_on);
+                const ImVec4 col_on{ImVec4(displayFrameBuffer[y * displayWidth + x] / 255.0, displayFrameBuffer[y * displayWidth + x] / 255.0,
+                                           displayFrameBuffer[y * displayWidth + x] / 255.0, 1.0f)};
+                const ImU32 off_col{ImColor(col_on)};
                 // Draw empty pixel
                 draw_list->AddCircleFilled(ImVec2(100 + p.x + x * (sz + 3), 100 + p.y + y * (sz + 3)), sz * 0.5f, off_col, 32);
             }
@@ -86,7 +86,7 @@ void Display::draw() const
 {
 
     // show_rect_window = true;  // Example to show the custom rendering window
-    ImVec4 clear_color = ImVec4(0.f, 0.f, 0.f, 1.00f);
+    const ImVec4 clear_color = ImVec4(0.f, 0.f, 0.f, 1.00f);
     // // Poll and handle events (inputs, window resize, etc.)
     // // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
     // // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
