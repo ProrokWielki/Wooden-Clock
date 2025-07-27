@@ -19,3 +19,5 @@ Texts:
     text: ":"
   - id: degree
     text: "°"
+  - id: dot
+    text: "."
