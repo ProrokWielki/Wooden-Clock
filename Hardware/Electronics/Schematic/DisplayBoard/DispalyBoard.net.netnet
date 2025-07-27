@@ -1125,17 +1125,6 @@
         (pin (num 14) (name SCL) (type input))
         (pin (num 15) (name SDA) (type input))
         (pin (num 16) (name VCC) (type input)))))
-  (libraries
-    (library (logical 74xx1)
-      (uri "D:/Moje/Projects/Biblioteki KiCad/kicad-symbols-master/74xx.lib"))
-    (library (logical DIODE)
-      (uri "D:/Moje/Projects/Biblioteki KiCad/lib/DIODE.lib"))
-    (library (logical conn)
-      (uri "D:/Moje/Projects/Biblioteki KiCad/lib/conn.lib"))
-    (library (logical device)
-      (uri "D:/Moje/Projects/Biblioteki KiCad/lib/device.lib"))
-    (library (logical texas)
-      (uri "D:/Moje/Projects/Biblioteki KiCad/lib/texas.lib")))
   (nets
     (net (code 1) (name /R28)
       (node (ref Q12) (pin 3))
