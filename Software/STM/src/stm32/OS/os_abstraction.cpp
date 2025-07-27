@@ -2,15 +2,6 @@
 #include <task.h>
 
 #include "os_abstraction.hpp"
-#include <array>
-
-struct TaskArguments {
-    std::function<void()> task_function;
-    uint32_t loop_time;
-};
-
-std::vector<TaskArguments> arguments{};
-std::vector<TaskFunction_t> tasks_pointers{};
 
 void OsAbstraction::create_task(char * name, uint32_t stack_depth, uint32_t priority, void (*task_function)(void*) )
 {
