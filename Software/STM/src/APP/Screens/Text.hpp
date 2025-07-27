@@ -8,9 +8,9 @@
 #ifndef APP_SCREENS_TEXT_HPP_
 #define APP_SCREENS_TEXT_HPP_
 
-#include "../Assets/Text/texts.hpp"
-#include <Canvas.hpp>
 #include <string>
+
+#include <Canvas.hpp>
 #include <widgets/Text.hpp>
 
 class TextScreen: public Canvas

@@ -1,0 +1,29 @@
+ADD_LIBRARY(
+  Hourglass
+  frames/1.hpp
+  frames/10.hpp
+  frames/11.hpp
+  frames/12.hpp
+  frames/13.hpp
+  frames/14.hpp
+  frames/15.hpp
+  frames/16.hpp
+  frames/17.hpp
+  frames/18.hpp
+  frames/19.hpp
+  frames/2.hpp
+  frames/20.hpp
+  frames/21.hpp
+  frames/3.hpp
+  frames/4.hpp
+  frames/5.hpp
+  frames/6.hpp
+  frames/7.hpp
+  frames/8.hpp
+  frames/9.hpp
+  Hourglass.cpp
+  Hourglass.hpp)
+
+TARGET_LINK_LIBRARIES(
+  Hourglass
+  PUBLIC EmbedGUI)

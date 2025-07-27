@@ -15,7 +15,7 @@ int main()
     HAL::init();
     BSP::init();
 
-    BSP::display.set_frame_buffer(Arrows1);
+    BSP::display.set_frame_buffer(Mario_pixel_map);
 
     NVIC_EnableIRQ(DMA1_Channel2_IRQn);
     NVIC_EnableIRQ(DMA1_Channel4_IRQn);

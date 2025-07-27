@@ -13,22 +13,31 @@
 // #include <HAL/HAL.hpp>
 
 #include <GUI.hpp>
+#include <sys/types.h>
 
 #include "BSP/Clock.hpp"
 #include "DataContainer.hpp"
 
-void gui_task(void*)
+#include "APP.hpp"
+
+namespace
 {
+void gui_task(void *)
+{
+    constexpr static uint8_t sleep_time_ms{20};
+
     for (;;)
     {
         DataContainer::stateMachine.update();
-        OsAbstraction::delay_ms(20);
+        OsAbstraction::delay_ms(sleep_time_ms);
     }
     // BSP::display.draw();
 }
 
-void system_interface_task(void*)
+void system_interface_task(void *)
 {
+    constexpr static uint8_t sleep_time_ms{20};
+
     for (;;)
     {
         // std::cout << "System interface task started" << std::endl;
@@ -39,6 +48,7 @@ void system_interface_task(void*)
         BSP2::Clock::update();
         BSP::magnetometer.update();
         BSP::accelerometer.update();
+        BSP::thermometer.update();
 
         if (BSP::button_up.wasReleased() || BSP::up)
         {
@@ -61,19 +71,15 @@ void system_interface_task(void*)
             BSP::right = false;
         }
 
-
         // if (HAL::reset)
         // {
         //     // flash();
         // }
-        OsAbstraction::delay_ms(20);
+        OsAbstraction::delay_ms(sleep_time_ms);
     }
 }
 
-void display_task()
-{
-    BSP::display.draw();
-}
+}  // namespace
 
 void APP_init()
 {
@@ -86,7 +92,6 @@ void APP_init()
     char systeam_interface_task[] = "system_interface_task";
 
     OsAbstraction::create_task(guui_task, 10000, 2, gui_task);
-    // OsAbstraction::create_task(dispaly_task, 10000, 1, display_task, 20);
     OsAbstraction::create_task(systeam_interface_task, 1024, 1, system_interface_task);
 
     OsAbstraction::start_scheduler();

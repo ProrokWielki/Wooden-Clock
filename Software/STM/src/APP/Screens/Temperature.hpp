@@ -7,12 +7,13 @@
 
 #pragma once
 
-#include "../Assets/Text/texts.hpp"
+#include <format>
+#include <string>
 
 #include <Canvas.hpp>
-
-#include <string>
 #include <widgets/Text.hpp>
+
+#include <BSP/BSP.hpp>
 
 class Temperature: public Canvas
 {
@@ -32,13 +33,9 @@ public:
 
     void up_date() override
     {
-
-        // uint32_t time = 0;
-        // auto temperature = HAL::BME280_1.get_temperature();
-        auto temperature = 13;
-        temperature_text.setText(std::to_string(temperature) + "*C");
-
-        // validate();
+        const auto temperature{BSP::thermometer.get_temperature()};
+        std::string temperature_str = std::to_string(temperature);
+        temperature_text.setText(temperature_str.substr(0, temperature_str.find(".")+2) + "*C");
     }
 
 private:

@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "../Assets/Text/texts.hpp"
 #include <Canvas.hpp>
 #include <widgets/Text.hpp>
 
@@ -31,7 +30,7 @@ public:
 
     void up_date() override
     {
-        BSP2::Time time = BSP2::Clock::get_time();
+        const BSP2::Time time = BSP2::Clock::get_time();
         time_text.setText(std::to_string(time.hours) + ":" + (time.minutes < 10 ? "0" + std::to_string(time.minutes) : std::to_string(time.minutes)));
     }
 

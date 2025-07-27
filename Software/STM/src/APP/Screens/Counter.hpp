@@ -8,9 +8,9 @@
 #ifndef APP_SCREENS_COUNTER_HPP_
 #define APP_SCREENS_COUNTER_HPP_
 
-#include "../Assets/Text/texts.hpp"
-#include <Canvas.hpp>
 #include <string>
+
+#include <Canvas.hpp>
 #include <widgets/Text.hpp>
 
 class Counter: public Canvas
@@ -44,7 +44,7 @@ public:
 
 private:
     uint16_t counter_value{0};
-    Text counter_text{"11111",TextAlignment::RIGHT};
+    Text counter_text{"11111", TextAlignment::RIGHT};
 };
 
 #endif /* APP_SCREENS_COUNTER_HPP_ */

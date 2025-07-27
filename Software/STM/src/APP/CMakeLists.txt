@@ -1,11 +1,10 @@
-FILE(GLOB ASSETS Assets/Images/* Assets/Text/*)
-
 ADD_LIBRARY(
   APP STATIC EXCLUDE_FROM_ALL
   ${ASSETS} APP.cpp APP.hpp DataContainer.cpp DataContainer.hpp)
 
 ADD_LIBRARY(
   OsAbstraction INTERFACE)
+  
 ADD_LIBRARY(
   BSP INTERFACE)
 

@@ -31,15 +31,15 @@ public:
 
     void up_date() override
     {
-        BSP2::MagneticField magnetic_field = magneto_.get_magnetic_filed();
+        const BSP2::MagneticField magnetic_field{magneto_.get_magnetic_filed()};
 
-        int16_t x = magnetic_field.x;
-        int16_t y = magnetic_field.y;
+        int16_t x{magnetic_field.x};
+        int16_t y{magnetic_field.y};
 
-        constexpr static uint8_t INDEX_HALF_SCREEN{static_cast<uint8_t>(get_width()/2U)};
+        constexpr static uint8_t INDEX_HALF_SCREEN{static_cast<uint8_t>(get_width() / 2U)};
 
         x = -x * INDEX_HALF_SCREEN / std::numeric_limits<int16_t>::max() + INDEX_HALF_SCREEN;
-        y = -y * INDEX_HALF_SCREEN / std::numeric_limits<int16_t>::max()  + INDEX_HALF_SCREEN;
+        y = -y * INDEX_HALF_SCREEN / std::numeric_limits<int16_t>::max() + INDEX_HALF_SCREEN;
 
         x = x > get_width() - 1 ? get_width() - 1 : x;
         y = y > get_height() - 1 ? get_height() - 1 : y;
@@ -54,7 +54,7 @@ public:
 
 private:
     BSP2::Magnetometer & magneto_;
-    std::array<std::array<uint8_t, get_width()>,get_height()> empty_frame_buffer{};
+    std::array<std::array<uint8_t, get_width()>, get_height()> empty_frame_buffer{};
     Image magnet;
 };
 

@@ -11,6 +11,7 @@
 #include <Canvas.hpp>
 
 #include "../Assets/Images/Images.hpp"
+#include "Assets/Animations/Animations.hpp"
 #include <BSP/BSP.hpp>
 #include <widgets/Animation.hpp>
 
@@ -20,7 +21,7 @@ public:
     /**
      * @brief Constructor.
      */
-    StateArrows() : arrows{32, 32, {Arrows1, Arrows2}}
+    StateArrows() : arrows{getAnimation(AnimationType::ARROWS)}
     {
     }
 
@@ -38,7 +39,7 @@ public:
     }
 
 private:
-    Animation<2> arrows;
+    Animation & arrows;
 };
 
 #endif /* APP_STATEMACHINE_STATES_STATEARROWS_HPP_ */
