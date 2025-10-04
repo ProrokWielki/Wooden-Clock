@@ -12,12 +12,13 @@
 #include <RotatableCanvas.hpp>
 #include <widgets/Image.hpp>
 
-#include "../Assets/Images/Images.hpp"
+#include "Images/Images.hpp"
 
 class StateMario: public RotatableCanvas
 {
 public:
-    StateMario() : mario(32, 32, Mario_pixel_map)
+    StateMario() : mario(getImage(ImageType::MARIO))
+
     {
     }
     void init() override
@@ -32,7 +33,7 @@ public:
     }
 
 private:
-    Image mario;
+    Image& mario;
 };
 
 #endif /* APP_STATEMACHINE_STATES_STATEMARIO_HPP_ */

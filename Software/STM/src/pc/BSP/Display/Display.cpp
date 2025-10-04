@@ -5,6 +5,7 @@
  *  @author: Paweł Warzecha
  */
 
+#include <cmath>
 #include <cstdint>
 #include <exception>
 
@@ -15,6 +16,8 @@
 
 #include <BSP/BSP.hpp>
 #include <BSP/Display.hpp>
+
+float roll{}, pitch{}, yaw{};
 
 void Display::ShowExampleAppCustomRendering() const
 {
@@ -32,7 +35,7 @@ void Display::ShowExampleAppCustomRendering() const
     ImDrawList * draw_list = ImGui::GetWindowDrawList();
 
     // Primitives
-    static const float sz {10.0f};
+    static const float sz{10.0f};
 
     const ImVec2 p = ImGui::GetCursorScreenPos();
 
@@ -51,7 +54,7 @@ void Display::ShowExampleAppCustomRendering() const
                                            displayFrameBuffer[y * displayWidth + x] / 255.0, 1.0f)};
                 const ImU32 off_col{ImColor(col_on)};
                 // Draw empty pixel
-                draw_list->AddCircleFilled(ImVec2(100 + p.x + x * (sz + 3), 100 + p.y + y * (sz + 3)), sz * 0.5f, off_col, 32);
+                draw_list->AddCircleFilled(ImVec2(100 + p.x + x * (sz + 3), 500 + p.y + y * (sz + 3)), sz * 0.5f, off_col, 32);
             }
         }
     }
@@ -156,6 +159,13 @@ void Display::draw() const
     {
         BSP::get().button_right.setReleased();
     }
+
+    ImGui::SliderAngle("roll", &roll);
+    ImGui::SliderAngle("pitch", &pitch);
+    ImGui::SliderAngle("yaw", &yaw);
+
+    BSP::get().accelerometer.set_accelerations({.x = -std::sin(roll), .y = std::cos(roll), .z = 0});
+
     ImGui::End();
 
     // // Rendering

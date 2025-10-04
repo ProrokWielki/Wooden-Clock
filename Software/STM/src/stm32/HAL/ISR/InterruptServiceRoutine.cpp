@@ -64,6 +64,8 @@ void USART3_IRQHandler(void)  // NOLINT(readability-identifier-naming)
         case 'k':
             HAL::parse_time = true;
             break;
+        default:
+            break;  // do nothing
     }
     USART3->ICR |= 0b0000'0000'0001'0010'0000'1101'11101'1111;  // clear all interrupts TODO: make it right
 }
@@ -80,7 +82,7 @@ void TIM2_IRQHandler(void)  // NOLINT(readability-identifier-naming)
     HAL::Timer2.clear_interrupt_flag(timer_types::Interrupt::UPDATE);
 }
 
-void Dispaly_Redrawn(void)
+void Display_Redrawn(void)
 {
 }
 

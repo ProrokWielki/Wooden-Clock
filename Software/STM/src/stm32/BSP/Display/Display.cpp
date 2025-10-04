@@ -8,12 +8,22 @@
 #include <algorithm>
 #include <cstdint>
 #include <iterator>
+#include <cassert>
 #include <string>
 
 #include <HAL/HAL.hpp>
+#include <utility>
 
 #include "HAL/types.hpp"
 #include "include/BSP/Display.hpp"
+
+enum class Transfer : uint8_t
+{
+    TLC59208F_1_Transfer = 0,
+    TLC59208F_2_Transfer = 1,
+    TLC59208F_3_Transfer = 2,
+    TLC59208F_4_Transfer = 3
+};
 
 Display::Display(uint8_t width, uint8_t height, const uint8_t * frameBuffer)
 : displayWidth(width), displayHeight(height), displayFrameBuffer(frameBuffer), transferComplete{true, true, true, true}
@@ -22,13 +32,13 @@ Display::Display(uint8_t width, uint8_t height, const uint8_t * frameBuffer)
 
 void Display::init()
 {
-    HAL::TLC59208F_1.set_transfer_complete_callback([&]() { transfer_complete(0); });
-    HAL::TLC59208F_2.set_transfer_complete_callback([&]() { transfer_complete(1); });
-    HAL::TLC59208F_3.set_transfer_complete_callback([&]() { transfer_complete(2); });
-    HAL::TLC59208F_4.set_transfer_complete_callback([&]() { transfer_complete(3); });
+    HAL::TLC59208F_1.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_1_Transfer); });
+    HAL::TLC59208F_2.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_2_Transfer); });
+    HAL::TLC59208F_3.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_3_Transfer); });
+    HAL::TLC59208F_4.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_4_Transfer); });
 }
 
-void Display::set_dispaly_redrawn_callback(std::function<void()> callback)
+void Display::set_display_redrawn_callback(std::function<void()> callback)
 {
     display_redrawn_callback = callback;
 }
@@ -45,15 +55,19 @@ void Display::draw_next_line()
                 display_redrawn_callback();
         }
 
-        std::ranges::fill(transferComplete.begin(),transferComplete.end(), false);
+        std::ranges::fill(transferComplete.begin(), transferComplete.end(), false);
 
+        const uint16_t current_line_offset = displayWidth * currentLine_;
 
-        const uint16_t current_line_offset = 32 * currentLine_;
+        constexpr uint8_t TLC59208F_1_LED_OFFSET{0};
+        constexpr uint8_t TLC59208F_2_LED_OFFSET{8};
+        constexpr uint8_t TLC59208F_3_LED_OFFSET{16};
+        constexpr uint8_t TLC59208F_4_LED_OFFSET{24};
 
-        HAL::TLC59208F_1.cashe_all_leds_values(&(displayFrameBuffer[current_line_offset + 0]));
-        HAL::TLC59208F_2.cashe_all_leds_values(&(displayFrameBuffer[current_line_offset + 8]));
-        HAL::TLC59208F_3.cashe_all_leds_values(&(displayFrameBuffer[current_line_offset + 16]));
-        HAL::TLC59208F_4.cashe_all_leds_values(&(displayFrameBuffer[current_line_offset + 24]));
+        HAL::TLC59208F_1.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_1_LED_OFFSET]));
+        HAL::TLC59208F_2.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_2_LED_OFFSET]));
+        HAL::TLC59208F_3.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_3_LED_OFFSET]));
+        HAL::TLC59208F_4.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_4_LED_OFFSET]));
 
         HAL::SR_74HC595_1.output_enable(false);
 
@@ -66,24 +80,50 @@ void Display::draw_next_line()
 
 bool Display::is_line_drawn()
 {
-    for (const volatile auto transfer_completed: transferComplete)
+    for (const volatile auto transfer_completed : transferComplete)
         if (transfer_completed == false)
             return false;
 
     return true;
 }
 
-void Display::transfer_complete(const uint8_t transferNumber)
+void Display::transfer_complete(const Transfer transferNumber)
 {
-    transferComplete[transferNumber] = true;
+    set_subtransfer_complete(transferNumber);
+
     if (true == is_line_drawn())
     {
+        move_to_next_line();
+    }
+}
 
-        HAL::SR_74HC595_1.shift_bit(0 == currentLine_ ? GPIO_Types::SignalLevel::Low : GPIO_Types::SignalLevel::High);
+void Display::move_to_next_line()
+{
+    HAL::SR_74HC595_1.shift_bit(0 == currentLine_ ? GPIO_Types::SignalLevel::Low : GPIO_Types::SignalLevel::High);
+    HAL::SR_74HC595_1.output_enable(true);
 
-        HAL::SR_74HC595_1.output_enable(true);
+    currentLine_ += 1;
+    currentLine_ %= displayHeight;
+}
 
-        currentLine_ += 1;
-        currentLine_ %= 32;
+void Display::set_subtransfer_complete(const Transfer transferNumber)
+{
+    switch (transferNumber)
+    {
+        case Transfer::TLC59208F_1_Transfer:
+            transferComplete[0] = true;
+            break;
+        case Transfer::TLC59208F_2_Transfer:
+            transferComplete[1] = true;
+            break;
+        case Transfer::TLC59208F_3_Transfer:
+            transferComplete[2] = true;
+            break;
+        case Transfer::TLC59208F_4_Transfer:
+            transferComplete[3] = true;
+            break;
+        default:
+            assert(false && "Unknown transfer number");
+            break;  // do nothing
     }
 }

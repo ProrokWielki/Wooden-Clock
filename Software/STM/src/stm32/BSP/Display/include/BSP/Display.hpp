@@ -12,6 +12,8 @@
 #include <cstdint>
 #include <functional>
 
+enum class Transfer: uint8_t;
+
 class Display
 {
 public:
@@ -39,21 +41,35 @@ public:
     /**
      * @brief draws next line, has to be called periodically.
      */
-    void draw(){}
+    void draw()
+    {
+    }
 
     /**
      * @brief Sets function to be called every time the full display is redrawn.
      *
      * @param callback function to be called.
      */
-    void set_dispaly_redrawn_callback(std::function<void()> callback);
+    void set_display_redrawn_callback(std::function<void()> callback);
 
     bool is_line_drawn();
     void draw_next_line();
 
+    [[nodiscard]] uint8_t get_width() const
+    {
+        return displayWidth;
+    }
+
+    [[nodiscard]] uint8_t get_height() const
+    {
+        return displayWidth;
+    }
+
 protected:
 private:
-    void transfer_complete(const uint8_t transferNumber);
+    void transfer_complete(const Transfer transfer);
+    void move_to_next_line();
+    void set_subtransfer_complete(const Transfer transferNumber);
 
     std::function<void()> display_redrawn_callback;
 

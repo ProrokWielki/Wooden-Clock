@@ -14,9 +14,16 @@
 #include "Canvas.hpp"
 
 #include <BSP/Accelerometer.hpp>
+#include <algorithm>
 #include <array>
+#include <cerrno>
+#include <cstdint>
+#include <cstdlib>
 #include <limits>
+#include <optional>
+#include <random>
 #include <stddef.h>
+#include <tuple>
 
 class Particle
 {
@@ -24,6 +31,11 @@ public:
     Particle() = default;
     Particle(double x, double y) : x_{x}, y_{y}
     {
+    }
+
+    bool operator==(const Particle & other) const
+    {
+        return x_ == other.x_ && y_ == other.y_;
     }
 
     void set_position(double x, double y)
@@ -35,38 +47,54 @@ public:
     void update(double accel_x, double accel_y)
     {
         constexpr double delta_t = 0.2;
+        constexpr double max_speed = 0.5;
+        constexpr double min_speed = -max_speed;
 
         speed_x_ += accel_x * delta_t;
         speed_y_ += accel_y * delta_t;
 
-        x_ += speed_x_ * delta_t;
-        y_ += speed_y_ * delta_t;
+        speed_x_ = std::max(std::min(speed_x_, max_speed), min_speed);
+        speed_y_ = std::max(std::min(speed_y_, max_speed), min_speed);
+    }
+
+    void stop()
+    {
+        speed_x_ = 0;
+        speed_y_ = 0;
     }
 
     void stop(double x, double y)
     {
-        if (std::abs(x - x_) > 0.5)
-        {
-            speed_x_ = 0;
-        }
+        speed_x_ = 0;
+        speed_y_ = 0;
 
-        if (std::abs(y - y_) > 0.5)
-        {
-            speed_y_ = 0;
-        }
         x_ = x;
         y_ = y;
+    }
+
+    void stop_x()
+    {
+        speed_x_ = 0;
+    }
+
+    void stop_y()
+    {
+        speed_y_ = 0;
     }
 
     [[nodiscard]] std::tuple<double, double> get_position() const
     {
         return {x_, y_};
     }
-    [[nodiscard]] std::tuple<uint8_t, uint8_t> get_position_as_uint() const
+    [[nodiscard]] std::tuple<double, double> get_speed() const
+    {
+        return {speed_x_, speed_y_};
+    }
+    [[nodiscard]] std::tuple<int8_t, int8_t> get_position_as_int() const
     {
         return {x_, y_};
     }
-    
+
 private:
     double x_{};
     double y_{};
@@ -80,76 +108,127 @@ class ParticleContainer
 public:
     ParticleContainer()
     {
+        std::array<std::tuple<int8_t, int8_t>, N> initial_positions{};
         for (size_t i{0}; i < N; ++i)
         {
-            particles[i].set_position(i % 31, i / 31);
+
+            while (true)
+            {
+                auto next_position = std::make_tuple<int8_t, int8_t>(rand() % BSP::DISPLAY_WIDTH, rand() % BSP::DISPLAY_HEIGHT);
+                const std::span<std::tuple<int8_t, int8_t>> populated_indices(initial_positions.data(), i);
+                if (std::ranges::find(populated_indices, next_position) != populated_indices.end())
+                {
+                    continue;
+                }
+                initial_positions[i] = next_position;
+                particles[i] = Particle(std::get<0>(next_position), std::get<1>(next_position));
+                break;
+            }
         }
     }
 
     void update(double accel_x, double accel_y)
     {
-        auto particles_after_update = particles;
-        for (auto & particle : particles_after_update)
-        {
-            particle.update(accel_x, accel_y);
-        }
-
-        bool needs_updating{true};
-        std::array<bool, N> particles_updated{};
-
-        while (needs_updating)
-        {
-            for (size_t i{0}; i < N; ++i)
-            {
-                needs_updating = !particles_updated[i];
-                if (needs_updating == false)
-                {
-                    continue;
-                }
-
-                for (size_t k{0}; k < N; ++k)
-                {
-                    if (k == i)
-                    {
-                        continue;
-                    }
-
-                    if (particles_after_update[i].get_position_as_uint() == particles[k].get_position_as_uint())
-                    {
-                        needs_updating = false;
-                        break;
-                    }
-                }
-                if (needs_updating)
-                {
-                    particles[i] = particles_after_update[i];
-                    particles_updated[i] = true;
-                    break;
-                }
-            }
-        }
-
         for (auto & particle : particles)
         {
-            auto [particle_x, particle_y] = particle.get_position();
-
-            if (particle_x < 0 || particle_x > 31 || particle_y < 0 || particle_y > 31)
+            particle.update(accel_x, accel_y);
+            auto maybe_next_position = get_first_movable_positions(particle);
+            if (maybe_next_position.has_value())
             {
-                particle_x = particle_x < 0.0 ? 0.0 : particle_x > 31.0 ? 31 : particle_x;
-                particle_y = particle_y < 0.0 ? 0.0 : particle_y > 31.0 ? 31 : particle_y;
-
-                particle.stop(particle_x, particle_y);
+                auto [next_x, next_y] = maybe_next_position.value();
+                particle.set_position(next_x, next_y);
+                if (next_x == 0 or next_x == BSP::DISPLAY_WIDTH - 1)
+                {
+                    particle.stop_x();
+                }
+                if (next_y == 0 or next_y == BSP::DISPLAY_HEIGHT - 1)
+                {
+                    particle.stop_y();
+                }
             }
-        }
-        for (size_t i{0}; i < N; ++i)
-        {
-            if (particles_updated[i] == false)
+            else
             {
-                auto [particle_x, particle_y] = particles[i].get_position();
-                particles[i].stop(particle_x, particle_y);
+                particle.stop();
             }
         }
     }
+
+    [[nodiscard]] std::array<std::tuple<int8_t, int8_t>, 5> get_all_possible_next_positions(const Particle & particle) const
+    {
+        // constexpr static double EPSILON{22.5};
+        auto [acceleration_x, acceleration_y] = particle.get_speed();
+        auto gravity_vector = atan2(-acceleration_y, acceleration_x);
+
+        auto [particle_x, particle_y] = particle.get_position_as_int();
+
+        return {{
+        {particle_x + std::round(std::cos(gravity_vector)), particle_y - std::round(std::sin(gravity_vector))},
+        {particle_x + std::round(std::cos(gravity_vector - 0.5)), particle_y - std::round(std::sin(gravity_vector - 0.5))},
+        {particle_x + std::round(std::cos(gravity_vector + 0.5)), particle_y - std::round(std::sin(gravity_vector + 0.5))},
+        {particle_x + std::round(std::cos(gravity_vector - 1.0)), particle_y - std::round(std::sin(gravity_vector - 1.0))},
+        {particle_x + std::round(std::cos(gravity_vector + 1.0)), particle_y - std::round(std::sin(gravity_vector + 1.0))},
+        }};
+    }
+
+    [[nodiscard]] std::span<std::tuple<int8_t, int8_t>> get_valid_next_positions(const Particle & particle) const
+    {
+        auto all_possible_next_positions = get_all_possible_next_positions(particle);
+        static std::array<std::tuple<int8_t, int8_t>, 5> valid_next_positions{};
+        uint8_t valid_next_positions_index{0};
+
+        for (const auto & position : all_possible_next_positions)
+        {
+            if (std::get<0>(position) < 0 || std::get<0>(position) > 31 || std::get<1>(position) < 0 || std::get<1>(position) > 31)
+            {
+                continue;
+            }
+            valid_next_positions.at(valid_next_positions_index++) = position;
+        }
+        return {valid_next_positions.data(), valid_next_positions_index};
+    }
+
+    [[nodiscard]] std::optional<std::tuple<int8_t, int8_t>> get_first_movable_positions(const Particle & particle) const
+    {
+        std::array<std::tuple<int8_t, int8_t>, 5> movable_positions{};
+        uint8_t movable_positions_index{0};
+        auto valid_positions = get_valid_next_positions(particle);
+
+        for (const auto & valid_position : valid_positions)
+        {
+            bool is_valid_position{true};
+            for (const auto & other_particle : particles)
+            {
+                if (other_particle == particle)
+                {
+                    continue;
+                }
+                if (other_particle.get_position_as_int() == valid_position)
+                {
+                    is_valid_position = false;
+                    break;
+                }
+            }
+            if (is_valid_position)
+            {
+                movable_positions.at(movable_positions_index++) = valid_position;
+            }
+        }
+        if (movable_positions_index == 0)
+        {
+            return std::nullopt;
+        }
+        return movable_positions.at(rand() % movable_positions_index);
+    }
+
+    // for (size_t i{0}; i < N; ++i)
+    // {
+    //     if (particles_updated[i] == false)
+    //     {
+    //         auto [particle_x, particle_y] = particles[i].get_position();
+    //         particles[i].stop(particle_x, particle_y);
+    //     }
+    // }
+    // }
 
     [[nodiscard]] const std::array<Particle, N> & get_particles() const
     {
@@ -163,7 +242,7 @@ private:
 class StateSand: public Canvas
 {
 public:
-    StateSand(BSP2::Accelerometer & accel) : accel_(accel), magnet(get_width(), get_height(), empty_frame_buffer[0])
+    StateSand(BSP2::Accelerometer & accel) : accel_(accel), magnet(get_width(), get_height(), empty_frame_buffer.data())
     {
     }
 
@@ -175,7 +254,7 @@ public:
 
     void up_date() override
     {
-        memset(empty_frame_buffer, 0, get_width() * get_height());
+        memset(empty_frame_buffer.data(), 0, get_width() * get_height());
 
         auto [x, y, z] = accel_.get_linear_accelerations();
         particles_.update(-x, y);
@@ -190,7 +269,8 @@ public:
             const auto display_x = static_cast<uint8_t>(particle_x);
             const auto display_y = static_cast<uint8_t>(particle_y);
 
-            empty_frame_buffer[std::min(display_y,max_y_index())][std::min(display_x,max_x_index())] = std::numeric_limits<uint8_t>::max();
+            empty_frame_buffer.at(std::min(display_y, max_y_index()) * BSP::DISPLAY_WIDTH + std::min(display_x, max_x_index())) =
+            std::numeric_limits<uint8_t>::max();
         }
 
         // validate();
@@ -198,7 +278,8 @@ public:
 
 private:
     BSP2::Accelerometer & accel_;
-    uint8_t empty_frame_buffer[32][32] = {};
+    std::array<uint8_t, BSP::DISPLAY_WIDTH * BSP::DISPLAY_WIDTH> empty_frame_buffer{};
     Image magnet;
-    ParticleContainer<1> particles_{};
+    static constexpr uint8_t NUM_OF_PARTICLES{128};
+    ParticleContainer<NUM_OF_PARTICLES> particles_{};
 };

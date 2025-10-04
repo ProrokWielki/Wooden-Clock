@@ -9,7 +9,7 @@
 
 #include <widgets/Image.hpp>
 
-#include "../Assets/Images/Images.hpp"
+#include "Images/Images.hpp"
 
 class StateButtons: public Canvas
 {
@@ -17,7 +17,9 @@ public:
     /**
      * @brief Constructor.
      */
-    StateButtons() : up_arrow_(12, 14, up_arrow), down_arrow_(12, 14, down_arrow), left_arrow_(14, 12, left_arrow), right_arrow_(14, 12, right_arrow)
+    StateButtons()
+    : up_arrow_(getImage(ImageType::UP_ARROW)), down_arrow_(getImage(ImageType::DOWN_ARROW)), left_arrow_(getImage(ImageType::LEFT_ARROW)),
+      right_arrow_(getImage(ImageType::RIGHT_ARROW))
     {
     }
 
@@ -26,15 +28,24 @@ public:
      */
     void init() override
     {
+        constexpr uint8_t UP_ARROW_X{10};
+        constexpr uint8_t UP_ARROW_Y{0};
+        constexpr uint8_t DOWN_ARROW_X{10};
+        constexpr uint8_t DOWN_ARROW_Y{18};
+        constexpr uint8_t LEFT_ARROW_X{0};
+        constexpr uint8_t LEFT_ARROW_Y{10};
+        constexpr uint8_t RIGHT_ARROW_X{18};
+        constexpr uint8_t RIGHT_ARROW_Y{10};
+
         up_arrow_.hide();
         down_arrow_.hide();
         left_arrow_.hide();
         right_arrow_.hide();
 
-        add(&up_arrow_, 10, 0);
-        add(&down_arrow_, 10, 18);
-        add(&left_arrow_, 0, 10);
-        add(&right_arrow_, 18, 10);
+        add(&up_arrow_, UP_ARROW_X, UP_ARROW_Y);
+        add(&down_arrow_, DOWN_ARROW_X, DOWN_ARROW_Y);
+        add(&left_arrow_, LEFT_ARROW_X, LEFT_ARROW_Y);
+        add(&right_arrow_, RIGHT_ARROW_X, RIGHT_ARROW_Y);
 
         // validate();
     }
@@ -67,8 +78,8 @@ public:
     }
 
 private:
-    Image up_arrow_;
-    Image down_arrow_;
-    Image left_arrow_;
-    Image right_arrow_;
+    Image & up_arrow_;
+    Image & down_arrow_;
+    Image & left_arrow_;
+    Image & right_arrow_;
 };

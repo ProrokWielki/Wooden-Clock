@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "BSP/Thermometer.hpp"
-
 namespace BSP2{
 
 class Thermometer

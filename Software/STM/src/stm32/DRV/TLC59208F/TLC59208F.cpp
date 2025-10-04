@@ -58,7 +58,7 @@ void TLC59208F::set_all_leds_values(uint8_t const * const allLedsValues)
     i2c_.write_data_DMA(ledValues_, 9);
 }
 
-void TLC59208F::cashe_all_leds_values(uint8_t const * const allLedsValues)
+void TLC59208F::cache_all_leds_values(uint8_t const * const allLedsValues)
 {
     memcpy(&(cashedLedValues_[1]), allLedsValues, 8 * sizeof(uint8_t));
 }

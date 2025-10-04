@@ -71,6 +71,9 @@ constexpr uint8_t TLC59208F_1_ADDRESS{0x40};
 
 constexpr float I2C_CLOCK_SPEED_1MHZ{1'000'000.0};
 
+constexpr unsigned int ESP_UART_SPEED{500'000};
+constexpr unsigned int DEBUG_UART_SPEED{115200};
+
 }  // namespace
 
 Clock HAL::clock{};
@@ -135,8 +138,8 @@ SPI HAL::SPI_1(clock, SPI_types::SPI_Number::SPI_1, SPI1_MOSI, SPI1_MISO, SPI1_S
                SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
                SPI_types::BaudRatePrescaller::Prescaller_256);
 
-USART HAL::USART_3(clock, Usart_Types::UsartNumber::USART_3, HAL::UART3_TX, HAL::UART3_RX, 500000);
-USART HAL::USART_4(clock, Usart_Types::UsartNumber::UART_4, HAL::UART4_TX, HAL::UART4_RX, 115200);
+USART HAL::USART_3(clock, Usart_Types::UsartNumber::USART_3, HAL::UART3_TX, HAL::UART3_RX, ESP_UART_SPEED);
+USART HAL::USART_4(clock, Usart_Types::UsartNumber::UART_4, HAL::UART4_TX, HAL::UART4_RX, DEBUG_UART_SPEED);
 
 SR_74HC595 HAL::SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR, SR_CHAIN_LENGTH);
 

@@ -31,7 +31,7 @@ public:
 
     void draw() const;
 
-    void set_dispaly_redrawn_callback(std::function<void()> callback)
+    void set_display_redrawn_callback(std::function<void()> callback)
 {
     display_redrawn_callback = callback;
 }

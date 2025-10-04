@@ -27,7 +27,7 @@ public:
 
     void set_all_leds_values(const uint8_t * allLedsValues);
 
-    void cashe_all_leds_values(const uint8_t * allLedsValues);
+    void cache_all_leds_values(const uint8_t * allLedsValues);
 
     void send_cashed_leds_values();
 

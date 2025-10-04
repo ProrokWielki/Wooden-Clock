@@ -23,6 +23,7 @@ class Accelerometer
 public:
     [[nodiscard]] Accelerations get_linear_accelerations() const;
     void update();
+    void set_accelerations(BSP2::Accelerations accelerations);
 
 private:
     Accelerations accelerations_{};

@@ -10,9 +10,9 @@
 namespace BSP2{
 
 struct Accelerations {
-    float x;
-    float y;
-    float z;
+    double x;
+    double y;
+    double z;
 };
 
 class Accelerometer

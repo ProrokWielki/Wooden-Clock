@@ -41,7 +41,8 @@ void Clock::set_clock_source_for(PeripheralWithSelectableClockSource peripheral,
 
 [[nodiscard]] uint32_t Clock::get_clock_frequency() const
 {
-    return 80'000'000;
+    constexpr uint32_t CLOCK_FREQUENCY{80'000'000}; //TODO: Get from RCC->CFGR
+    return CLOCK_FREQUENCY;
 }
 
 Register<uint32_t> & Clock::get_peripheral_clock_register(Peripheral peripheral)

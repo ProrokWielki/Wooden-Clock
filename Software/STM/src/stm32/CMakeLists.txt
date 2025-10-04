@@ -2,7 +2,7 @@ IF(NOT ((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
                                                     "x86_GCC")))
   ADD_EXECUTABLE(WoodenClock main.cpp)
 
-  TARGET_LINK_LIBRARIES(WoodenClock PUBLIC APP BSP HAL MCU ISR CMSIS)
+  TARGET_LINK_LIBRARIES(WoodenClock PUBLIC APP BSP HAL MCU ISR CMSIS EmbedGUI)
 
   TARGET_LINK_OPTIONS(
     WoodenClock PRIVATE
