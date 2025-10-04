@@ -18,9 +18,10 @@
 #include "Screens/StateHourglass.hpp"
 #include "Screens/StateMario.hpp"
 #include "Screens/StateNorth.hpp"
-#include "Screens/Text.hpp"
 #include "Screens/StateSand.hpp"
 #include "Screens/Temperature.hpp"
+#include "Screens/Shapes.hpp"
+#include "Screens/Text.hpp"
 
 enum class Signal
 {
@@ -30,14 +31,10 @@ enum class Signal
     BUTTON_DOWN
 };
 
-
 class DataContainer
 {
 public:
-    static uint8_t FrameBuffer1[];
-    static uint8_t FrameBuffer2[];
-
-    static GUI stateMachine;
+    static DataContainer & get();
 
     static StateMario Mario;
     static StateArrows Arrows;
@@ -48,8 +45,14 @@ public:
     static StateButtons Buttons;
     static StateSand Sand;
     static Hour StateHour;
-    static Temperature temperature;    
+    static Temperature temperature;
+    static ShapesScreen Shapes;
     static TextScreen text;
+
+    GUI stateMachine;
+
+private:
+    DataContainer();
 };
 
 #endif /* APP_DATACONTAINER_HPP_ */
