@@ -1,21 +1,22 @@
 /**
  *  @file Images
  *
- *  Created on: 15-02-2018
+ *  Created on: 27-07-2025
  *  @author: Paweł Warzecha
  */
 
-#ifndef APP_ASSETS_IMAGES_IMAGES_HPP_
-#define APP_ASSETS_IMAGES_IMAGES_HPP_
-
-#include <cstdint>
-
-extern const uint8_t Mario_pixel_map[];
-
-extern const uint8_t up_arrow[];
-extern const uint8_t down_arrow[];
-extern const uint8_t left_arrow[];
-extern const uint8_t right_arrow[];
+#pragma once
 
 
-#endif /* APP_ASSETS_IMAGES_IMAGES_HPP_ */
+class Image;
+
+enum class ImageType
+{
+    MARIO,
+    UP_ARROW,
+    DOWN_ARROW,
+    LEFT_ARROW,
+    RIGHT_ARROW
+};
+
+Image & getImage(ImageType image_type);
