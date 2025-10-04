@@ -10,7 +10,7 @@ namespace
 std::vector<std::thread> tasks;
 }
 
-void OsAbstraction::create_task(char *, uint32_t, uint32_t, std::function<void(void *)> thread_function)
+void OsAbstraction::create_task(const char *, uint32_t, uint32_t, std::function<void(void *)> thread_function)
 {
     tasks.emplace_back([thread_function]() { thread_function(nullptr); });
 }

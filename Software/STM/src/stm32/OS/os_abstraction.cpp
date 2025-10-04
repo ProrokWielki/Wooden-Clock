@@ -3,7 +3,7 @@
 
 #include "os_abstraction.hpp"
 
-void OsAbstraction::create_task(char * name, uint32_t stack_depth, uint32_t priority, void (*task_function)(void*) )
+void OsAbstraction::create_task(const char * name, uint32_t stack_depth, uint32_t priority, void (*task_function)(void*) )
 {
     xTaskCreate(task_function, name, stack_depth, nullptr, priority, nullptr);
 }
