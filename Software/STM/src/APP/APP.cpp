@@ -28,7 +28,7 @@ void gui_task(void *)
 
     for (;;)
     {
-        DataContainer::stateMachine.update();
+        DataContainer::get().stateMachine.update();
         OsAbstraction::delay_ms(sleep_time_ms);
     }
     // BSP::display.draw();
@@ -41,34 +41,34 @@ void system_interface_task(void *)
     for (;;)
     {
         // std::cout << "System interface task started" << std::endl;
-        BSP::button_up.update();
-        BSP::button_down.update();
-        BSP::button_left.update();
-        BSP::button_right.update();
+        BSP::get().button_up.update();
+        BSP::get().button_down.update();
+        BSP::get().button_left.update();
+        BSP::get().button_right.update();
         BSP2::Clock::update();
-        BSP::magnetometer.update();
-        BSP::accelerometer.update();
-        BSP::thermometer.update();
+        BSP::get().magnetometer.update();
+        BSP::get().accelerometer.update();
+        BSP::get().thermometer.update();
 
-        if (BSP::button_up.wasReleased() || BSP::up)
+        if (BSP::get().button_up.wasReleased() || BSP::get().up)
         {
-            DataContainer::stateMachine.signal_callback(Signal::BUTTON_UP);
-            BSP::up = false;
+            DataContainer::get().stateMachine.signal_callback(Signal::BUTTON_UP);
+            BSP::get().up = false;
         }
-        if (BSP::button_down.wasReleased() || BSP::down)
+        if (BSP::get().button_down.wasReleased() || BSP::get().down)
         {
-            DataContainer::stateMachine.signal_callback(Signal::BUTTON_DOWN);
-            BSP::down = false;
+            DataContainer::get().stateMachine.signal_callback(Signal::BUTTON_DOWN);
+            BSP::get().down = false;
         }
-        if (BSP::button_left.wasReleased() || BSP::left)
+        if (BSP::get().button_left.wasReleased() || BSP::get().left)
         {
-            DataContainer::stateMachine.signal_callback(Signal::BUTTON_LEFT);
-            BSP::left = false;
+            DataContainer::get().stateMachine.signal_callback(Signal::BUTTON_LEFT);
+            BSP::get().left = false;
         }
-        if (BSP::button_right.wasReleased() || BSP::right)
+        if (BSP::get().button_right.wasReleased() || BSP::get().right)
         {
-            DataContainer::stateMachine.signal_callback(Signal::BUTTON_RIGHT);
-            BSP::right = false;
+            DataContainer::get().stateMachine.signal_callback(Signal::BUTTON_RIGHT);
+            BSP::get().right = false;
         }
 
         // if (HAL::reset)
@@ -83,16 +83,17 @@ void system_interface_task(void *)
 
 void APP_init()
 {
+    constexpr static uint32_t gui_task_stack_depth{10000};
+    constexpr static uint32_t system_interface_task_stack_depth{1024};
 
-    BSP::display.set_frame_buffer(DataContainer::stateMachine.getFrameBuffer());
-    BSP::display.set_dispaly_redrawn_callback([&]() { DataContainer::stateMachine.swap_framebuffers(); });
+    constexpr static uint32_t gui_task_priority{2};
+    constexpr static uint32_t system_interface_task_priority{1};
 
-    // char dispaly_task[] = "dispaly_task";
-    char guui_task[] = "gui_task";
-    char systeam_interface_task[] = "system_interface_task";
+    BSP::get().display.set_frame_buffer(DataContainer::get().stateMachine.getFrameBuffer());
+    BSP::get().display.set_display_redrawn_callback([&]() { DataContainer::get().stateMachine.swap_framebuffers(); });
 
-    OsAbstraction::create_task(guui_task, 10000, 2, gui_task);
-    OsAbstraction::create_task(systeam_interface_task, 1024, 1, system_interface_task);
+    OsAbstraction::create_task("gui_task", gui_task_stack_depth, gui_task_priority, gui_task);
+    OsAbstraction::create_task("system_interface_task", system_interface_task_stack_depth, system_interface_task_priority, system_interface_task);
 
     OsAbstraction::start_scheduler();
 }

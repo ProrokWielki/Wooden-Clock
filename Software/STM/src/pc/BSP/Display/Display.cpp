@@ -120,41 +120,41 @@ void Display::draw() const
     ImGui::Button("up");
     if (ImGui::IsItemActive())
     {
-        BSP::button_up.setPressed();
+        BSP::get().button_up.setPressed();
     }
     else
     {
-        BSP::button_up.setReleased();
+        BSP::get().button_up.setReleased();
     }
 
     ImGui::Button("down");
     if (ImGui::IsItemActive())
     {
-        BSP::button_down.setPressed();
+        BSP::get().button_down.setPressed();
     }
     else
     {
-        BSP::button_down.setReleased();
+        BSP::get().button_down.setReleased();
     }
 
     ImGui::Button("left");
     if (ImGui::IsItemActive())
     {
-        BSP::button_left.setPressed();
+        BSP::get().button_left.setPressed();
     }
     else
     {
-        BSP::button_left.setReleased();
+        BSP::get().button_left.setReleased();
     }
 
     ImGui::Button("right");
     if (ImGui::IsItemActive())
     {
-        BSP::button_right.setPressed();
+        BSP::get().button_right.setPressed();
     }
     else
     {
-        BSP::button_right.setReleased();
+        BSP::get().button_right.setReleased();
     }
     ImGui::End();
 

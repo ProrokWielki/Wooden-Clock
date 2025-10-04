@@ -76,7 +76,7 @@ void SysTick_Handler(void)  // NOLINT(readability-identifier-naming)
 
 void TIM2_IRQHandler(void)  // NOLINT(readability-identifier-naming)
 {
-    BSP::display.draw_next_line();
+    BSP::get().display.draw_next_line();
     HAL::Timer2.clear_interrupt_flag(timer_types::Interrupt::UPDATE);
 }
 

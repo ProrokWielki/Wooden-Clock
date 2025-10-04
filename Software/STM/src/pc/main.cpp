@@ -9,7 +9,7 @@ int main()
 
     while (true)
     {
-        BSP::display.draw();
+        BSP::get().display.draw();
     }
 
     return 0;

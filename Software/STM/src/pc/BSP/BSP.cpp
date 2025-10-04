@@ -1,20 +1,11 @@
 #include <BSP/BSP.hpp>
 
-std::array<uint8_t, 32 * 32> frame_buffer1{};
-std::array<uint8_t, 32 * 32> frame_buffer2{};
+BSP::BSP() : display(BSP::DISPLAY_WIDTH, BSP::DISPLAY_HEIGHT, frame_buffer1.data()), button_right{"right"}, button_left{"left"}, button_up{"up"}, button_down{"down"}
+{
+}
 
-Display BSP::display(32, 32, frame_buffer1.data());
-BSP2::Magnetometer BSP::magnetometer;
-BSP2::Accelerometer BSP::accelerometer;
-BSP2::Clock BSP::clock;
-BSP2::Thermometer BSP::thermometer;
-
-Button BSP::button_right{"right"};
-Button BSP::button_left{"left"};
-Button BSP::button_up{"up"};
-Button BSP::button_down{"down"};
-
-bool BSP::up;
-bool BSP::down;
-bool BSP::left;
-bool BSP::right;
+BSP & BSP::get()
+{
+    static BSP instance;
+    return instance;
+}

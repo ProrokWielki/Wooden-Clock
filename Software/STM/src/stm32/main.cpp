@@ -7,15 +7,16 @@
 #include <HAL/RTC.hpp>
 
 #include "Assets/Images/Images.hpp"
+#include <widgets/Image.hpp>
 
 #include <stm32l452xx.h>
 
 int main()
 {
     HAL::init();
-    BSP::init();
+    BSP::get().init();
 
-    BSP::display.set_frame_buffer(Mario_pixel_map);
+    BSP::get().display.set_frame_buffer(getImage(ImageType::MARIO).get_pixel_map());
 
     NVIC_EnableIRQ(DMA1_Channel2_IRQn);
     NVIC_EnableIRQ(DMA1_Channel4_IRQn);

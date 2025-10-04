@@ -33,7 +33,7 @@ public:
 
     void up_date() override
     {
-        const auto temperature{BSP::thermometer.get_temperature()};
+        const auto temperature{BSP::get().thermometer.get_temperature()};
         std::string temperature_str = std::to_string(temperature);
         temperature_text.setText(temperature_str.substr(0, temperature_str.find(".")+2) + "*C");
     }
