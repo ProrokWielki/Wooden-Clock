@@ -142,6 +142,7 @@ uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::SYSTEM_CLOCK:
                     return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::LSI:
                 case ClockSource::MSI:
                 case ClockSource::HSI48:
@@ -174,6 +175,7 @@ uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, C
                     return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
                 case ClockSource::LSI:
                 case ClockSource::MSI:
+                case ClockSource::HSE:
                 case ClockSource::HSI48:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_ADC_CLOCK:
@@ -203,6 +205,7 @@ uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::HSI16:
                 case ClockSource::HSI48:
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_48_M1_CLOCK:
                 case ClockSource::PLL_48_M2_CLOCK:
@@ -229,6 +232,7 @@ uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::LSI:
                 case ClockSource::HSI16:
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_ADC_CLOCK:
                 case ClockSource::PLL_SAI_CLOCK:
@@ -254,6 +258,7 @@ uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::SYSTEM_CLOCK:
                 case ClockSource::MSI:
                 case ClockSource::HSI48:
+                case ClockSource::HSE:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_ADC_CLOCK:
                 case ClockSource::PLL_48_M1_CLOCK:
@@ -283,6 +288,7 @@ uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::MSI:
                 case ClockSource::HSI48:
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::PLL_ADC_CLOCK:
                 case ClockSource::PLL_48_M1_CLOCK:
                 case ClockSource::PLL_48_M2_CLOCK:
@@ -308,11 +314,36 @@ uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::HSI16:
                 case ClockSource::HSI48:
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_ADC_CLOCK:
                 case ClockSource::PLL_48_M1_CLOCK:
                 case ClockSource::PLL_48_M2_CLOCK:
                 case ClockSource::N0_CLOCK:
+                default:
+                    assert(false && "invalid clock source");
+                    return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            }
+        case PeripheralWithSelectableClockSource::RTC_1:
+            switch (clock_source)
+            {
+                case ClockSource::N0_CLOCK:
+                    return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                case ClockSource::LSE:
+                    return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                case ClockSource::LSI:
+                    return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                case ClockSource::HSE:
+                    return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                case ClockSource::PCLK:
+                case ClockSource::SYSTEM_CLOCK:
+                case ClockSource::MSI:
+                case ClockSource::HSI16:
+                case ClockSource::HSI48:
+                case ClockSource::PCLK1:
+                case ClockSource::PLL_ADC_CLOCK:
+                case ClockSource::PLL_48_M1_CLOCK:
+                case ClockSource::PLL_48_M2_CLOCK:
                 default:
                     assert(false && "invalid clock source");
                     return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
@@ -357,6 +388,8 @@ uint8_t to_clock_source_position(PeripheralWithSelectableClockSource peripheral)
             return 30;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case PeripheralWithSelectableClockSource::SAI_1:
             return 22;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case PeripheralWithSelectableClockSource::RTC_1:
+            return 8;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         default:
             assert(false && "invalid peripheral");
             return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
@@ -468,6 +501,8 @@ uint8_t to_bit_position(Peripheral peripheral)
             return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case Peripheral::SYSTEM_CONFIG:
             return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case Peripheral::RTC_1:
+            return 15;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         default:
             assert(false && "invalid peripheral");
             return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
@@ -559,6 +594,7 @@ bool is_clock_source_supported(PeripheralWithSelectableClockSource peripheral, C
                     return true;
                 case ClockSource::LSI:
                 case ClockSource::MSI:
+                case ClockSource::HSE:
                 case ClockSource::HSI48:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_ADC_CLOCK:
@@ -587,6 +623,7 @@ bool is_clock_source_supported(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::HSI16:
                 case ClockSource::HSI48:
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_48_M1_CLOCK:
                 case ClockSource::PLL_48_M2_CLOCK:
@@ -611,6 +648,7 @@ bool is_clock_source_supported(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::LSI:
                 case ClockSource::HSI16:
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_ADC_CLOCK:
                 case ClockSource::PLL_SAI_CLOCK:
@@ -635,6 +673,7 @@ bool is_clock_source_supported(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::MSI:
                 case ClockSource::HSI48:
                 case ClockSource::PCLK1:
+                case ClockSource::HSE:
                 case ClockSource::PLL_ADC_CLOCK:
                 case ClockSource::PLL_48_M1_CLOCK:
                 case ClockSource::PLL_48_M2_CLOCK:
@@ -663,6 +702,7 @@ bool is_clock_source_supported(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::MSI:
                 case ClockSource::HSI48:
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::PLL_ADC_CLOCK:
                 case ClockSource::PLL_48_M1_CLOCK:
                 case ClockSource::PLL_48_M2_CLOCK:
@@ -687,11 +727,34 @@ bool is_clock_source_supported(PeripheralWithSelectableClockSource peripheral, C
                 case ClockSource::HSI16:
                 case ClockSource::HSI48:
                 case ClockSource::LSE:
+                case ClockSource::HSE:
                 case ClockSource::PCLK1:
                 case ClockSource::PLL_ADC_CLOCK:
                 case ClockSource::PLL_48_M1_CLOCK:
                 case ClockSource::PLL_48_M2_CLOCK:
                 case ClockSource::N0_CLOCK:
+                    return false;
+                default:
+                    assert(false && "invalid clock source");
+                    return false;
+            }
+        case PeripheralWithSelectableClockSource::RTC_1:
+            switch (clock_source)
+            {
+                case ClockSource::N0_CLOCK:
+                case ClockSource::LSE:
+                case ClockSource::LSI:
+                case ClockSource::HSE:
+                    return true;
+                case ClockSource::PCLK:
+                case ClockSource::SYSTEM_CLOCK:
+                case ClockSource::MSI:
+                case ClockSource::HSI16:
+                case ClockSource::HSI48:
+                case ClockSource::PCLK1:
+                case ClockSource::PLL_ADC_CLOCK:
+                case ClockSource::PLL_48_M1_CLOCK:
+                case ClockSource::PLL_48_M2_CLOCK:
                     return false;
                 default:
                     assert(false && "invalid clock source");
@@ -721,6 +784,7 @@ uint8_t to_peripheral_clock_select_field_length(PeripheralWithSelectableClockSou
         case PeripheralWithSelectableClockSource::SAI_1:
         case PeripheralWithSelectableClockSource::CLK_48MHZ:
         case PeripheralWithSelectableClockSource::ADC:
+        case PeripheralWithSelectableClockSource::RTC_1:
             return 2;
         case PeripheralWithSelectableClockSource::SINGLE_WIRE:
             return 1;

@@ -19,7 +19,8 @@
 Clock::Clock()
 : AHB1(to_address(ClockRegister::AHB1)), AHB2(to_address(ClockRegister::AHB2)), AHB3(to_address(ClockRegister::AHB3)),
   APB1_1(to_address(ClockRegister::APB1_1)), APB1_2(to_address(ClockRegister::APB1_2)), APB2(to_address(ClockRegister::APB2)),
-  PLL_CONFIG(to_address(ClockRegister::PLL_CONFIG)), CCIPR(to_address(ClockRegister::CCIPR)), CCIPR2(to_address(ClockRegister::CCIPR2))
+  PLL_CONFIG(to_address(ClockRegister::PLL_CONFIG)), CCIPR(to_address(ClockRegister::CCIPR)), CCIPR2(to_address(ClockRegister::CCIPR2)),
+  BDCR(to_address(ClockRegister::BDCR))
 {
 }
 
@@ -41,7 +42,7 @@ void Clock::set_clock_source_for(PeripheralWithSelectableClockSource peripheral,
 
 [[nodiscard]] uint32_t Clock::get_clock_frequency() const
 {
-    constexpr uint32_t CLOCK_FREQUENCY{80'000'000}; //TODO: Get from RCC->CFGR
+    constexpr uint32_t CLOCK_FREQUENCY{80'000'000};  // TODO: Get from RCC->CFGR
     return CLOCK_FREQUENCY;
 }
 
@@ -106,6 +107,8 @@ Register<uint32_t> & Clock::get_peripheral_clock_register(Peripheral peripheral)
         case Peripheral::DFSDM_1:
         case Peripheral::SYSTEM_CONFIG:
             return APB2;
+                    case Peripheral::RTC_1:
+            return BDCR;
         default:
             assert(false && "invalid peripheral");
             return APB1_1;
@@ -133,6 +136,8 @@ Register<uint32_t> & Clock::get_peripheral_clock_source_register(PeripheralWithS
             return CCIPR;
         case PeripheralWithSelectableClockSource::I2C_4:
             return CCIPR2;
+        case PeripheralWithSelectableClockSource::RTC_1:
+            return BDCR;
         default:
             assert(false && "invalid peripheral");
             return CCIPR;

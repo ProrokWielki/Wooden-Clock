@@ -46,4 +46,5 @@ private:
     Register<uint32_t> PLL_CONFIG;
     Register<uint32_t> CCIPR;
     Register<uint32_t> CCIPR2;
+    Register<uint32_t> BDCR;
 };

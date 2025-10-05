@@ -43,7 +43,7 @@ RTC_::RTC_(Clock & clock)
     // RCC->APB1ENR1 |= RCC_APB1ENR1_PWREN;
 
     // Enable access to RTC and Backup registers
-    PWR->CR1 |= PWR_CR1_DBP;
+    unlock_registers();
 
     // Resets Backup Domain Config
     RCC->BDCR |= RCC_BDCR_BDRST;
@@ -60,16 +60,8 @@ RTC_::RTC_(Clock & clock)
     while ((RCC->BDCR & RCC_BDCR_LSERDY) != RCC_BDCR_LSERDY)
         ;
 
-    // Select LSE as RTC clock source
-    RCC->BDCR &= ~RCC_BDCR_RTCSEL_Msk;
-    RCC->BDCR |= 1 << 8;
-
-    // Enable RTC clock
-    RCC->BDCR |= RCC_BDCR_RTCEN;
-
-    // RTC->WPR = 0xCA;
-    // RTC->WPR = 0x53;
-    unlock_registers();
+    clock.set_clock_source_for(PeripheralWithSelectableClockSource::RTC_1, ClockSource::LSE);
+    clock.enable_clock_for(Peripheral::RTC_1);
 
     // Enter Init
     RTC->ISR |= RTC_ISR_INIT;

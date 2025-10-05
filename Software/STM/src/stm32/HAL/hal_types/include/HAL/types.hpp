@@ -155,6 +155,7 @@ enum class Peripheral
     AES,
     LCD,
     RTC_APB,
+    RTC_1,
     WINDOW_WATCHDOG,
     CLOCK_RECOVERY_SYSTEM,
     POWER_INTERFACE,
@@ -173,6 +174,7 @@ enum class ClockRegister
     PLL_CONFIG,
     CCIPR,
     CCIPR2,
+    BDCR
 };
 
 enum class PllSource
@@ -260,6 +262,7 @@ enum class ClockSource
     MSI,
     HSI16,
     HSI48,
+    HSE,
     LSE,
     PCLK1,
     PLL_ADC_CLOCK,
@@ -268,7 +271,7 @@ enum class ClockSource
     PLL_SAI_CLOCK,
     PLL_P_CLOCK,
     SAI_EXTERNAL_CLOCK,
-    N0_CLOCK
+    N0_CLOCK,
 };
 
 enum class PeripheralWithSelectableClockSource
@@ -288,6 +291,7 @@ enum class PeripheralWithSelectableClockSource
     CLK_48MHZ,
     ADC,
     SINGLE_WIRE,
+    RTC_1,
 };
 
 namespace I2C_Types
@@ -568,6 +572,7 @@ enum class Register
     ALRMASSR,
     ALARMBR,
     ALRMBSSR,
+    ISR,
 };
 }
 

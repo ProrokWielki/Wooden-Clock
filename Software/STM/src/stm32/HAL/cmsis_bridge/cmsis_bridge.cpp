@@ -177,6 +177,8 @@ volatile uint32_t * to_address(ClockRegister clock_register)
             return &(RCC->CCIPR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         case ClockRegister::CCIPR2:
             return &(RCC->CCIPR2);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case ClockRegister::BDCR:
+            return &(RCC->BDCR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         default:
             assert(false && "invalid clock register");
             return nullptr;
@@ -339,6 +341,8 @@ volatile uint32_t * to_address(RTC_types::Register rtc_register)
             return &(RTC->ALRMBR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         case RTC_types::Register::ALRMBSSR:
             return &(RTC->ALRMBSSR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case RTC_types::Register::ISR:
+            return &(RTC->ISR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         default:
             assert(false && "invalid register");
             return nullptr;
@@ -429,7 +433,7 @@ volatile uint32_t * to_address(Usart_Types::UsartNumber usart, Usart_Types::Regi
         case Usart_Types::Register::BRR:
             return &(usart_address->BRR);
         // case Usart_Types::Register::GTPR:
-            // return &(usart_address->GTPR);
+        // return &(usart_address->GTPR);
         case Usart_Types::Register::RTOR:
             return &(usart_address->RTOR);
         case Usart_Types::Register::ISR:
@@ -437,9 +441,9 @@ volatile uint32_t * to_address(Usart_Types::UsartNumber usart, Usart_Types::Regi
         case Usart_Types::Register::ICR:
             return &(usart_address->ICR);
         // case Usart_Types::Register::RDR:
-            // return &(usart_address->RDR);
+        // return &(usart_address->RDR);
         // case Usart_Types::Register::TDR:
-            // return &(usart_address->TDR);
+        // return &(usart_address->TDR);
         default:
             assert(false && "invalid register");
             return nullptr;
