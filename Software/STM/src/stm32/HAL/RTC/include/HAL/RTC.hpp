@@ -53,6 +53,7 @@ private:
     Register<uint32_t> ALRMASSR;
     Register<uint32_t> ALARMBR;
     Register<uint32_t> ALRMBSSR;
+    Register<uint32_t> ISR;
 
     void unlock_registers();
     void enter_init_mode();

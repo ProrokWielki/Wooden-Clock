@@ -30,17 +30,18 @@ constexpr static uint8_t TENS_OF_SECONDS_FIELD_LENGTH{4};
 constexpr static uint8_t UNITS_OF_SECONDS_POSITION{0};
 constexpr static uint8_t UNITS_OF_SECONDS_FIELD_LENGTH{3};
 
+constexpr static uint8_t START_INIT_BIT_POSITION{7};
+constexpr static uint8_t IS_IN_INIT_MODE_BIT_POSITION{7};
+
 RTC_::RTC_(Clock & clock)
 : clock_{clock}, TR(to_address(RTC_types::Register::TR)), DR(to_address(RTC_types::Register::DR)), SSR(to_address(RTC_types::Register::SSR)),
   ICSR(to_address(RTC_types::Register::ICSR)), PRER(to_address(RTC_types::Register::PRER)), WUTR(to_address(RTC_types::Register::WUTR)),
   CR(to_address(RTC_types::Register::CR)), WPR(to_address(RTC_types::Register::WPR)), CALR(to_address(RTC_types::Register::CALR)),
   SHIFTR(to_address(RTC_types::Register::SHIFTR)), TSTR(to_address(RTC_types::Register::TSTR)), TSDR(to_address(RTC_types::Register::TSDR)),
   TSSSR(to_address(RTC_types::Register::TSSSR)), ALRMAR(to_address(RTC_types::Register::ALRMAR)), ALRMASSR(to_address(RTC_types::Register::ALRMASSR)),
-  ALARMBR(to_address(RTC_types::Register::ALARMBR)), ALRMBSSR(to_address(RTC_types::Register::ALRMBSSR))
+  ALARMBR(to_address(RTC_types::Register::ALARMBR)), ALRMBSSR(to_address(RTC_types::Register::ALRMBSSR)),ISR(to_address(RTC_types::Register::ISR)) 
 {
     clock_.enable_clock_for(Peripheral::POWER_INTERFACE);
-    // Enable the PWR clock
-    // RCC->APB1ENR1 |= RCC_APB1ENR1_PWREN;
 
     // Enable access to RTC and Backup registers
     unlock_registers();
@@ -64,22 +65,17 @@ RTC_::RTC_(Clock & clock)
     clock.enable_clock_for(Peripheral::RTC_1);
 
     // Enter Init
-    RTC->ISR |= RTC_ISR_INIT;
-    while ((RTC->ISR & RTC_ISR_INITF) != RTC_ISR_INITF)
+    ISR.set_bit(START_INIT_BIT_POSITION);
+    while (ISR.get_bit(IS_IN_INIT_MODE_BIT_POSITION) == 0)
         ;
 
     // Setup prescalers for 1s RTC clock
-    RTC->PRER = 0x007F'00FF;
-
-    // Set time
-    // RTC->TR = 1 << 20 | 1 << 16 | 2 << 12 | 5 << 8;
+    constexpr uint32_t PRESCLAER_VALUE{0x007F'00FF}; // TODO: Make it right
+    PRER.write(PRESCLAER_VALUE);
 
     // Exit Init
-    RTC->ISR &= ~RTC_ISR_INIT;
+    ISR.clear_bit(START_INIT_BIT_POSITION);
 
-    // Disable Write access for RTC registers
-    // RTC->WPR = 0xFE;
-    // RTC->WPR = 0x64;
     lock_registers();
 }
 
