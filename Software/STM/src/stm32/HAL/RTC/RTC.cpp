@@ -31,7 +31,7 @@ constexpr static uint8_t UNITS_OF_SECONDS_POSITION{0};
 constexpr static uint8_t UNITS_OF_SECONDS_FIELD_LENGTH{3};
 
 constexpr static uint8_t START_INIT_BIT_POSITION{7};
-constexpr static uint8_t IS_IN_INIT_MODE_BIT_POSITION{7};
+constexpr static uint8_t IS_IN_INIT_MODE_BIT_POSITION{6};
 
 RTC_::RTC_(Clock & clock)
 : clock_{clock}, TR(to_address(RTC_types::Register::TR)), DR(to_address(RTC_types::Register::DR)), SSR(to_address(RTC_types::Register::SSR)),
@@ -44,7 +44,8 @@ RTC_::RTC_(Clock & clock)
     clock_.enable_clock_for(Peripheral::POWER_INTERFACE);
 
     // Enable access to RTC and Backup registers
-    unlock_registers();
+    PWR->CR1 |= PWR_CR1_DBP;
+
 
     // Resets Backup Domain Config
     RCC->BDCR |= RCC_BDCR_BDRST;
@@ -63,6 +64,8 @@ RTC_::RTC_(Clock & clock)
 
     clock.set_clock_source_for(PeripheralWithSelectableClockSource::RTC_1, ClockSource::LSE);
     clock.enable_clock_for(Peripheral::RTC_1);
+
+    unlock_registers();
 
     // Enter Init
     ISR.set_bit(START_INIT_BIT_POSITION);

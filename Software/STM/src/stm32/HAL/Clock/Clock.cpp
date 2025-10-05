@@ -107,7 +107,7 @@ Register<uint32_t> & Clock::get_peripheral_clock_register(Peripheral peripheral)
         case Peripheral::DFSDM_1:
         case Peripheral::SYSTEM_CONFIG:
             return APB2;
-                    case Peripheral::RTC_1:
+        case Peripheral::RTC_1:
             return BDCR;
         default:
             assert(false && "invalid peripheral");
