@@ -56,7 +56,7 @@ ADD_CUSTOM_TARGET(
   doc COMMAND doxygen ${CMAKE_CURRENT_SOURCE_DIR}/config/doxygen/Doxyfile)
 
 ADD_CUSTOM_TARGET(tidy COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ci/run_clang_tidy.sh
-                               ${CMAKE_BINARY_DIR})
+                               ${CMAKE_CURRENT_LIST_DIR})
 
 ADD_CUSTOM_TARGET(iwyu COMMAND iwyu-tool -p ${CMAKE_BINARY_DIR})
 
@@ -65,7 +65,7 @@ ADD_CUSTOM_TARGET(
   COMMAND
     openocd -f /usr/share/openocd/scripts/interface/jlink.cfg -c
     "transport select swd" -f /usr/share/openocd/scripts/target/stm32l4x.cfg -c
-    "program ${CMAKE_BINARY_DIR}/src/WoodenClock verify reset exit")
+    "program ${CMAKE_BINARY_DIR}/src/stm32/WoodenClock verify reset exit")
 
 ADD_CUSTOM_TARGET(
   coverage
