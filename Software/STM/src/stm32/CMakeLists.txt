@@ -1,14 +1,20 @@
-IF(NOT ((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
-                                                    "x86_GCC")))
-  ADD_EXECUTABLE(WoodenClock main.cpp)
+ADD_EXECUTABLE(
+  WoodenClock
+  main.cpp)
 
-  TARGET_LINK_LIBRARIES(WoodenClock PUBLIC APP BSP HAL MCU ISR CMSIS EmbedGUI)
+TARGET_LINK_LIBRARIES(
+  WoodenClock
+  PUBLIC APP
+         BSP
+         HAL
+         MCU
+         ISR
+         CMSIS
+         EmbedGUI)
 
-  TARGET_LINK_OPTIONS(
-    WoodenClock PRIVATE
-    "LINKER:--script=${CMAKE_SOURCE_DIR}/src/stm32/MCU/STM32L452RETx_FLASH.ld")
-ENDIF()
-
+TARGET_LINK_OPTIONS(
+  WoodenClock PRIVATE
+  "LINKER:--script=${CMAKE_SOURCE_DIR}/src/stm32/MCU/STM32L452RETx_FLASH.ld")
 
 ADD_SUBDIRECTORY(HAL)
 ADD_SUBDIRECTORY(DRV)

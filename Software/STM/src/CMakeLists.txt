@@ -1,6 +1,13 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.30)
 
-
 ADD_SUBDIRECTORY(APP)
-ADD_SUBDIRECTORY(stm32)   
-ADD_SUBDIRECTORY(pc)
+
+IF(NOT ((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
+                                                    "x86_GCC")))
+  ADD_SUBDIRECTORY(stm32)
+ENDIF()
+
+IF((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
+                                               "x86_GCC"))
+  ADD_SUBDIRECTORY(pc)
+ENDIF()
