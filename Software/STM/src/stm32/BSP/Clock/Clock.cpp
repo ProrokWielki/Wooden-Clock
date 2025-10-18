@@ -12,18 +12,18 @@ BSP2::Time BSP2::Clock::get_time()
 
 void BSP2::Clock::update()
 {
-    if (HAL::parse_time == true)
-    {
-        const uint8_t minute = (HAL::uart_buffer[HAL::head - 2] - 48) + (HAL::uart_buffer[HAL::head - 3] - 48) * 10;
-        const uint8_t hour = (HAL::uart_buffer[HAL::head - 4] - 48) + (HAL::uart_buffer[HAL::head - 5] - 48) * 10;
+    // if (HAL::parse_time == true)
+    // {
+    //     // const uint8_t minute = (HAL::uart_buffer[HAL::head - 2] - 48) + (HAL::uart_buffer[HAL::head - 3] - 48) * 10;
+    //     // const uint8_t hour = (HAL::uart_buffer[HAL::head - 4] - 48) + (HAL::uart_buffer[HAL::head - 5] - 48) * 10;
 
-        HAL::rtc.set_minutes(minute);
-        HAL::rtc.set_hours(hour);
+    //     // HAL::rtc.set_minutes(minute);
+    //     // HAL::rtc.set_hours(hour);
 
-        HAL::parse_time = false;
-    }
+    //     HAL::parse_time = false;
+    // }
 
-    time.seconds = HAL::rtc.get_seconds();
-    time.minutes = HAL::rtc.get_minutes();
-    time.hours = HAL::rtc.get_hours();
+    time.seconds = HAL::get().rtc.get_seconds();
+    time.minutes = HAL::get().rtc.get_minutes();
+    time.hours = HAL::get().rtc.get_hours();
 }

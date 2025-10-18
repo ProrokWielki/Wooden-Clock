@@ -11,6 +11,7 @@
 #include <BSP/Accelerometer.hpp>
 #include <BSP/Button.hpp>
 #include <BSP/Clock.hpp>
+#include <BSP/Communication.hpp>
 #include <BSP/Display.hpp>
 #include <BSP/Magnetometer.hpp>
 #include <BSP/Thermometer.hpp>
@@ -40,11 +41,12 @@ public:
     Button button_up;
     Button button_down;
 
-    bool & up;
-    bool & down;
-    bool & left;
-    bool & right;
+    bool up{};
+    bool down{};
+    bool left{};
+    bool right{};
 
+    Communication communication_interface;
 
 private:
     static void display_init();

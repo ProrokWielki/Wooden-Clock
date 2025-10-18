@@ -9,6 +9,7 @@ TARGET_LINK_LIBRARIES(
   APP
   HAL
   Magnetometer
+  Communication
   StmClock
   StmAccelerometer
   StmThermometer)
@@ -21,3 +22,4 @@ ADD_SUBDIRECTORY(Accelerometer)
 ADD_SUBDIRECTORY(Thermometer)
 ADD_SUBDIRECTORY(Button)
 ADD_SUBDIRECTORY(Clock)
+ADD_SUBDIRECTORY(Communication)

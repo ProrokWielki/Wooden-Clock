@@ -6,9 +6,9 @@
  */
 
 #include <algorithm>
+#include <cassert>
 #include <cstdint>
 #include <iterator>
-#include <cassert>
 #include <string>
 
 #include <HAL/HAL.hpp>
@@ -32,10 +32,10 @@ Display::Display(uint8_t width, uint8_t height, const uint8_t * frameBuffer)
 
 void Display::init()
 {
-    HAL::TLC59208F_1.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_1_Transfer); });
-    HAL::TLC59208F_2.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_2_Transfer); });
-    HAL::TLC59208F_3.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_3_Transfer); });
-    HAL::TLC59208F_4.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_4_Transfer); });
+    HAL::get().TLC59208F_1.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_1_Transfer); });
+    HAL::get().TLC59208F_2.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_2_Transfer); });
+    HAL::get().TLC59208F_3.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_3_Transfer); });
+    HAL::get().TLC59208F_4.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_4_Transfer); });
 }
 
 void Display::set_display_redrawn_callback(std::function<void()> callback)
@@ -64,17 +64,17 @@ void Display::draw_next_line()
         constexpr uint8_t TLC59208F_3_LED_OFFSET{16};
         constexpr uint8_t TLC59208F_4_LED_OFFSET{24};
 
-        HAL::TLC59208F_1.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_1_LED_OFFSET]));
-        HAL::TLC59208F_2.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_2_LED_OFFSET]));
-        HAL::TLC59208F_3.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_3_LED_OFFSET]));
-        HAL::TLC59208F_4.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_4_LED_OFFSET]));
+        HAL::get().TLC59208F_1.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_1_LED_OFFSET]));
+        HAL::get().TLC59208F_2.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_2_LED_OFFSET]));
+        HAL::get().TLC59208F_3.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_3_LED_OFFSET]));
+        HAL::get().TLC59208F_4.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_4_LED_OFFSET]));
 
-        HAL::SR_74HC595_1.output_enable(false);
+        HAL::get().SR_74HC595_1.output_enable(false);
 
-        HAL::TLC59208F_1.send_cashed_leds_values();
-        HAL::TLC59208F_2.send_cashed_leds_values();
-        HAL::TLC59208F_3.send_cashed_leds_values();
-        HAL::TLC59208F_4.send_cashed_leds_values();
+        HAL::get().TLC59208F_1.send_cashed_leds_values();
+        HAL::get().TLC59208F_2.send_cashed_leds_values();
+        HAL::get().TLC59208F_3.send_cashed_leds_values();
+        HAL::get().TLC59208F_4.send_cashed_leds_values();
     }
 }
 
@@ -99,8 +99,8 @@ void Display::transfer_complete(const Transfer transferNumber)
 
 void Display::move_to_next_line()
 {
-    HAL::SR_74HC595_1.shift_bit(0 == currentLine_ ? GPIO_Types::SignalLevel::Low : GPIO_Types::SignalLevel::High);
-    HAL::SR_74HC595_1.output_enable(true);
+    HAL::get().SR_74HC595_1.shift_bit(0 == currentLine_ ? GPIO_Types::SignalLevel::Low : GPIO_Types::SignalLevel::High);
+    HAL::get().SR_74HC595_1.output_enable(true);
 
     currentLine_ += 1;
     currentLine_ %= displayHeight;

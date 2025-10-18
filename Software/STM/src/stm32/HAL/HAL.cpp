@@ -76,107 +76,55 @@ constexpr unsigned int DEBUG_UART_SPEED{115200};
 
 }  // namespace
 
-Clock HAL::clock{};
+// bool HAL::new_time_set{false};
+// uint8_t HAL::new_hour{0};
+// uint8_t HAL::new_minutes{0};
+// bool HAL::parse_time{false};
 
-GPIO HAL::I2C1_SCL(clock, GPIO_Types::Port::A, I2C_1_SCL_PIN_NUMBER);
-GPIO HAL::I2C1_SDA(clock, GPIO_Types::Port::A, I2C_1_SDA_PIN_NUMBER);
+HAL::HAL()
+: clock{}, I2C1_SCL(clock, GPIO_Types::Port::A, I2C_1_SCL_PIN_NUMBER), I2C1_SDA(clock, GPIO_Types::Port::A, I2C_1_SDA_PIN_NUMBER),
+  I2C2_SCL(clock, GPIO_Types::Port::B, I2C_2_SCL_PIN_NUMBER), I2C2_SDA(clock, GPIO_Types::Port::B, I2C_2_SDA_PIN_NUMBER),
+  I2C3_SCL(clock, GPIO_Types::Port::C, I2C_3_SCL_PIN_NUMBER), I2C3_SDA(clock, GPIO_Types::Port::C, I2C_3_SDA_PIN_NUMBER),
+  I2C4_SCL(clock, GPIO_Types::Port::B, I2C_4_SCL_PIN_NUMBER), I2C4_SDA(clock, GPIO_Types::Port::B, I2C_4_SDA_PIN_NUMBER),
+  SPI1_MISO(clock, GPIO_Types::Port::A, SPI_1_MISO_PIN_NUMBER), SPI1_MOSI(clock, GPIO_Types::Port::A, SPI_1_MOSI_PIN_NUMBER),
+  SPI1_SCK(clock, GPIO_Types::Port::A, SPI_1_SCK_PIN_NUMBER), SPI1_CS1(clock, GPIO_Types::Port::E, SPI_1_CS1_PIN_NUMBER),
+  SPI1_CS2(clock, GPIO_Types::Port::B, SPI_1_CS2_PIN_NUMBER), SPI1_CS3(clock, GPIO_Types::Port::E, SPI_1_CS3_PIN_NUMBER),
+  QSPI_IO0(clock, GPIO_Types::Port::B, QSPI_IO0_PIN_NUMBER), QSPI_IO1(clock, GPIO_Types::Port::B, QSPI_IO1_PIN_NUMBER),
+  QSPI_IO2(clock, GPIO_Types::Port::A, QSPI_IO2_PIN_NUMBER), QSPI_IO3(clock, GPIO_Types::Port::A, QSPI_IO3_PIN_NUMBER),
+  QSPI_CLK(clock, GPIO_Types::Port::A, QSPI_CLK_PIN_NUMBER), QSPI_CS(clock, GPIO_Types::Port::A, QSPI_CS_PIN_NUMBER),
+  UART3_TX(clock, GPIO_Types::Port::C, UART_3_TX_PIN_NUMBER), UART3_RX(clock, GPIO_Types::Port::C, UART_3_RX_PIN_NUMBER),
+  UART4_TX(clock, GPIO_Types::Port::A, UART_4_TX_PIN_NUMBER), UART4_RX(clock, GPIO_Types::Port::A, UART_4_RX_PIN_NUMBER),
+  TLC_RESET(clock, GPIO_Types::Port::C, TLC_RESET_PIN_NUMBER), SR_DATAIN(clock, GPIO_Types::Port::B, SR_DATAIN_PIN_NUMBER),
+  SR_RCLOCK(clock, GPIO_Types::Port::C, SR_RCLOCK_PIN_NUMBER), SR_SCLOCK(clock, GPIO_Types::Port::C, SR_SCLOCK_PIN_NUMBER),
+  SR_OE(clock, GPIO_Types::Port::B, SR_OE_PIN_NUMBER), SR_CLEAR(clock, GPIO_Types::Port::C, SR_CLEAR_PIN_NUMBER),
+  BUTTON1(clock, GPIO_Types::Port::A, BUTTON1_PIN_NUMBER), BUTTON2(clock, GPIO_Types::Port::B, BUTTON2_PIN_NUMBER),
+  BUTTON3(clock, GPIO_Types::Port::C, BUTTON3_PIN_NUMBER), BUTTON4(clock, GPIO_Types::Port::E, BUTTON4_PIN_NUMBER),
+  DMA1_2(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel2), DMA1_4(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel4),
+  DMA2_2(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel2), DMA2_4(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel4),
+  DMA2_7(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel7),
+  I2C_1(clock, I2C_Types::I2CNumber::I2C_1, I2C1_SCL, I2C1_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_7),
+  I2C_2(clock, I2C_Types::I2CNumber::I2C_2, I2C2_SCL, I2C2_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA1_4),
+  I2C_3(clock, I2C_Types::I2CNumber::I2C_3, I2C3_SCL, I2C3_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA1_2),
+  I2C_4(clock, I2C_Types::I2CNumber::I2C_4, I2C4_SCL, I2C4_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_2),
+  SPI_1(clock, SPI_types::SPI_Number::SPI_1, SPI1_MOSI, SPI1_MISO, SPI1_SCK, SPI_types::SPIMode::master, SPI_types::SPIDataSize::_8bits,
+        SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
+        SPI_types::BaudRatePrescaller::Prescaller_256),
+  USART_3(clock, Usart_Types::UsartNumber::USART_3, UART3_TX, UART3_RX, ESP_UART_SPEED),
+  USART_4(clock, Usart_Types::UsartNumber::UART_4, UART4_TX, UART4_RX, DEBUG_UART_SPEED),
+  SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR, SR_CHAIN_LENGTH), TLC59208F_1(I2C_4, TLC59208F_1_ADDRESS, TLC_RESET),
+  TLC59208F_2(I2C_1, TLC59208F_2_ADDRESS, TLC_RESET), TLC59208F_3(I2C_3, TLC59208F_3_ADDRESS, TLC_RESET), TLC59208F_4(I2C_2, TLC59208F_4_ADDRESS, TLC_RESET),
+  LSM9DS1_1(SPI_1, SPI1_CS1, SPI1_CS2), BME280_1(SPI_1, SPI1_CS3), Timer2(timer_types::Timer_number::Timer_2), rtc{clock}
+{
+}
 
-GPIO HAL::I2C2_SCL(clock, GPIO_Types::Port::B, I2C_2_SCL_PIN_NUMBER);
-GPIO HAL::I2C2_SDA(clock, GPIO_Types::Port::B, I2C_2_SDA_PIN_NUMBER);
-
-GPIO HAL::I2C3_SCL(clock, GPIO_Types::Port::C, I2C_3_SCL_PIN_NUMBER);
-GPIO HAL::I2C3_SDA(clock, GPIO_Types::Port::C, I2C_3_SDA_PIN_NUMBER);
-
-GPIO HAL::I2C4_SCL(clock, GPIO_Types::Port::B, I2C_4_SCL_PIN_NUMBER);
-GPIO HAL::I2C4_SDA(clock, GPIO_Types::Port::B, I2C_4_SDA_PIN_NUMBER);
-
-GPIO HAL::SPI1_MISO(clock, GPIO_Types::Port::A, SPI_1_MISO_PIN_NUMBER);
-GPIO HAL::SPI1_MOSI(clock, GPIO_Types::Port::A, SPI_1_MOSI_PIN_NUMBER);
-GPIO HAL::SPI1_SCK(clock, GPIO_Types::Port::A, SPI_1_SCK_PIN_NUMBER);
-GPIO HAL::SPI1_CS1(clock, GPIO_Types::Port::E, SPI_1_CS1_PIN_NUMBER);
-GPIO HAL::SPI1_CS2(clock, GPIO_Types::Port::B, SPI_1_CS2_PIN_NUMBER);
-GPIO HAL::SPI1_CS3(clock, GPIO_Types::Port::E, SPI_1_CS3_PIN_NUMBER);
-
-GPIO HAL::QSPI_IO0(clock, GPIO_Types::Port::B, QSPI_IO0_PIN_NUMBER);
-GPIO HAL::QSPI_IO1(clock, GPIO_Types::Port::B, QSPI_IO1_PIN_NUMBER);
-GPIO HAL::QSPI_IO2(clock, GPIO_Types::Port::A, QSPI_IO2_PIN_NUMBER);
-GPIO HAL::QSPI_IO3(clock, GPIO_Types::Port::A, QSPI_IO3_PIN_NUMBER);
-GPIO HAL::QSPI_CLK(clock, GPIO_Types::Port::A, QSPI_CLK_PIN_NUMBER);
-GPIO HAL::QSPI_CS(clock, GPIO_Types::Port::A, QSPI_CS_PIN_NUMBER);
-
-GPIO HAL::UART3_TX(clock, GPIO_Types::Port::C, UART_3_TX_PIN_NUMBER);
-GPIO HAL::UART3_RX(clock, GPIO_Types::Port::C, UART_3_RX_PIN_NUMBER);
-
-GPIO HAL::UART4_TX(clock, GPIO_Types::Port::A, UART_4_TX_PIN_NUMBER);
-GPIO HAL::UART4_RX(clock, GPIO_Types::Port::A, UART_4_RX_PIN_NUMBER);
-
-GPIO HAL::TLC_RESET(clock, GPIO_Types::Port::C, TLC_RESET_PIN_NUMBER);
-
-GPIO HAL::SR_DATAIN(clock, GPIO_Types::Port::B, SR_DATAIN_PIN_NUMBER);
-GPIO HAL::SR_RCLOCK(clock, GPIO_Types::Port::C, SR_RCLOCK_PIN_NUMBER);
-GPIO HAL::SR_SCLOCK(clock, GPIO_Types::Port::C, SR_SCLOCK_PIN_NUMBER);
-GPIO HAL::SR_OE(clock, GPIO_Types::Port::B, SR_OE_PIN_NUMBER);
-GPIO HAL::SR_CLEAR(clock, GPIO_Types::Port::C, SR_CLEAR_PIN_NUMBER);
-
-GPIO HAL::BUTTON1(clock, GPIO_Types::Port::A, BUTTON1_PIN_NUMBER);
-GPIO HAL::BUTTON2(clock, GPIO_Types::Port::B, BUTTON2_PIN_NUMBER);
-GPIO HAL::BUTTON3(clock, GPIO_Types::Port::C, BUTTON3_PIN_NUMBER);
-GPIO HAL::BUTTON4(clock, GPIO_Types::Port::E, BUTTON4_PIN_NUMBER);
-
-DMA HAL::DMA1_2(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel2);
-DMA HAL::DMA1_4(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel4);
-DMA HAL::DMA2_2(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel2);
-DMA HAL::DMA2_4(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel4);
-DMA HAL::DMA2_7(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel7);
-
-I2C HAL::I2C_1(clock, I2C_Types::I2CNumber::I2C_1, I2C1_SCL, I2C1_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_7);
-I2C HAL::I2C_2(clock, I2C_Types::I2CNumber::I2C_2, I2C2_SCL, I2C2_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA1_4);
-I2C HAL::I2C_3(clock, I2C_Types::I2CNumber::I2C_3, I2C3_SCL, I2C3_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA1_2);
-I2C HAL::I2C_4(clock, I2C_Types::I2CNumber::I2C_4, I2C4_SCL, I2C4_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_2);
-
-SPI HAL::SPI_1(clock, SPI_types::SPI_Number::SPI_1, SPI1_MOSI, SPI1_MISO, SPI1_SCK, SPI_types::SPIMode::master, SPI_types::SPIDataSize::_8bits,
-               SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
-               SPI_types::BaudRatePrescaller::Prescaller_256);
-
-USART HAL::USART_3(clock, Usart_Types::UsartNumber::USART_3, HAL::UART3_TX, HAL::UART3_RX, ESP_UART_SPEED);
-USART HAL::USART_4(clock, Usart_Types::UsartNumber::UART_4, HAL::UART4_TX, HAL::UART4_RX, DEBUG_UART_SPEED);
-
-SR_74HC595 HAL::SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR, SR_CHAIN_LENGTH);
-
-TLC59208F HAL::TLC59208F_4(I2C_2, TLC59208F_4_ADDRESS, TLC_RESET);
-TLC59208F HAL::TLC59208F_3(I2C_3, TLC59208F_3_ADDRESS, TLC_RESET);
-TLC59208F HAL::TLC59208F_2(I2C_1, TLC59208F_2_ADDRESS, TLC_RESET);
-TLC59208F HAL::TLC59208F_1(I2C_4, TLC59208F_1_ADDRESS, TLC_RESET);
-
-LSM9DS1 HAL::LSM9DS1_1(SPI_1, SPI1_CS1, SPI1_CS2);
-
-BME280 HAL::BME280_1(SPI_1, SPI1_CS3);
-
-Timer HAL::Timer2(timer_types::Timer_number::Timer_2);
-
-RTC_ HAL::rtc{clock};
-
-bool HAL::up;
-bool HAL::down;
-bool HAL::left;
-bool HAL::right;
-bool HAL::reset;
-
-std::array<volatile uint8_t, HAL::UART_BUFFER_SIZE> HAL::uart_buffer{};
-volatile uint8_t HAL::head{0};
-uint8_t HAL::tail{0};
-bool HAL::new_time_set{false};
-uint8_t HAL::new_hour{0};
-uint8_t HAL::new_minutes{0};
-bool HAL::parse_time{false};
+HAL & HAL::get()
+{
+    static HAL instance;
+    return instance;
+}
 
 void HAL::init()
 {
-    up = false;
-    down = false;
-    left = false;
-    right = false;
-
     clock_init();
     SystemCoreClockUpdate();
 
@@ -203,6 +151,10 @@ void HAL::init()
     DMA1_2.enable_request(DMA_Types::Request::I2C_3_TX);
     DMA2_2.enable_request(DMA_Types::Request::I2C_4_TX);
 
+    // DMA2_4.enable_request(DMA::);
+
+    // DMA1_CSELR->CSELR |= ((3 << 12) | (3 << 4));
+
     // TIM2->DIER |= (1 << 0);
     Timer2.enable_interrupt(timer_types::Interrupt::UPDATE);
 
@@ -225,7 +177,6 @@ void HAL::init()
 
 void HAL::qspi_init()
 {
-
     //     RCC->AHB3ENR = 1 << 8;  // QSPI_EN
 
     //     QUADSPI->CR = 255 << 24;
@@ -569,15 +520,15 @@ void HAL::tlc59208f_init()
     TLC59208F_3.init();
     TLC59208F_4.init();
 
-    TLC59208F_1.set_registers_values(0x00, first.data(), 2);
-    TLC59208F_2.set_registers_values(0x00, first.data(), 2);
-    TLC59208F_3.set_registers_values(0x00, first.data(), 2);
-    TLC59208F_4.set_registers_values(0x00, first.data(), 2);
+    TLC59208F_1.set_registers_values(0x00, first.data(), first.size());
+    TLC59208F_2.set_registers_values(0x00, first.data(), first.size());
+    TLC59208F_3.set_registers_values(0x00, first.data(), first.size());
+    TLC59208F_4.set_registers_values(0x00, first.data(), first.size());
 
-    TLC59208F_1.set_registers_values(0x0C, second.data(), 2);
-    TLC59208F_2.set_registers_values(0x0C, second.data(), 2);
-    TLC59208F_3.set_registers_values(0x0C, second.data(), 2);
-    TLC59208F_4.set_registers_values(0x0C, second.data(), 2);
+    TLC59208F_1.set_registers_values(0x0C, second.data(), second.size());
+    TLC59208F_2.set_registers_values(0x0C, second.data(), second.size());
+    TLC59208F_3.set_registers_values(0x0C, second.data(), second.size());
+    TLC59208F_4.set_registers_values(0x0C, second.data(), second.size());
 }
 
 void HAL::sr_74hc595_init()
@@ -588,7 +539,7 @@ void HAL::sr_74hc595_init()
 void HAL::lsm9ds1_init()
 {
     LSM9DS1_1.set_data_rate(MagnetometerDataRate::Hz_80);
-    LSM9DS1_1.set_XY_operation_mode(MagnetometerXYOperationMode::ultra_perforamnce);
+    LSM9DS1_1.set_XY_operation_mode(MagnetometerXYOperationMode::ultra_performance);
     LSM9DS1_1.set_full_scale(MagnetometerFullScale::Gs_16);
     LSM9DS1_1.set_operation_mode(MagnetometerOperationMode::continuous_conversion);
 }

@@ -50,6 +50,32 @@ void system_interface_task(void *)
         BSP::get().accelerometer.update();
         BSP::get().thermometer.update();
 
+        if (BSP::get().communication_interface.is_message_available())
+        {
+            auto message = BSP::get().communication_interface.get_message();
+
+            if (message.length == 1)
+            {
+                switch (message.data[0])
+                {
+                    case 'u':
+                        BSP::get().up = true;
+                        break;
+                    case 'd':
+                        BSP::get().down = true;
+                        break;
+                    case 'l':
+                        BSP::get().left = true;
+                        break;
+                    case 'r':
+                        BSP::get().right = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         if (BSP::get().button_up.wasReleased() || BSP::get().up)
         {
             DataContainer::get().stateMachine.signal_callback(Signal::BUTTON_UP);

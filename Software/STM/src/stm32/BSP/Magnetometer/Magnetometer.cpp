@@ -17,7 +17,7 @@ BSP2::MagneticField BSP2::Magnetometer::get_magnetic_filed() const
 
 void BSP2::Magnetometer::update()
 {
-    magnetic_filed_.x = HAL::LSM9DS1_1.get_magnetic_field(Axis::X); 
-    magnetic_filed_.y = HAL::LSM9DS1_1.get_magnetic_field(Axis::Y);   
-    magnetic_filed_.z = HAL::LSM9DS1_1.get_magnetic_field(Axis::Z);   
+    magnetic_filed_.x = HAL::get().LSM9DS1_1.get_magnetic_field(Axis::X);
+    magnetic_filed_.y = HAL::get().LSM9DS1_1.get_magnetic_field(Axis::Y);
+    magnetic_filed_.z = HAL::get().LSM9DS1_1.get_magnetic_field(Axis::Z);
 }

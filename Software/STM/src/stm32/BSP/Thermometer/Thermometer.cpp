@@ -11,5 +11,5 @@ float BSP2::Thermometer::get_temperature() const
 
 void BSP2::Thermometer::update()
 {
-    temperature_ = HAL::BME280_1.get_temperature();
+    temperature_ = HAL::get().BME280_1.get_temperature();
 }

@@ -12,7 +12,7 @@ BSP2::Accelerations BSP2::Accelerometer::get_linear_accelerations() const
 
 void BSP2::Accelerometer::update()
 {
-    auto accelerations = HAL::LSM9DS1_1.get_linear_acceleration();
+    auto accelerations = HAL::get().LSM9DS1_1.get_linear_acceleration();
 
     accelerations_.x = accelerations.x;
     accelerations_.y = accelerations.y;

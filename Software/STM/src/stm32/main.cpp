@@ -13,7 +13,7 @@
 
 int main()
 {
-    HAL::init();
+    HAL::get().init();
     BSP::get().init();
 
     BSP::get().display.set_frame_buffer(getImage(ImageType::MARIO).get_pixel_map());
