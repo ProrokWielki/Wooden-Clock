@@ -19,6 +19,7 @@ USART::USART(Clock & clock, Usart_Types::UsartNumber usart_number, GPIO & tx_pin
     constexpr static uint8_t TE_BIT_POSITION{3};      // Bit position for Transmitter Enable in CR1 register
     constexpr static uint8_t RE_BIT_POSITION{2};      // Bit position for Receiver Enable in CR1 register
     constexpr static uint8_t RXNEIE_BIT_POSITION{5};  // Bit position for RXNE interrupt enable in CR1 register
+    constexpr static uint8_t IDLEIE_BIT_POSITION{4};  // Bit position for IDLE interrupt enable in CR1 register
     constexpr static uint8_t PS_BIT_POSITION{9};      // Bit position for Parity Control Enable in CR1 register
 
     clock.enable_clock_for(to_peripheral(usart_number));
@@ -40,7 +41,29 @@ USART::USART(Clock & clock, Usart_Types::UsartNumber usart_number, GPIO & tx_pin
     CR1.set_bit(TE_BIT_POSITION);      // Enable Transmitter
     CR1.set_bit(RE_BIT_POSITION);      // Enable Receiver
     CR1.set_bit(RXNEIE_BIT_POSITION);  // Enable RXNE interrupt
+    CR1.set_bit(IDLEIE_BIT_POSITION);  // Enable IDLE interrupt
     CR1.set_bit(ENABLE_BIT_POSITION);  // Enable USART
+}
+
+void USART::set_buffer_not_empty_callback(std::function<void(uint8_t)> callback)
+{
+    buffer_not_empty_callback_ = callback;
+}
+
+void USART::set_idle_callback(std::function<void()> callback)
+{
+    idle_callback_ = callback;
+}
+
+uint8_t USART::get_received_data()
+{
+    return RDR.read();
+}
+
+void USART::handle_interrupts()
+{
+    handle_read_buffer_not_empty();
+    handle_idle_interrupt();
 }
 
 void USART::set_baud_rate(uint32_t baud_rate)
@@ -70,4 +93,47 @@ void USART::set_baud_rate(uint32_t baud_rate)
         BRR.set_value(usart_div_with_oversampling_register_value, USARTDIV_VALUE_POSITION, USARTDIV_VALUE_LENGTH);
         CR1.set_bit(OVERSAMPLING_BIT_POSITION);
     }
+}
+
+bool USART::is_read_buffer_not_empty() const
+{
+    constexpr static uint8_t RXNE_BIT_POSITION{5};
+
+    return ISR.get_bit(RXNE_BIT_POSITION);
+}
+
+void USART::handle_read_buffer_not_empty()
+{
+    if (is_read_buffer_not_empty())
+    {
+        if (buffer_not_empty_callback_)
+        {
+            buffer_not_empty_callback_(get_received_data());
+        }
+    }
+}
+
+bool USART::is_idle_interrupt() const
+{
+    constexpr static uint8_t IDLE_BIT_POSITION{4};
+
+    return ISR.get_bit(IDLE_BIT_POSITION);
+}
+
+void USART::handle_idle_interrupt()
+{
+    if (is_idle_interrupt())
+    {
+        if (idle_callback_)
+        {
+            idle_callback_();
+        }
+        clear_idle_interrupt();
+    }
+}
+
+void USART::clear_idle_interrupt()
+{
+    constexpr static uint8_t IDLE_INTERRUPT_CLEAR_BIT{4};
+    ICR.set_bit(IDLE_INTERRUPT_CLEAR_BIT);
 }
