@@ -443,22 +443,77 @@ enum class DataSize
  */
 enum class Request
 {
-    Request0,  //!< Request0 request 0
-    Request1,  //!< Request1 request 1
-    Request2,  //!< Request2 request 2
-    Request3,  //!< Request3 request 3
-    Request4,  //!< Request4 request 4
-    Request5,  //!< Request5 request 5
-    Request6,  //!< Request6 request 6
-    Request7   //!< Request7 request 7
+    ADC_1,
+    ADC_2,
+    DFSDM_1_FLT0,
+    DFSDM_1_FLT1,
+    SPI_1_RX,
+    SPI_1_TX,
+    SPI_2_RX,
+    SPI_2_TX,
+    SAI_1_A,
+    SAI_1_B,
+    USART_3_TX,
+    USART_3_RX,
+    USART_1_TX,
+    USART_1_RX,
+    USART_2_RX,
+    USART_2_TX,
+    I2C_3_TX,
+    I2C_3_RX,
+    I2C_2_TX,
+    I2C_2_RX,
+    I2C_1_TX,
+    I2C_1_RX,
+    TIM_2_CH3,
+    TIM_2_UP,
+    TIM_16_CH1,
+    TIM_16_UP,
+    TIM_2_CH1,
+    TIM_2_CH2,
+    TIM_2_CH4,
+    TIM_3_CH3,
+    TIM_3_CH4,
+    TIM_3_UP,
+    TIM_7_UP,
+    DAC_CH2,
+    QUAD_SPI,
+    TIM_3_CH1,
+    TIM_3_TRIG,
+    TIM_6_UP,
+    DAC_CH1,
+    TIM_1_CH1,
+    TIM_1_CH2,
+    TIM_1_CH4,
+    TIM_1_TRIG,
+    TIM_1_COM,
+    TIM_15_CH1,
+    TIM_15_UP,
+    TIM_15_TRIG,
+    TIM_15_COM,
+    TIM_1_UP,
+    TIM_1_CH3,
+    I2C_4_RX,
+    I2C_4_TX,
+    UART_4_TX,
+    UART_4_RX,
+    SPI_3_RX,
+    SPI_3_TX,
+    SWPMI_1_RX,
+    SWPMI_1_TX,
+    LPUART_1_TX,
+    LPUART_1_RX,
+    AES_IN,
+    AES_OUT,
+    SDMMC_1,
 };
 
 /**
- * @brief Read direciton
+ * @brief Read direction
  */
 enum class ReadDirection
 {
-    ReadFromPeriphearl,  //!< ReadFromPeriphearl read for peripheral
+    ReadFromPeripheral,  //!< ReadFromPeripheral read for peripheral
     ReadFromMemory       //!< ReadFromMemory read from memory
 };
 
@@ -685,7 +740,9 @@ uint32_t to_value(DMA_Types::Priority priority);
 uint32_t to_value(DMA_Types::DataSize memory_size);
 uint32_t to_value(DMA_Types::DataSize peripheral_size);
 uint32_t to_value(DMA_Types::ReadDirection read_direction);
-uint32_t to_value(DMA_Types::Request request);
+uint32_t to_value(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request);
 uint32_t to_value(SPI_types::BaudRatePrescaller baudrate_prescaller);
 
 PeripheralWithSelectableClockSource to_peripheral_with_clock_select(I2C_Types::I2CNumber i2c);
+
+bool is_request_valid(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request);

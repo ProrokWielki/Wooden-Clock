@@ -78,7 +78,7 @@ public:
     /**
      * @brief Disables automatic peripheral increment.
      */
-    void disable_peripheral_incremen();
+    void disable_peripheral_increment();
 
     /**
      * @brief Enables circular mode.
@@ -132,7 +132,7 @@ public:
      *
      * @param PeripheralAddress peripheral address.
      */
-    void set_periphearl_address(uint32_t PeripheralAddress);
+    void set_peripheral_address(uint32_t PeripheralAddress);
 
     /**
      * @brief Sets address of the memory.
@@ -142,25 +142,25 @@ public:
     void set_memory_address(uint32_t MemoryAddress);
 
     /**
-     * @brief Sets DMA request.
+     * @brief Enables DMA request.
      *
-     * @param DMARequest DMA request to be enabled.
+     * @param request DMA request to be enabled.
      */
-    void set_request(DMA_Types::Request request);
+    void enable_request(DMA_Types::Request request);
 
     /**
      * @brief Sets callback function to be called when interrupt is received. Can be set only once!
      *
      * @param callback function to be called when interrupt is received.
      */
-    void set_transfer_complete_callback(std::function<void()> callback);  // TODO: make it possible to change the callback.
+    void set_transfer_complete_callback(std::function<void()> callback);
 
     /**
      * @brief Sets callback function to be called when interrupt is received. Can be set only once!
      *
      * @param callback function to be called when interrupt is received.
      */
-    void set_half_transfer_callback(std::function<void()> callback);  // TODO: make it possible to change the callback.
+    void set_half_transfer_callback(std::function<void()> callback);
 
     /**
      * @brief function to be called to when interrupt is received. Has to be put to the IRQ handler!
@@ -173,12 +173,10 @@ public:
     void half_transfer_callback();
 
     bool is_half_transfer_interrupt();
-
     bool is_transfer_complete_interrupt();
 
 private:
     void clear_transfer_complete_interrupt();
-
     void clear_half_transfer_interrupt();
 
     Register<uint32_t> IFCR;
@@ -188,10 +186,10 @@ private:
     Register<uint32_t> CNDTR;
     Register<uint32_t> CPAR;
     Register<uint32_t> CMAR;
-
     Register<uint32_t> CSELR;
 
-    DMA_Types::Channel channel;
+    DMA_Types::Channel channel_;
+    DMA_Types::DmaNumber dma_number_;
 
     std::function<void()> complete_transfer_callback_;
     std::function<void()> half_transfer_callback_;

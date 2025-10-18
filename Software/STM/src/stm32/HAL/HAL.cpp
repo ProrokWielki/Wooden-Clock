@@ -198,8 +198,10 @@ void HAL::init()
     sr_74hc595_init();
     // lsm9ds1_init();
 
-    DMA2_CSELR->CSELR |= (5 << 24);
-    DMA1_CSELR->CSELR |= ((3 << 12) | (3 << 4));
+    DMA2_7.enable_request(DMA_Types::Request::I2C_1_TX);
+    DMA1_4.enable_request(DMA_Types::Request::I2C_2_TX);
+    DMA1_2.enable_request(DMA_Types::Request::I2C_3_TX);
+    DMA2_2.enable_request(DMA_Types::Request::I2C_4_TX);
 
     // TIM2->DIER |= (1 << 0);
     Timer2.enable_interrupt(timer_types::Interrupt::UPDATE);

@@ -5,6 +5,7 @@
  *  @author: Paweł Warzecha
  */
 
+#include <cassert>
 #include <cstdint>
 #include <functional>
 
@@ -40,7 +41,7 @@ DMA::DMA(Clock & clock, DMA_Types::DmaNumber dma_number, DMA_Types::Channel dma_
 : IFCR(to_address(dma_number, dma_channel, DMA_Types::DmaRegister::IFCR)), ISR(to_address(dma_number, dma_channel, DMA_Types::DmaRegister::ISR)),
   CCR(to_address(dma_number, dma_channel, DMA_Types::DmaRegister::CCR)), CNDTR(to_address(dma_number, dma_channel, DMA_Types::DmaRegister::CNDTR)),
   CPAR(to_address(dma_number, dma_channel, DMA_Types::DmaRegister::CPAR)), CMAR(to_address(dma_number, dma_channel, DMA_Types::DmaRegister::CMAR)),
-  CSELR(to_address(dma_number, dma_channel, DMA_Types::DmaRegister::CSELR)), channel(dma_channel)
+  CSELR(to_address(dma_number, dma_channel, DMA_Types::DmaRegister::CSELR)), channel_(dma_channel), dma_number_(dma_number)
 {
     clock.enable_clock_for(to_peripheral(dma_number));
 }
@@ -85,7 +86,7 @@ void DMA::enable_peripheral_increment()
     CCR.set_bit(DMA_PERIPHERAL_INCREMENT_START_POSITION);
 }
 
-void DMA::disable_peripheral_incremen()
+void DMA::disable_peripheral_increment()
 {
     CCR.clear_bit(DMA_PERIPHERAL_INCREMENT_START_POSITION);
 }
@@ -130,7 +131,7 @@ void DMA::set_transfer_size(uint16_t transfer_size)
     CNDTR.set_value(transfer_size, 0, MEMORY_TRANSFER_SIZE_FIELD_BIT_LENGTH);
 }
 
-void DMA::set_periphearl_address(uint32_t peripheral_address)
+void DMA::set_peripheral_address(uint32_t peripheral_address)
 {
     CPAR.set_value(peripheral_address, 0, PERIPHERAL_ADDRESS_FIELD_BIT_LENGTH);
 }
@@ -140,9 +141,15 @@ void DMA::set_memory_address(uint32_t memory_address)
     CMAR.set_value(memory_address, 0, MEMORY_ADDRESS_FIELD_BIT_LENGTH);
 }
 
-void DMA::set_request(DMA_Types::Request request)
+void DMA::enable_request(DMA_Types::Request request)
 {
-    CMAR.set_value(to_value(request), to_start_position(channel), MEMORY_ADDRESS_FIELD_BIT_LENGTH);
+    assert(is_request_valid(dma_number_, channel_, request) && "Not a valid request");
+
+    auto channel_position = to_start_position(channel_);
+    auto request_value = to_value(dma_number_, channel_, request);
+
+    static constexpr uint8_t REQUEST_FIELD_BIT_LENGTH{4};
+    CSELR.set_value(request_value, channel_position, REQUEST_FIELD_BIT_LENGTH);
 }
 
 void DMA::set_transfer_complete_callback(std::function<void()> callback)
@@ -171,20 +178,20 @@ void DMA::half_transfer_callback()
 
 bool DMA::is_half_transfer_interrupt()
 {
-    return ISR.get_bit(to_bit_position(channel, DMA_Types::Interrupt::HalfTransfer)) != 0;
+    return ISR.get_bit(to_bit_position(channel_, DMA_Types::Interrupt::HalfTransfer)) != 0;
 }
 
 bool DMA::is_transfer_complete_interrupt()
 {
-    return ISR.get_bit(to_bit_position(channel, DMA_Types::Interrupt::TransferCompleted)) != 0;
+    return ISR.get_bit(to_bit_position(channel_, DMA_Types::Interrupt::TransferCompleted)) != 0;
 }
 
 void DMA::clear_transfer_complete_interrupt()
 {
-    IFCR.set_bit(to_bit_position(channel, DMA_Types::Interrupt::TransferCompleted));
+    IFCR.set_bit(to_bit_position(channel_, DMA_Types::Interrupt::TransferCompleted));
 }
 
 void DMA::clear_half_transfer_interrupt()
 {
-    IFCR.set_bit(to_bit_position(channel, DMA_Types::Interrupt::TransferCompleted));
+    IFCR.set_bit(to_bit_position(channel_, DMA_Types::Interrupt::TransferCompleted));
 }

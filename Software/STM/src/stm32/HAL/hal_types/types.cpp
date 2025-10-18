@@ -1133,7 +1133,7 @@ uint32_t to_value(DMA_Types::ReadDirection read_direction)
 {
     switch (read_direction)
     {
-        case DMA_Types::ReadDirection::ReadFromPeriphearl:
+        case DMA_Types::ReadDirection::ReadFromPeripheral:
             return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DMA_Types::ReadDirection::ReadFromMemory:
             return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
@@ -1143,28 +1143,482 @@ uint32_t to_value(DMA_Types::ReadDirection read_direction)
     }
 }
 
-uint32_t to_value(DMA_Types::Request request)
+bool is_request_valid(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request)
 {
-    switch (request)
+    switch (dma_number)
     {
-        case DMA_Types::Request::Request0:
-            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        case DMA_Types::Request::Request1:
-            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        case DMA_Types::Request::Request2:
-            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        case DMA_Types::Request::Request3:
-            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        case DMA_Types::Request::Request4:
-            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        case DMA_Types::Request::Request5:
-            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        case DMA_Types::Request::Request6:
-            return 6;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        case DMA_Types::Request::Request7:
-            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
-        default:
-            assert(false && "invalid request");
-            return 0;
+        case DMA_Types::DmaNumber::DMA_1:
+            switch (channel)
+            {
+                case DMA_Types::Channel::Channel1:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::ADC_1:
+                        case DMA_Types::Request::TIM_2_CH3:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel2:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::ADC_2:
+                        case DMA_Types::Request::SPI_1_RX:
+                        case DMA_Types::Request::USART_3_TX:
+                        case DMA_Types::Request::I2C_3_TX:
+                        case DMA_Types::Request::TIM_2_UP:
+                        case DMA_Types::Request::TIM_3_CH3:
+                        case DMA_Types::Request::TIM_1_CH1:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel3:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SPI_1_TX:
+                        case DMA_Types::Request::USART_3_RX:
+                        case DMA_Types::Request::I2C_3_RX:
+                        case DMA_Types::Request::TIM_16_CH1:
+                        case DMA_Types::Request::TIM_16_UP:
+                        case DMA_Types::Request::TIM_3_CH4:
+                        case DMA_Types::Request::TIM_3_UP:
+                        case DMA_Types::Request::TIM_6_UP:
+                        case DMA_Types::Request::DAC_CH1:
+                        case DMA_Types::Request::TIM_1_CH2:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel4:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::DFSDM_1_FLT0:
+                        case DMA_Types::Request::SPI_2_RX:
+                        case DMA_Types::Request::USART_1_TX:
+                        case DMA_Types::Request::I2C_2_TX:
+                        case DMA_Types::Request::TIM_7_UP:
+                        case DMA_Types::Request::DAC_CH2:
+                        case DMA_Types::Request::TIM_1_CH4:
+                        case DMA_Types::Request::TIM_1_TRIG:
+                        case DMA_Types::Request::TIM_1_COM:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel5:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::DFSDM_1_FLT1:
+                        case DMA_Types::Request::SPI_2_TX:
+                        case DMA_Types::Request::USART_1_RX:
+                        case DMA_Types::Request::I2C_2_RX:
+                        case DMA_Types::Request::TIM_2_CH1:
+                        case DMA_Types::Request::QUAD_SPI:
+                        case DMA_Types::Request::TIM_15_CH1:
+                        case DMA_Types::Request::TIM_15_UP:
+                        case DMA_Types::Request::TIM_15_TRIG:
+                        case DMA_Types::Request::TIM_15_COM:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel6:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SAI_1_A:
+                        case DMA_Types::Request::USART_2_RX:
+                        case DMA_Types::Request::I2C_1_TX:
+                        case DMA_Types::Request::TIM_16_CH1:
+                        case DMA_Types::Request::TIM_16_UP:
+                        case DMA_Types::Request::TIM_3_CH1:
+                        case DMA_Types::Request::TIM_3_TRIG:
+                        case DMA_Types::Request::TIM_1_UP:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel7:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SAI_1_B:
+                        case DMA_Types::Request::USART_2_TX:
+                        case DMA_Types::Request::I2C_1_RX:
+                        case DMA_Types::Request::TIM_2_CH2:
+                        case DMA_Types::Request::TIM_2_CH4:
+                        case DMA_Types::Request::TIM_1_CH3:
+                            return true;
+                        default:
+                            return false;
+                    }
+                default:
+                    return false;
+            }
+        case DMA_Types::DmaNumber::DMA_2:
+            switch (channel)
+            {
+                case DMA_Types::Channel::Channel1:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::I2C_4_RX:
+                        case DMA_Types::Request::SAI_1_A:
+                        case DMA_Types::Request::SPI_3_RX:
+                        case DMA_Types::Request::SWPMI_1_RX:
+                        case DMA_Types::Request::AES_IN:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel2:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::I2C_4_TX:
+                        case DMA_Types::Request::SAI_1_B:
+                        case DMA_Types::Request::SPI_3_TX:
+                        case DMA_Types::Request::SWPMI_1_TX:
+                        case DMA_Types::Request::AES_OUT:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel3:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::ADC_1:
+                        case DMA_Types::Request::UART_4_RX:
+                        case DMA_Types::Request::SPI_1_RX:
+                        case DMA_Types::Request::AES_OUT:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel4:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::ADC_2:
+                        case DMA_Types::Request::TIM_6_UP:
+                        case DMA_Types::Request::DAC_CH1:
+                        case DMA_Types::Request::SPI_1_TX:
+                        case DMA_Types::Request::SDMMC_1:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel5:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::UART_4_RX:
+                        case DMA_Types::Request::TIM_7_UP:
+                        case DMA_Types::Request::DAC_CH2:
+                        case DMA_Types::Request::AES_IN:
+                        case DMA_Types::Request::SDMMC_1:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel6:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SAI_1_A:
+                        case DMA_Types::Request::USART_1_TX:
+                        case DMA_Types::Request::LPUART_1_TX:
+                        case DMA_Types::Request::I2C_1_RX:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case DMA_Types::Channel::Channel7:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SAI_1_B:
+                        case DMA_Types::Request::USART_1_RX:
+                        case DMA_Types::Request::QUAD_SPI:
+                        case DMA_Types::Request::LPUART_1_RX:
+                        case DMA_Types::Request::I2C_1_TX:
+                            return true;
+                        default:
+                            return false;
+                    }
+                default:
+                    return false;
+            }
     }
+    return false;
+}
+
+uint32_t to_value(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request)
+{
+    switch (dma_number)
+    {
+        case DMA_Types::DmaNumber::DMA_1:
+            switch (channel)
+            {
+                case DMA_Types::Channel::Channel1:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::ADC_1:
+                            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_2_CH3:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel2:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::ADC_2:
+                            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SPI_1_RX:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::USART_3_TX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::I2C_3_TX:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_2_UP:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_3_CH3:
+                            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_1_CH1:
+                            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel3:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SPI_1_TX:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::USART_3_RX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::I2C_3_RX:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_16_CH1:
+                        case DMA_Types::Request::TIM_16_UP:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_3_CH4:
+                        case DMA_Types::Request::TIM_3_UP:
+                            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_6_UP:
+                        case DMA_Types::Request::DAC_CH1:
+                            return 6;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_1_CH2:
+                            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel4:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::DFSDM_1_FLT0:
+                            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SPI_2_RX:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::USART_1_TX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::I2C_2_TX:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_7_UP:
+                        case DMA_Types::Request::DAC_CH2:
+                            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_1_CH4:
+                        case DMA_Types::Request::TIM_1_TRIG:
+                        case DMA_Types::Request::TIM_1_COM:
+                            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel5:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::DFSDM_1_FLT1:
+                            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SPI_2_TX:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::USART_1_RX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::I2C_2_RX:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_2_CH1:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::QUAD_SPI:
+                            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_15_CH1:
+                        case DMA_Types::Request::TIM_15_UP:
+                        case DMA_Types::Request::TIM_15_TRIG:
+                        case DMA_Types::Request::TIM_15_COM:
+                            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel6:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SAI_1_A:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::USART_2_RX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::I2C_1_TX:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_16_CH1:
+                        case DMA_Types::Request::TIM_16_UP:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_3_CH1:
+                        case DMA_Types::Request::TIM_3_TRIG:
+                            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_1_UP:
+                            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel7:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SAI_1_B:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::USART_2_TX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::I2C_1_RX:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_2_CH2:
+                        case DMA_Types::Request::TIM_2_CH4:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_1_CH3:
+                            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                default:
+                    assert(false && "invalid channel");
+                    return 0;
+            }
+        case DMA_Types::DmaNumber::DMA_2:
+            switch (channel)
+            {
+                case DMA_Types::Channel::Channel1:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::I2C_4_RX:
+                            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SAI_1_A:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SPI_3_RX:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SWPMI_1_RX:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::AES_IN:
+                            return 6;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel2:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::I2C_4_TX:
+                            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SAI_1_B:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SPI_3_TX:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SWPMI_1_TX:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::AES_OUT:
+                            return 6;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel3:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::ADC_1:
+                            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::UART_4_RX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SPI_1_RX:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::AES_OUT:
+                            return 6;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel4:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::ADC_2:
+                            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_6_UP:
+                        case DMA_Types::Request::DAC_CH1:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SPI_1_TX:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SDMMC_1:
+                            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel5:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::UART_4_RX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::TIM_7_UP:
+                        case DMA_Types::Request::DAC_CH2:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::AES_IN:
+                            return 6;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::SDMMC_1:
+                            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel6:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SAI_1_A:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::USART_1_TX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::LPUART_1_TX:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::I2C_1_RX:
+                            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                case DMA_Types::Channel::Channel7:
+                    switch (request)
+                    {
+                        case DMA_Types::Request::SAI_1_B:
+                            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::USART_1_RX:
+                            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::QUAD_SPI:
+                            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::LPUART_1_RX:
+                            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case DMA_Types::Request::I2C_1_TX:
+                            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "invalid request");
+                            return 0;
+                    }
+                default:
+                    assert(false && "invalid channel");
+                    return 0;
+            }
+    }
+    assert(false && "invalid DMA");
+    return 0;
 }
