@@ -44,7 +44,7 @@ LSM9DS1::LSM9DS1(SPI & spi, GPIO & gyro_cs, GPIO & magnet_cs) : spi_(spi), gyro_
     spi.write_data_to_register(gyro_cs_, 0x20, data_to_write20);  // 119 Hz, 2g
 
     set_data_rate(MagnetometerDataRate::Hz_80);
-    set_XY_operation_mode(MagnetometerXYOperationMode::ultra_perforamnce);
+    set_XY_operation_mode(MagnetometerXYOperationMode::ultra_performance);
     set_full_scale(MagnetometerFullScale::Gs_16);
     set_operation_mode(MagnetometerOperationMode::continuous_conversion);
 

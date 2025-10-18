@@ -83,7 +83,7 @@ enum class MagnetometerXYOperationMode : uint8_t
 {
     medium_performance = 1,
     high_performance = 2,
-    ultra_perforamnce = 3
+    ultra_performance = 3
 };
 
 enum class MagnetometerDataRate : uint8_t
