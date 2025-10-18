@@ -77,9 +77,9 @@ public:
     /** Sets the slave address.
      *
      * @param slave_address The slave address.
-     * @param adress_length Lenggth of the slave address.
+     * @param address_length Length of the slave address.
      */
-    void set_slave_address(uint16_t slave_address, I2C_Types::AddressLength adress_length);
+    void set_slave_address(uint16_t slave_address, I2C_Types::AddressLength address_length);
 
     /** Writes the data to the slave.
      *

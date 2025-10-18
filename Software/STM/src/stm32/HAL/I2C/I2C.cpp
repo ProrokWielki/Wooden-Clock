@@ -26,17 +26,19 @@
 
 namespace
 {
-constexpr static uint8_t DIGITAL_FILTER_FIELD_BIT_LENGTH = 4;
-constexpr static uint8_t TRANSFER_SIZE_FIELD_BIT_LENGTH = 8;
-constexpr static uint8_t DATA_FIELD_BIT_LENGTH = 8;
-constexpr static uint8_t PRESCALER_FIELD_BIT_LENGTH = 4;
-constexpr static uint8_t DATA_SETUP_FIELD_BIT_LENGTH = 4;
-constexpr static uint8_t DATA_HOLD_FIELD_BIT_LENGT = 4;
-constexpr static uint8_t SCL_HIGH_FIELD_BIT_LENGT = 8;
-constexpr static uint8_t SCL_LOW_FIELD_BIT_LENGT = 8;
+constexpr static uint8_t DIGITAL_FILTER_FIELD_BIT_LENGTH{4};
+constexpr static uint8_t TRANSFER_SIZE_FIELD_BIT_LENGTH{8};
+constexpr static uint8_t DATA_FIELD_BIT_LENGTH{8};
+constexpr static uint8_t PRESCALER_FIELD_BIT_LENGTH{4};
+constexpr static uint8_t DATA_SETUP_FIELD_BIT_LENGTH{4};
+constexpr static uint8_t DATA_HOLD_FIELD_BIT_LENGTH{4};
+constexpr static uint8_t SCL_HIGH_FIELD_BIT_LENGTH{8};
+constexpr static uint8_t SCL_LOW_FIELD_BIT_LENGTH{8};
+constexpr static uint8_t DIRECTION_BIT_LENGTH{1};
 
-constexpr static uint8_t REGISTER_OFFSET_7BIT_ADDRESS = 1;
-constexpr static uint8_t REGISTER_OFFSET_10BIT_ADDRESS = 0;
+constexpr static uint8_t REGISTER_OFFSET_7BIT_ADDRESS{1};
+constexpr static uint8_t REGISTER_OFFSET_10BIT_ADDRESS{0};
+constexpr static uint8_t REGISTER_OFFSET_DIRECTION_ADDRESS{10};
 }  // namespace
 
 using namespace I2C_Types;
@@ -169,7 +171,7 @@ void I2C::write_data_DMA(uint8_t * data, uint16_t numberOfBytes)
 {
     dma_->enable_memory_increment();
     dma_->set_memory_address(reinterpret_cast<uint32_t>(data));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
-    dma_->set_periphearl_address(TXDR.get_address());
+    dma_->set_peripheral_address(TXDR.get_address());
     dma_->set_read_direction(DMA_Types::ReadDirection::ReadFromMemory);
     dma_->set_memory_size(DMA_Types::DataSize::Bits8);
     dma_->set_peripheral_size(DMA_Types::DataSize::Bits8);
@@ -184,7 +186,7 @@ void I2C::write_data_DMA(uint8_t * data, uint16_t numberOfBytes)
 
 void I2C::set_transfer_direction(TransferDirection direction)
 {
-    CR2.set_value(to_value(direction), 10, 1);
+    CR2.set_value(to_value(direction), REGISTER_OFFSET_DIRECTION_ADDRESS, DIRECTION_BIT_LENGTH);
 }
 
 void I2C::read_data(std::span<uint8_t> & received_data, uint16_t num_of_bytes_to_read)
@@ -236,9 +238,9 @@ void I2C::set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHol
 {
     TIMINGR.set_value(u8Prescaler, I2C_TIMINGR_PRESC_Pos, PRESCALER_FIELD_BIT_LENGTH);
     TIMINGR.set_value(u8DataSetup, I2C_TIMINGR_SCLDEL_Pos, DATA_SETUP_FIELD_BIT_LENGTH);
-    TIMINGR.set_value(u8DataHold, I2C_TIMINGR_SDADEL_Pos, DATA_HOLD_FIELD_BIT_LENGT);
-    TIMINGR.set_value(u8SCLHigh, I2C_TIMINGR_SCLH_Pos, SCL_HIGH_FIELD_BIT_LENGT);
-    TIMINGR.set_value(u8SCLLow, I2C_TIMINGR_SCLL_Pos, SCL_LOW_FIELD_BIT_LENGT);
+    TIMINGR.set_value(u8DataHold, I2C_TIMINGR_SDADEL_Pos, DATA_HOLD_FIELD_BIT_LENGTH);
+    TIMINGR.set_value(u8SCLHigh, I2C_TIMINGR_SCLH_Pos, SCL_HIGH_FIELD_BIT_LENGTH);
+    TIMINGR.set_value(u8SCLLow, I2C_TIMINGR_SCLL_Pos, SCL_LOW_FIELD_BIT_LENGTH);
 }
 
 DMA * I2C::get_DMA()
