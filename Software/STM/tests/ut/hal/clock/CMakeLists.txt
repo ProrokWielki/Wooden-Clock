@@ -6,12 +6,13 @@ IF((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
   SET(UPDATED_SOURCES "")
 
   FOREACH(FILE ${CLOCK_SOURCES})
-    LIST(APPEND UPDATED_SOURCES "${CMAKE_SOURCE_DIR}/src/stm32/HAL/Clock/${FILE}")
+    LIST(APPEND UPDATED_SOURCES
+         "${CMAKE_SOURCE_DIR}/src/stm32/HAL/Clock/${FILE}")
   ENDFOREACH()
 
   ADD_EXECUTABLE(UtClockTest ${UPDATED_SOURCES} clock_test.cpp)
   TARGET_LINK_LIBRARIES(UtClockTest GTest::gtest_main GTest::gmock RegisterMock
-                        CmsisBridgeMock HalTypes)
+                        CmsisBridge HalTypes)
 
   INCLUDE(GoogleTest)
   GTEST_DISCOVER_TESTS(UtClockTest)

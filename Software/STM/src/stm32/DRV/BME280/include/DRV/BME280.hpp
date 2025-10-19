@@ -56,7 +56,30 @@ private:
 
     int32_t get_t_fine();
 
-    uint8_t read_register(uint8_t register_address);
+    uint8_t read_8_bits_register(uint8_t register_address);
+    uint16_t read_16_bits_register(uint8_t msb_register_address, uint8_t lsb_register_address);
+    uint32_t read_20_bits_register(uint8_t msb_register_address, uint8_t lsb_register_address, uint8_t xlsb_register_address);
+
+    template<typename T>
+    T read_8_bits_register_as(uint8_t register_address)
+    {
+        static_assert(sizeof(T) >= sizeof(uint8_t), "Wrong size.");
+        return static_cast<T>(read_8_bits_register(register_address));
+    }
+
+    template<typename T>
+    T read_16_bits_register_as(uint8_t msb_register_address, uint8_t lsb_register_address)
+    {
+        static_assert(sizeof(T) >= sizeof(uint16_t), "Wrong size.");
+        return static_cast<T>(read_16_bits_register(msb_register_address,lsb_register_address));
+    }
+
+    template<typename T>
+    T read_20_bits_register_as(uint8_t msb_register_address, uint8_t lsb_register_address,uint8_t xlsb_register_address)
+    {
+        static_assert(sizeof(T) >= sizeof(uint32_t), "Wrong size.");
+        return static_cast<T>(read_20_bits_register(msb_register_address,lsb_register_address,xlsb_register_address));
+    }
 
     uint8_t read_data(uint8_t register_address);
 

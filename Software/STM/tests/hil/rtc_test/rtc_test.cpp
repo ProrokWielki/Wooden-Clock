@@ -1,11 +1,13 @@
 #include <testing_framework.hpp>
 
 #include <HAL/Clock.hpp>
+#include <HAL/Power.hpp>
 #include <HAL/RTC.hpp>
 
 RegisterTest(RtcTest, rtc_on_start_is_0, [](Test * test) {
     Clock clock;
-    RTC_ rtc{clock};
+    Power power;
+    RTC_ rtc(clock, power);
 
     uint8_t hours{rtc.get_hours()};
     uint8_t minutes{rtc.get_minutes()};
@@ -16,7 +18,8 @@ RegisterTest(RtcTest, rtc_on_start_is_0, [](Test * test) {
 
 RegisterTest(RtcTest, rtc_after_init_is_running, [](Test * test) {
     Clock clock;
-    RTC_ rtc{clock};
+    Power power;
+    RTC_ rtc(clock, power);
 
     uint8_t seconds_before{rtc.get_seconds()};
 
@@ -31,7 +34,8 @@ RegisterTest(RtcTest, rtc_after_init_is_running, [](Test * test) {
 
 RegisterTest(RtcTest, setting_time, [](Test * test) {
     Clock clock;
-    RTC_ rtc{clock};
+    Power power;
+    RTC_ rtc(clock, power);
 
     uint8_t hour_to_be_set{12};
     uint8_t minute_to_be_set{34};

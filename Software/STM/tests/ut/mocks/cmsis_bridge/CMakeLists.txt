@@ -1,4 +1,8 @@
-ADD_LIBRARY(
-  CmsisBridgeMock INTERFACE)
+IF((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
+                                               "x86_GCC"))
+  ADD_LIBRARY(CmsisBridge INTERFACE)
 
-TARGET_INCLUDE_DIRECTORIES(CmsisBridgeMock INTERFACE include)
+  TARGET_LINK_LIBRARIES(CmsisBridge INTERFACE gmock)
+
+  TARGET_INCLUDE_DIRECTORIES(CmsisBridge INTERFACE include)
+ENDIF()

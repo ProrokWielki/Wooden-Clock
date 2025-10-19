@@ -5,6 +5,7 @@
  */
 
 #include "include/DRV/BME280.hpp"
+#include <cstdint>
 
 BME280::BME280(SPI & spi, GPIO & chip_select) : spi_(spi), chip_select_(chip_select)
 {
@@ -15,28 +16,23 @@ void BME280::init()
     chip_select_.set_output_high();
 
     get_calibration_data();
-
-    write_register(0x72, 0xff);
-    write_register(0x74, 0xff);
 }
 
 uint8_t BME280::get_id()
 {
-
-    return read_register(0xD0);
-    ;
+    constexpr uint8_t ID_REGISTER_ADDRESS{0x0D0};
+    return read_8_bits_register(ID_REGISTER_ADDRESS);
 }
 
 float BME280::get_humidity()
 {
 
-    uint8_t hum_lsb = read_register(0xFE);
-    uint8_t hum_msb = read_register(0xFD);
+    constexpr uint8_t HUMIDITY_MSB_REGISTER_ADDRESS{0xFD};
+    constexpr uint8_t HUMIDITY_LSB_REGISTER_ADDRESS{0xFE};
 
-    int32_t value = static_cast<int32_t>(hum_lsb);
-    value |= static_cast<int32_t>(hum_msb) << 8;
+    auto hum_lsb = read_16_bits_register_as<int32_t>(HUMIDITY_MSB_REGISTER_ADDRESS, HUMIDITY_LSB_REGISTER_ADDRESS);
 
-    return convert_to_RH(value);
+    return convert_to_RH(hum_lsb);
 }
 
 float BME280::get_temperature()
@@ -47,37 +43,95 @@ float BME280::get_temperature()
 
 float BME280::get_pressure()
 {
-    const uint8_t press_lsb = read_register(0xF8);
-    const uint8_t press_msb = read_register(0xF7);
-    const uint8_t press_xlsb = read_register(0xF9);
+    constexpr uint8_t RAW_PRESSURE_MSB_REGISTER_ADDRESS{0xF7};
+    constexpr uint8_t RAW_PRESSURE_LSB_REGISTER_ADDRESS{0xF8};
+    constexpr uint8_t RAW_PRESSURE_XLSB_REGISTER_ADDRESS{0xF9};
 
-    int32_t value = static_cast<int32_t>(press_lsb) << 4;
-    value |= static_cast<int32_t>(press_msb) << 12;
-    value |= static_cast<int32_t>(press_xlsb) >> 4;
+    const auto pressure =
+    read_20_bits_register_as<int32_t>(RAW_PRESSURE_MSB_REGISTER_ADDRESS, RAW_PRESSURE_LSB_REGISTER_ADDRESS, RAW_PRESSURE_XLSB_REGISTER_ADDRESS);
 
-    return convert_to_Pa(value);
+    return convert_to_Pa(pressure);
 }
 
 void BME280::get_calibration_data()
 {
-    calibration_data.dig_T1 = static_cast<uint16_t>(read_register(0x88)) | static_cast<uint16_t>(read_register(0x89)) << 8;
-    calibration_data.dig_T2 = static_cast<int16_t>(read_register(0x8A)) | static_cast<int16_t>(read_register(0x8B)) << 8;
-    calibration_data.dig_T3 = static_cast<int16_t>(read_register(0x8C)) | static_cast<int16_t>(read_register(0x8D)) << 8;
-    calibration_data.dig_P1 = static_cast<uint16_t>(read_register(0x8E)) | static_cast<uint16_t>(read_register(0x8F)) << 8;
-    calibration_data.dig_P2 = static_cast<int16_t>(read_register(0x90)) | static_cast<int16_t>(read_register(0x91)) << 8;
-    calibration_data.dig_P3 = static_cast<int16_t>(read_register(0x92)) | static_cast<int16_t>(read_register(0x93)) << 8;
-    calibration_data.dig_P4 = static_cast<int16_t>(read_register(0x94)) | static_cast<int16_t>(read_register(0x95)) << 8;
-    calibration_data.dig_P5 = static_cast<int16_t>(read_register(0x96)) | static_cast<int16_t>(read_register(0x97)) << 8;
-    calibration_data.dig_P6 = static_cast<int16_t>(read_register(0x98)) | static_cast<int16_t>(read_register(0x99)) << 8;
-    calibration_data.dig_P7 = static_cast<int16_t>(read_register(0x9A)) | static_cast<int16_t>(read_register(0x9B)) << 8;
-    calibration_data.dig_P8 = static_cast<int16_t>(read_register(0x9C)) | static_cast<int16_t>(read_register(0x9D)) << 8;
-    calibration_data.dig_P9 = static_cast<int16_t>(read_register(0x9E)) | static_cast<int16_t>(read_register(0x9F)) << 8;
-    calibration_data.dig_H1 = static_cast<uint8_t>(read_register(0xA1));
-    calibration_data.dig_H2 = static_cast<int16_t>(read_register(0xE1)) | static_cast<int16_t>(read_register(0xE2)) << 8;
-    calibration_data.dig_H3 = static_cast<uint8_t>(read_register(0xE3));
-    calibration_data.dig_H4 = static_cast<int16_t>(read_register(0xE4)) << 4 | (static_cast<int16_t>(read_register(0xE5)) & 0x0F);
-    calibration_data.dig_H5 = (static_cast<int16_t>(read_register(0xE5)) & 0x0F) | (static_cast<int16_t>(read_register(0xE6)) << 4);
-    calibration_data.dig_H3 = static_cast<int8_t>(read_register(0xE7));
+
+    // TEMPERATURE CALIBRATION DATA
+    constexpr uint8_t CALIBRATION_T1_MSB_REGISTER_ADDRESS{0x89};
+    constexpr uint8_t CALIBRATION_T1_LSB_REGISTER_ADDRESS{0x88};
+    calibration_data.dig_T1 = read_16_bits_register_as<uint16_t>(CALIBRATION_T1_MSB_REGISTER_ADDRESS, CALIBRATION_T1_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_T2_MSB_REGISTER_ADDRESS{0x8B};
+    constexpr uint8_t CALIBRATION_T2_LSB_REGISTER_ADDRESS{0x8A};
+    calibration_data.dig_T2 = read_16_bits_register_as<int16_t>(CALIBRATION_T2_MSB_REGISTER_ADDRESS, CALIBRATION_T2_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_T3_MSB_REGISTER_ADDRESS{0x8D};
+    constexpr uint8_t CALIBRATION_T3_LSB_REGISTER_ADDRESS{0x8C};
+    calibration_data.dig_T3 = read_16_bits_register_as<int16_t>(CALIBRATION_T3_MSB_REGISTER_ADDRESS, CALIBRATION_T3_LSB_REGISTER_ADDRESS);
+
+    // PRESSURE CALIBRATION DATA
+    constexpr uint8_t CALIBRATION_P1_MSB_REGISTER_ADDRESS{0x8F};
+    constexpr uint8_t CALIBRATION_P1_LSB_REGISTER_ADDRESS{0x8E};
+    calibration_data.dig_P1 = read_16_bits_register_as<uint16_t>(CALIBRATION_P1_MSB_REGISTER_ADDRESS, CALIBRATION_P1_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_P2_MSB_REGISTER_ADDRESS{0x91};
+    constexpr uint8_t CALIBRATION_P2_LSB_REGISTER_ADDRESS{0x90};
+    calibration_data.dig_P2 = read_16_bits_register_as<int16_t>(CALIBRATION_P2_MSB_REGISTER_ADDRESS, CALIBRATION_P2_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_P3_MSB_REGISTER_ADDRESS{0x93};
+    constexpr uint8_t CALIBRATION_P3_LSB_REGISTER_ADDRESS{0x92};
+    calibration_data.dig_P3 = read_16_bits_register_as<int16_t>(CALIBRATION_P3_MSB_REGISTER_ADDRESS, CALIBRATION_P3_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_P4_MSB_REGISTER_ADDRESS{0x95};
+    constexpr uint8_t CALIBRATION_P4_LSB_REGISTER_ADDRESS{0x94};
+    calibration_data.dig_P4 = read_16_bits_register_as<int16_t>(CALIBRATION_P4_MSB_REGISTER_ADDRESS, CALIBRATION_P4_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_P5_MSB_REGISTER_ADDRESS{0x97};
+    constexpr uint8_t CALIBRATION_P5_LSB_REGISTER_ADDRESS{0x96};
+    calibration_data.dig_P5 = read_16_bits_register_as<int16_t>(CALIBRATION_P5_MSB_REGISTER_ADDRESS, CALIBRATION_P5_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_P6_MSB_REGISTER_ADDRESS{0x99};
+    constexpr uint8_t CALIBRATION_P6_LSB_REGISTER_ADDRESS{0x98};
+    calibration_data.dig_P6 = read_16_bits_register_as<int16_t>(CALIBRATION_P6_MSB_REGISTER_ADDRESS, CALIBRATION_P6_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_P7_MSB_REGISTER_ADDRESS{0x9B};
+    constexpr uint8_t CALIBRATION_P7_LSB_REGISTER_ADDRESS{0x9A};
+    calibration_data.dig_P7 = read_16_bits_register_as<int16_t>(CALIBRATION_P7_MSB_REGISTER_ADDRESS, CALIBRATION_P7_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_P8_MSB_REGISTER_ADDRESS{0x9D};
+    constexpr uint8_t CALIBRATION_P8_LSB_REGISTER_ADDRESS{0x9C};
+    calibration_data.dig_P8 = read_16_bits_register_as<int16_t>(CALIBRATION_P8_MSB_REGISTER_ADDRESS, CALIBRATION_P8_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_P9_MSB_REGISTER_ADDRESS{0x9F};
+    constexpr uint8_t CALIBRATION_P9_LSB_REGISTER_ADDRESS{0x9E};
+    calibration_data.dig_P9 = read_16_bits_register_as<int16_t>(CALIBRATION_P9_MSB_REGISTER_ADDRESS, CALIBRATION_P9_LSB_REGISTER_ADDRESS);
+
+    // HUMIDITY CALIBRATION DATA
+    constexpr uint8_t CALIBRATION_H1_REGISTER_ADDRESS{0xA1};
+    calibration_data.dig_H1 = read_8_bits_register_as<uint8_t>(CALIBRATION_H1_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_H2_MSB_REGISTER_ADDRESS{0xE2};
+    constexpr uint8_t CALIBRATION_H2_LSB_REGISTER_ADDRESS{0xE1};
+    calibration_data.dig_H2 = read_16_bits_register_as<int16_t>(CALIBRATION_H2_MSB_REGISTER_ADDRESS, CALIBRATION_H2_LSB_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_H3_REGISTER_ADDRESS{0xE3};
+    calibration_data.dig_H3 = read_8_bits_register_as<uint8_t>(CALIBRATION_H3_REGISTER_ADDRESS);
+
+    constexpr uint8_t CALIBRATION_H4_MSB_REGISTER_ADDRESS{0xE4};
+    constexpr uint8_t CALIBRATION_H4_LSB_REGISTER_ADDRESS{0xE5};
+    constexpr uint8_t CALIBRATION_H4_LSB_MASK{0x0F};
+    const auto h4_8_bits_msb_value = static_cast<int16_t>(read_8_bits_register_as<int16_t>(CALIBRATION_H4_MSB_REGISTER_ADDRESS) << 4);
+    const auto h4_4_bits_lsb_value = static_cast<int16_t>(read_8_bits_register_as<int16_t>(CALIBRATION_H4_LSB_REGISTER_ADDRESS) & CALIBRATION_H4_LSB_MASK);
+    calibration_data.dig_H4 = static_cast<int16_t>(h4_8_bits_msb_value | h4_4_bits_lsb_value);
+
+    constexpr uint8_t CALIBRATION_H5_MSB_REGISTER_ADDRESS{0xE6};
+    constexpr uint8_t CALIBRATION_H5_LSB_REGISTER_ADDRESS{0xE5};
+    const auto h5_8_bits_msb_value = static_cast<int16_t>(read_8_bits_register_as<int16_t>(CALIBRATION_H5_MSB_REGISTER_ADDRESS) << 4);
+    const auto h5_4_bits_lsb_value = static_cast<int16_t>(read_8_bits_register_as<int16_t>(CALIBRATION_H5_LSB_REGISTER_ADDRESS) >> 4);
+    calibration_data.dig_H5 = static_cast<int16_t>(h5_8_bits_msb_value | h5_4_bits_lsb_value);
+
+    constexpr uint8_t CALIBRATION_H6_REGISTER_ADDRESS{0xE7};
+    calibration_data.dig_H6 = read_8_bits_register_as<int8_t>(CALIBRATION_H6_REGISTER_ADDRESS);
 }
 
 float BME280::convert_to_RH(int32_t register_value)
@@ -104,16 +158,14 @@ float BME280::convert_to_RH(int32_t register_value)
 
 int32_t BME280::get_raw_temperature()
 {
+    constexpr uint8_t RAW_TEMPERATURE_MSB_REGISTER_ADDRESS{0xFA};
+    constexpr uint8_t RAW_TEMPERATURE_LSB_REGISTER_ADDRESS{0xFB};
+    constexpr uint8_t RAW_TEMPERATURE_XLSB_REGISTER_ADDRESS{0xFC};
 
-    const uint8_t hum_lsb = read_register(0xFB);
-    const uint8_t hum_msb = read_register(0xFA);
-    const uint8_t hum_xlsb = read_register(0xFC);
+    const auto temperature =
+    read_20_bits_register_as<int32_t>(RAW_TEMPERATURE_MSB_REGISTER_ADDRESS, RAW_TEMPERATURE_LSB_REGISTER_ADDRESS, RAW_TEMPERATURE_XLSB_REGISTER_ADDRESS);
 
-    int32_t value = static_cast<int32_t>(hum_lsb) << 4;
-    value |= static_cast<int32_t>(hum_msb) << 12;
-    value |= static_cast<int32_t>(hum_xlsb) >> 4;
-
-    return value;
+    return temperature;
 }
 
 float BME280::convert_to_Pa(int32_t raw_pressure)
@@ -139,7 +191,7 @@ float BME280::convert_to_Pa(int32_t raw_pressure)
 
 int32_t BME280::get_t_fine()
 {
-    int32_t raw_temperature = get_raw_temperature();
+    const int32_t raw_temperature = get_raw_temperature();
 
     auto var1 = ((((raw_temperature >> 3) - (static_cast<int32_t>(calibration_data.dig_T1) << 1))) * (static_cast<int32_t>(calibration_data.dig_T2))) >> 11;
     auto var2 =
@@ -150,9 +202,26 @@ int32_t BME280::get_t_fine()
     return var1 + var2;
 }
 
-uint8_t BME280::read_register(uint8_t register_address)
+uint8_t BME280::read_8_bits_register(uint8_t register_address)
 {
-    return read_data(static_cast<uint8_t>(register_address));
+    return read_data(register_address);
+}
+
+uint16_t BME280::read_16_bits_register(uint8_t msb_register_address, uint8_t lsb_register_address)
+{
+    constexpr uint8_t MSB_OFFSET{8};
+
+    return (read_8_bits_register_as<uint16_t>(msb_register_address) << MSB_OFFSET) | read_8_bits_register_as<uint16_t>(lsb_register_address);
+}
+
+uint32_t BME280::read_20_bits_register(uint8_t msb_register_address, uint8_t lsb_register_address, uint8_t xlsb_register_address)
+{
+    constexpr uint8_t MSB_OFFSET{12};
+    constexpr uint8_t LSB_OFFSET{4};
+    constexpr uint8_t XLSB_OFFSET{4};
+
+    return (read_8_bits_register_as<uint32_t>(msb_register_address) << MSB_OFFSET) | (read_8_bits_register_as<uint32_t>(lsb_register_address) << LSB_OFFSET) |
+           (read_8_bits_register_as<uint32_t>(xlsb_register_address) >> XLSB_OFFSET);
 }
 
 uint8_t BME280::read_data(uint8_t register_address)
@@ -165,7 +234,7 @@ uint8_t BME280::read_data(uint8_t register_address)
 
 void BME280::write_register(uint8_t register_address, uint8_t data)
 {
-    write_data(static_cast<uint8_t>(register_address), data);
+    write_data(register_address, data);
 }
 
 void BME280::write_data(uint8_t register_address, uint8_t data)

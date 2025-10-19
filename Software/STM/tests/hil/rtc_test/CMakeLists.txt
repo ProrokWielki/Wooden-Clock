@@ -7,6 +7,7 @@ IF((CMAKE_BUILD_TYPE STREQUAL "ARM_Debug"))
             RTC
             Clock
             HalTypes
+            Power
             GPIO
             MCU
             TestingFramework
