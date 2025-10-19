@@ -1,3 +1,4 @@
-add_subdirectory(CMSIS)
-add_subdirectory(FreeRTOS)
-add_subdirectory(EmbedGUI)
+ADD_SUBDIRECTORY(CMSIS)
+ADD_SUBDIRECTORY(FreeRTOS)
+ADD_SUBDIRECTORY(EmbedGUI)
+ADD_SUBDIRECTORY(BME280_API)
