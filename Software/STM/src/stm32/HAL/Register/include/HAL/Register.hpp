@@ -38,29 +38,29 @@ public:
     /** Sets given values to register, without changing other values.
      *
      * @param u32Value Value to be written to the register
-     * @param u8FielStartPosition Position in register from where to start writing the value
+     * @param u8FieldStartPosition Position in register from where to start writing the value
      * @param u8FieldBitLength Length in bits of the field to which the value is written.
      */
-    void set_value(T value, uint8_t u8FielStartPosition, uint8_t u8FieldBitLength)
+    void set_value(T value, uint8_t u8FieldStartPosition, uint8_t u8FieldBitLength)
     {
         const uint32_t masked_value = value & get_mask(u8FieldBitLength);
-        const uint32_t register_value_with_cleared_bits_to_set = (*register_) & ~(get_mask(u8FieldBitLength) << u8FielStartPosition);
-        *register_ = register_value_with_cleared_bits_to_set | (masked_value << u8FielStartPosition);
+        const uint32_t register_value_with_cleared_bits_to_set = (*register_) & ~(get_mask(u8FieldBitLength) << u8FieldStartPosition);
+        *register_ = register_value_with_cleared_bits_to_set | (masked_value << u8FieldStartPosition);
     }
 
     /** Reads value from the register.
      *
-     * @param u8FielStartPosition Position in register from where to start reading the value
+     * @param u8FieldStartPosition Position in register from where to start reading the value
      * @param u8FieldBitLength Length in bits of the field from which the value is read.
      *
      * @return Value of wanted field in register.
      */
-    [[nodiscard]] T get_value(uint8_t u8FielStartPosition, uint8_t u8FieldBitLength) const
+    [[nodiscard]] T get_value(uint8_t u8FieldStartPosition, uint8_t u8FieldBitLength) const
     {
         const T register_value = *register_;
-        const T value_mask = get_mask(u8FieldBitLength) << u8FielStartPosition;
+        const T value_mask = get_mask(u8FieldBitLength) << u8FieldStartPosition;
 
-        return (register_value & value_mask) >> u8FielStartPosition;
+        return (register_value & value_mask) >> u8FieldStartPosition;
     }
 
     /** Toggles single bit in register.
