@@ -20,9 +20,12 @@ public:
     Clock();
 
     void enable_clock_for(Peripheral peripheral);
+    void enable_clock_source(ClockSource clock_source);
     void set_clock_source_for(PeripheralWithSelectableClockSource peripheral, ClockSource clock_source);
 
     [[nodiscard]] uint32_t get_clock_frequency() const;
+
+    void reset_backup_domain();
 
 private:
     friend class ClockTestAhb1_EnableClock_Test;
@@ -36,6 +39,11 @@ private:
 
     Register<uint32_t> & get_peripheral_clock_register(Peripheral peripheral);
     Register<uint32_t> & get_peripheral_clock_source_register(PeripheralWithSelectableClockSource peripheral);
+    Register<uint32_t> & get_clock_source_register(ClockSource clock_source);
+
+    bool is_clock_source_ready(ClockSource clock_source);
+
+    void wait_for_clock_source_to_be_ready(ClockSource clock_source);
 
     Register<uint32_t> AHB1;
     Register<uint32_t> AHB2;
@@ -47,4 +55,5 @@ private:
     Register<uint32_t> CCIPR;
     Register<uint32_t> CCIPR2;
     Register<uint32_t> BDCR;
+    Register<uint32_t> CR;
 };

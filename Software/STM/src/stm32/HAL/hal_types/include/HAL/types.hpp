@@ -732,6 +732,10 @@ uint8_t to_bit_position(DMA_Types::Channel channel, DMA_Types::Interrupt interru
 uint8_t to_bit_position(Peripheral peripheral);
 uint8_t to_bit_position(timer_types::Interrupt interrupt);
 
+uint8_t to_enable_bit_position(ClockSource clock_source);
+
+uint8_t to_ready_bit_position(ClockSource clock_source);
+
 uint8_t to_start_position(DMA_Types::Channel channel);
 
 uint32_t to_value(I2C_Types::DigitalFilter digital_filter);

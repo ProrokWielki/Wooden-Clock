@@ -20,8 +20,17 @@ Clock::Clock()
 : AHB1(to_address(ClockRegister::AHB1)), AHB2(to_address(ClockRegister::AHB2)), AHB3(to_address(ClockRegister::AHB3)),
   APB1_1(to_address(ClockRegister::APB1_1)), APB1_2(to_address(ClockRegister::APB1_2)), APB2(to_address(ClockRegister::APB2)),
   PLL_CONFIG(to_address(ClockRegister::PLL_CONFIG)), CCIPR(to_address(ClockRegister::CCIPR)), CCIPR2(to_address(ClockRegister::CCIPR2)),
-  BDCR(to_address(ClockRegister::BDCR))
+  BDCR(to_address(ClockRegister::BDCR)), CR(to_address(ClockRegister::CR))
 {
+}
+
+void Clock::enable_clock_source(ClockSource clock_source)
+{
+    Register<uint32_t> & clock_source_register{get_clock_source_register(clock_source)};
+
+    clock_source_register.set_bit(to_enable_bit_position(clock_source));
+
+    wait_for_clock_source_to_be_ready(clock_source);
 }
 
 void Clock::enable_clock_for(Peripheral peripheral)
@@ -44,6 +53,27 @@ void Clock::set_clock_source_for(PeripheralWithSelectableClockSource peripheral,
 {
     constexpr uint32_t CLOCK_FREQUENCY{80'000'000};  // TODO: Get from RCC->CFGR
     return CLOCK_FREQUENCY;
+}
+
+void Clock::reset_backup_domain()
+{
+    static constexpr uint8_t BACKUP_DOMAIN_RESET_BIT{16};
+
+    BDCR.set_bit(BACKUP_DOMAIN_RESET_BIT);
+    BDCR.clear_bit(BACKUP_DOMAIN_RESET_BIT);
+}
+
+void Clock::wait_for_clock_source_to_be_ready(ClockSource clock_source)
+{
+    while (not is_clock_source_ready(clock_source))
+        ;
+}
+
+bool Clock::is_clock_source_ready(ClockSource clock_source)
+{
+    Register<uint32_t> & clock_source_register{get_clock_source_register(clock_source)};
+
+    return clock_source_register.get_bit(to_ready_bit_position(clock_source));
 }
 
 Register<uint32_t> & Clock::get_peripheral_clock_register(Peripheral peripheral)
@@ -113,6 +143,34 @@ Register<uint32_t> & Clock::get_peripheral_clock_register(Peripheral peripheral)
             assert(false && "invalid peripheral");
             return APB1_1;
     };
+}
+
+Register<uint32_t> & Clock::get_clock_source_register(ClockSource clock_source)
+{
+    switch (clock_source)
+    {
+        case ClockSource::LSE:
+            return BDCR;
+        case ClockSource::PCLK:
+        case ClockSource::LSI:
+        case ClockSource::HSI16:
+        case ClockSource::SYSTEM_CLOCK:
+        case ClockSource::MSI:
+        case ClockSource::HSI48:
+        case ClockSource::PCLK1:
+        case ClockSource::HSE:
+        case ClockSource::PLL_ADC_CLOCK:
+        case ClockSource::PLL_48_M1_CLOCK:
+        case ClockSource::PLL_48_M2_CLOCK:
+        case ClockSource::PLL_SAI_CLOCK:
+        case ClockSource::PLL_P_CLOCK:
+        case ClockSource::SAI_EXTERNAL_CLOCK:
+            assert(false && "Not implemented.");
+            return BDCR;
+        default:
+            assert(false && "invalid clock source");
+            return BDCR;
+    }
 }
 
 Register<uint32_t> & Clock::get_peripheral_clock_source_register(PeripheralWithSelectableClockSource peripheral)
