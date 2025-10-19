@@ -13,3 +13,6 @@
 [submodule "Software/STM/tools/Text2CArray"]
 	path = Software/STM/tools/Text2CArray
 	url = https://github.com/ProrokWielki/Text2CArray.git
+[submodule "Software/STM/lib/BME280_API/BME280_SensorAPI"]
+	path = Software/STM/lib/BME280_API/BME280_SensorAPI
+	url = https://github.com/boschsensortec/BME280_SensorAPI.git
