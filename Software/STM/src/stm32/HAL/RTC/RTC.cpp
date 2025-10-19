@@ -8,12 +8,11 @@
 #include <cstdint>
 
 #include <HAL/Clock.hpp>
+#include <HAL/Power.hpp>
 #include <HAL/RTC.hpp>
 #include <HAL/Register.hpp>
 #include <HAL/types.hpp>
 #include <cmsis_bridge/cmsis_bridge.hpp>
-
-#include <stm32l452xx.h>
 
 constexpr static uint8_t TENS_OF_HOURS_POSITION{20};
 constexpr static uint8_t TENS_OF_HOURS_FIELD_LENGTH{3};
@@ -33,35 +32,21 @@ constexpr static uint8_t UNITS_OF_SECONDS_FIELD_LENGTH{3};
 constexpr static uint8_t START_INIT_BIT_POSITION{7};
 constexpr static uint8_t IS_IN_INIT_MODE_BIT_POSITION{6};
 
-RTC_::RTC_(Clock & clock)
-: clock_{clock}, TR(to_address(RTC_types::Register::TR)), DR(to_address(RTC_types::Register::DR)), SSR(to_address(RTC_types::Register::SSR)),
+RTC_::RTC_(Clock & clock, Power & power)
+: clock_{clock}, power_{power}, TR(to_address(RTC_types::Register::TR)), DR(to_address(RTC_types::Register::DR)), SSR(to_address(RTC_types::Register::SSR)),
   ICSR(to_address(RTC_types::Register::ICSR)), PRER(to_address(RTC_types::Register::PRER)), WUTR(to_address(RTC_types::Register::WUTR)),
   CR(to_address(RTC_types::Register::CR)), WPR(to_address(RTC_types::Register::WPR)), CALR(to_address(RTC_types::Register::CALR)),
   SHIFTR(to_address(RTC_types::Register::SHIFTR)), TSTR(to_address(RTC_types::Register::TSTR)), TSDR(to_address(RTC_types::Register::TSDR)),
   TSSSR(to_address(RTC_types::Register::TSSSR)), ALRMAR(to_address(RTC_types::Register::ALRMAR)), ALRMASSR(to_address(RTC_types::Register::ALRMASSR)),
-  ALARMBR(to_address(RTC_types::Register::ALARMBR)), ALRMBSSR(to_address(RTC_types::Register::ALRMBSSR)),ISR(to_address(RTC_types::Register::ISR)) 
+  ALARMBR(to_address(RTC_types::Register::ALARMBR)), ALRMBSSR(to_address(RTC_types::Register::ALRMBSSR)), ISR(to_address(RTC_types::Register::ISR))
 {
     clock_.enable_clock_for(Peripheral::POWER_INTERFACE);
 
-    // Enable access to RTC and Backup registers
-    PWR->CR1 |= PWR_CR1_DBP;
+    power_.set_backup_domain_write_protection_state(Power_Types::WriteProtectionState::Disabled);
 
+    clock_.reset_backup_domain();
 
-    // Resets Backup Domain Config
-    RCC->BDCR |= RCC_BDCR_BDRST;
-    RCC->BDCR &= ~RCC_BDCR_BDRST;
-
-    // Set driving capability to medium high
-    RCC->BDCR &= ~RCC_BDCR_LSEDRV_Msk;
-    RCC->BDCR |= (0x02 << RCC_BDCR_LSEDRV_Pos);
-
-    // Start LSE clock
-    RCC->BDCR |= RCC_BDCR_LSEON;
-
-    // Wait until LSE is ready
-    while ((RCC->BDCR & RCC_BDCR_LSERDY) != RCC_BDCR_LSERDY)
-        ;
-
+    clock.enable_clock_source(ClockSource::LSE);
     clock.set_clock_source_for(PeripheralWithSelectableClockSource::RTC_1, ClockSource::LSE);
     clock.enable_clock_for(Peripheral::RTC_1);
 
@@ -73,7 +58,7 @@ RTC_::RTC_(Clock & clock)
         ;
 
     // Setup prescalers for 1s RTC clock
-    constexpr uint32_t PRESCLAER_VALUE{0x007F'00FF}; // TODO: Make it right
+    constexpr uint32_t PRESCLAER_VALUE{0x007F'00FF};  // TODO: Make it right
     PRER.write(PRESCLAER_VALUE);
 
     // Exit Init
@@ -184,10 +169,10 @@ void RTC_::enter_init_mode()
 
 void RTC_::unlock_registers()
 {
+    power_.set_backup_domain_write_protection_state(Power_Types::WriteProtectionState::Disabled);
+
     constexpr static uint8_t WRITE_PROTECTION_DISABLE_1ST_VALUE{0xCA};
     constexpr static uint8_t WRITE_PROTECTION_DISABLE_2ND_VALUE{0x53};
-
-    PWR->CR1 |= 1 << 8;
 
     WPR.write(WRITE_PROTECTION_DISABLE_1ST_VALUE);
     WPR.write(WRITE_PROTECTION_DISABLE_2ND_VALUE);
@@ -200,7 +185,7 @@ void RTC_::unlock_registers()
 
 void RTC_::lock_registers()
 {
-    PWR->CR1 &= ~(1 << 8);
+    power_.set_backup_domain_write_protection_state(Power_Types::WriteProtectionState::Enabled);
 
     constexpr static uint8_t WRITE_PROTECTION_ENABLE_1ST_VALUE{0xFE};
     constexpr static uint8_t WRITE_PROTECTION_ENABLE_2ND_VALUE{0x64};

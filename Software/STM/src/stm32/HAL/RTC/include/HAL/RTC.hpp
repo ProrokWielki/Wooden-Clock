@@ -13,15 +13,15 @@
 
 #include <cstdint>
 
-#include <HAL/Register.hpp>
 #include <HAL/Clock.hpp>
+#include <HAL/Power.hpp>
+#include <HAL/Register.hpp>
 #include <HAL/types.hpp>
-
 
 class RTC_
 {
 public:
-    RTC_(Clock& clock);
+    RTC_(Clock & clock, Power & power);
 
     uint8_t get_hours();
     uint8_t get_minutes();
@@ -34,7 +34,8 @@ public:
     bool is_am();
 
 private:
-    Clock& clock_;
+    Clock & clock_;
+    Power & power_;
 
     Register<uint32_t> TR;
     Register<uint32_t> DR;
@@ -61,5 +62,4 @@ private:
 
     [[nodiscard]] bool is_synchronized() const;
     [[nodiscard]] bool can_time_be_set() const;
-
 };

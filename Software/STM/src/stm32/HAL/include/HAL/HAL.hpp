@@ -12,6 +12,7 @@
 #include <HAL/DMA.hpp>
 #include <HAL/GPIO.hpp>
 #include <HAL/I2C.hpp>
+#include <HAL/Power.hpp>
 #include <HAL/RTC.hpp>
 #include <HAL/SPI.hpp>
 #include <HAL/Timer.hpp>
@@ -30,6 +31,7 @@ public:
     static HAL & get();
 
     Clock clock;
+    Power power;
 
     GPIO I2C1_SCL;
     GPIO I2C1_SDA;

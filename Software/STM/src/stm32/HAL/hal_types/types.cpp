@@ -991,6 +991,20 @@ uint32_t to_value(SPI_types::BaudRatePrescaller baudrate_prescaller)
     };
 }
 
+uint32_t to_value(Power_Types::WriteProtectionState state)
+{
+    switch (state)
+    {
+        case Power_Types::WriteProtectionState::Disabled:
+            return 1;
+        case Power_Types::WriteProtectionState::Enabled:
+            return 0;
+        default:
+            assert(false && "Invalid state.");
+            return 0;
+    };
+}
+
 uint32_t to_value(I2C_Types::TransferDirection transfer_direction)
 {
     switch (transfer_direction)

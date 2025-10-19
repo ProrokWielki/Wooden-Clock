@@ -179,10 +179,24 @@ volatile uint32_t * to_address(ClockRegister clock_register)
             return &(RCC->CCIPR2);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         case ClockRegister::BDCR:
             return &(RCC->BDCR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case ClockRegister::CR:
+            return &(RCC->CR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         default:
             assert(false && "invalid clock register");
             return nullptr;
     };
+}
+
+volatile uint32_t * to_address(Power_Types::Register power_register)
+{
+    switch (power_register)
+    {
+        case Power_Types::Register::CR1:
+            return &(PWR->CR1);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        default:
+            assert(false && "invalid power register");
+            return nullptr;
+    }
 }
 
 volatile uint32_t * to_address(I2C_Types::I2CNumber port, I2C_Types::Register i2c_register)

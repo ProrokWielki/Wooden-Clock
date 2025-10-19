@@ -174,7 +174,8 @@ enum class ClockRegister
     PLL_CONFIG,
     CCIPR,
     CCIPR2,
-    BDCR
+    BDCR,
+    CR
 };
 
 enum class PllSource
@@ -707,6 +708,20 @@ enum class BaudRate
 };
 }  // namespace Usart_Types
 
+namespace Power_Types
+{
+enum class Register
+{
+    CR1
+};
+
+enum class WriteProtectionState
+{
+    Enabled,
+    Disabled
+};
+}  // namespace Power_Types
+
 uint32_t to_register_value(GPIO_Types::PortMode portMode);
 uint32_t to_register_value(GPIO_Types::AlternateFunction alteranteFunction);
 uint32_t to_register_value(GPIO_Types::SignalLevel signalLevel);
@@ -746,6 +761,7 @@ uint32_t to_value(DMA_Types::DataSize peripheral_size);
 uint32_t to_value(DMA_Types::ReadDirection read_direction);
 uint32_t to_value(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request);
 uint32_t to_value(SPI_types::BaudRatePrescaller baudrate_prescaller);
+uint32_t to_value(Power_Types::WriteProtectionState state);
 
 PeripheralWithSelectableClockSource to_peripheral_with_clock_select(I2C_Types::I2CNumber i2c);
 

@@ -82,7 +82,7 @@ constexpr unsigned int DEBUG_UART_SPEED{115200};
 // bool HAL::parse_time{false};
 
 HAL::HAL()
-: clock{}, I2C1_SCL(clock, GPIO_Types::Port::A, I2C_1_SCL_PIN_NUMBER), I2C1_SDA(clock, GPIO_Types::Port::A, I2C_1_SDA_PIN_NUMBER),
+: clock{}, power{}, I2C1_SCL(clock, GPIO_Types::Port::A, I2C_1_SCL_PIN_NUMBER), I2C1_SDA(clock, GPIO_Types::Port::A, I2C_1_SDA_PIN_NUMBER),
   I2C2_SCL(clock, GPIO_Types::Port::B, I2C_2_SCL_PIN_NUMBER), I2C2_SDA(clock, GPIO_Types::Port::B, I2C_2_SDA_PIN_NUMBER),
   I2C3_SCL(clock, GPIO_Types::Port::C, I2C_3_SCL_PIN_NUMBER), I2C3_SDA(clock, GPIO_Types::Port::C, I2C_3_SDA_PIN_NUMBER),
   I2C4_SCL(clock, GPIO_Types::Port::B, I2C_4_SCL_PIN_NUMBER), I2C4_SDA(clock, GPIO_Types::Port::B, I2C_4_SDA_PIN_NUMBER),
@@ -113,7 +113,7 @@ HAL::HAL()
   USART_4(clock, Usart_Types::UsartNumber::UART_4, UART4_TX, UART4_RX, DEBUG_UART_SPEED),
   SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR, SR_CHAIN_LENGTH), TLC59208F_1(I2C_4, TLC59208F_1_ADDRESS, TLC_RESET),
   TLC59208F_2(I2C_1, TLC59208F_2_ADDRESS, TLC_RESET), TLC59208F_3(I2C_3, TLC59208F_3_ADDRESS, TLC_RESET), TLC59208F_4(I2C_2, TLC59208F_4_ADDRESS, TLC_RESET),
-  LSM9DS1_1(SPI_1, SPI1_CS1, SPI1_CS2), BME280_1(SPI_1, SPI1_CS3), Timer2(timer_types::Timer_number::Timer_2), rtc{clock}
+  LSM9DS1_1(SPI_1, SPI1_CS1, SPI1_CS2), BME280_1(SPI_1, SPI1_CS3), Timer2(timer_types::Timer_number::Timer_2), rtc{clock, power}
 {
 }
 
