@@ -18,11 +18,9 @@ public:
 
     uint8_t get_id();
 
-    float get_humidity();
-
-    float get_temperature();
-
-    float get_pressure();
+    double get_humidity();
+    double get_temperature();
+    double get_pressure();
 
 private:
     struct CalibrationData {
@@ -48,13 +46,9 @@ private:
 
     void get_calibration_data();
 
-    float convert_to_RH(int32_t register_value);
-
-    int32_t get_raw_temperature();
-
-    float convert_to_Pa(int32_t raw_pressure);
-
-    int32_t get_t_fine();
+    uint32_t get_raw_humidity();
+    uint32_t get_raw_temperature();
+    uint32_t get_raw_pressure();
 
     uint8_t read_8_bits_register(uint8_t register_address);
     uint16_t read_16_bits_register(uint8_t msb_register_address, uint8_t lsb_register_address);
@@ -71,14 +65,14 @@ private:
     T read_16_bits_register_as(uint8_t msb_register_address, uint8_t lsb_register_address)
     {
         static_assert(sizeof(T) >= sizeof(uint16_t), "Wrong size.");
-        return static_cast<T>(read_16_bits_register(msb_register_address,lsb_register_address));
+        return static_cast<T>(read_16_bits_register(msb_register_address, lsb_register_address));
     }
 
     template<typename T>
-    T read_20_bits_register_as(uint8_t msb_register_address, uint8_t lsb_register_address,uint8_t xlsb_register_address)
+    T read_20_bits_register_as(uint8_t msb_register_address, uint8_t lsb_register_address, uint8_t xlsb_register_address)
     {
         static_assert(sizeof(T) >= sizeof(uint32_t), "Wrong size.");
-        return static_cast<T>(read_20_bits_register(msb_register_address,lsb_register_address,xlsb_register_address));
+        return static_cast<T>(read_20_bits_register(msb_register_address, lsb_register_address, xlsb_register_address));
     }
 
     uint8_t read_data(uint8_t register_address);

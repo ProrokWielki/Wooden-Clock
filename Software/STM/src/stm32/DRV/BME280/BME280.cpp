@@ -4,8 +4,44 @@
  * @date 2025-02-06
  */
 
-#include "include/DRV/BME280.hpp"
+#include "BME280_SensorAPI/bme280_defs.h"
 #include <cstdint>
+
+#include <BME280_SensorAPI/bme280.h>
+
+#include <DRV/BME280.hpp>
+
+bme280_uncomp_data to_bme280_uncomp_data(uint32_t temperature, uint32_t pressure, uint32_t humidity)
+{
+    return {.pressure = pressure, .temperature = temperature, .humidity = humidity};
+}
+
+bme280_calib_data to_bme280_calib_data(uint16_t dig_t1, int16_t dig_t2, int16_t dig_t3, uint16_t dig_p1, int16_t dig_p2, int16_t dig_p3, int16_t dig_p4,
+                                       int16_t dig_p5, int16_t dig_p6, int16_t dig_p7, int16_t dig_p8, int16_t dig_p9, uint8_t dig_h1, int16_t dig_h2,
+                                       uint8_t dig_h3, int16_t dig_h4, int16_t dig_h5, int8_t dig_h6
+
+)
+{
+    return {.dig_t1 = dig_t1,
+            .dig_t2 = dig_t2,
+            .dig_t3 = dig_t3,
+            .dig_p1 = dig_p1,
+            .dig_p2 = dig_p2,
+            .dig_p3 = dig_p3,
+            .dig_p4 = dig_p4,
+            .dig_p5 = dig_p5,
+            .dig_p6 = dig_p6,
+            .dig_p7 = dig_p7,
+            .dig_p8 = dig_p8,
+            .dig_p9 = dig_p9,
+            .dig_h1 = dig_h1,
+            .dig_h2 = dig_h2,
+            .dig_h3 = dig_h3,
+            .dig_h4 = dig_h4,
+            .dig_h5 = dig_h5,
+            .dig_h6 = dig_h6,
+            .t_fine = 0};
+}
 
 BME280::BME280(SPI & spi, GPIO & chip_select) : spi_(spi), chip_select_(chip_select)
 {
@@ -24,33 +60,89 @@ uint8_t BME280::get_id()
     return read_8_bits_register(ID_REGISTER_ADDRESS);
 }
 
-float BME280::get_humidity()
+uint32_t BME280::get_raw_humidity()
 {
 
     constexpr uint8_t HUMIDITY_MSB_REGISTER_ADDRESS{0xFD};
     constexpr uint8_t HUMIDITY_LSB_REGISTER_ADDRESS{0xFE};
 
-    auto hum_lsb = read_16_bits_register_as<int32_t>(HUMIDITY_MSB_REGISTER_ADDRESS, HUMIDITY_LSB_REGISTER_ADDRESS);
-
-    return convert_to_RH(hum_lsb);
+    return read_16_bits_register_as<uint32_t>(HUMIDITY_MSB_REGISTER_ADDRESS, HUMIDITY_LSB_REGISTER_ADDRESS);
 }
 
-float BME280::get_temperature()
+uint32_t BME280::get_raw_temperature()
 {
+    constexpr uint8_t RAW_TEMPERATURE_MSB_REGISTER_ADDRESS{0xFA};
+    constexpr uint8_t RAW_TEMPERATURE_LSB_REGISTER_ADDRESS{0xFB};
+    constexpr uint8_t RAW_TEMPERATURE_XLSB_REGISTER_ADDRESS{0xFC};
 
-    return ((get_t_fine() * 5 + 128) >> 8) / 100.0;
+    return read_20_bits_register_as<uint32_t>(RAW_TEMPERATURE_MSB_REGISTER_ADDRESS, RAW_TEMPERATURE_LSB_REGISTER_ADDRESS,
+                                              RAW_TEMPERATURE_XLSB_REGISTER_ADDRESS);
 }
 
-float BME280::get_pressure()
+uint32_t BME280::get_raw_pressure()
 {
     constexpr uint8_t RAW_PRESSURE_MSB_REGISTER_ADDRESS{0xF7};
     constexpr uint8_t RAW_PRESSURE_LSB_REGISTER_ADDRESS{0xF8};
     constexpr uint8_t RAW_PRESSURE_XLSB_REGISTER_ADDRESS{0xF9};
 
-    const auto pressure =
-    read_20_bits_register_as<int32_t>(RAW_PRESSURE_MSB_REGISTER_ADDRESS, RAW_PRESSURE_LSB_REGISTER_ADDRESS, RAW_PRESSURE_XLSB_REGISTER_ADDRESS);
+    return read_20_bits_register_as<uint32_t>(RAW_PRESSURE_MSB_REGISTER_ADDRESS, RAW_PRESSURE_LSB_REGISTER_ADDRESS, RAW_PRESSURE_XLSB_REGISTER_ADDRESS);
+}
 
-    return convert_to_Pa(pressure);
+double BME280::get_temperature()
+{
+    auto calibration = to_bme280_calib_data(
+    calibration_data.dig_T1, calibration_data.dig_T2, calibration_data.dig_T3, calibration_data.dig_P1, calibration_data.dig_P2, calibration_data.dig_P3,
+    calibration_data.dig_P4, calibration_data.dig_P5, calibration_data.dig_P6, calibration_data.dig_P7, calibration_data.dig_P8, calibration_data.dig_P9,
+    calibration_data.dig_H1, calibration_data.dig_H2, calibration_data.dig_H3, calibration_data.dig_H4, calibration_data.dig_H5, calibration_data.dig_H6);
+
+    auto raw_temperature = get_raw_temperature();
+
+    auto uncompensated_data = to_bme280_uncomp_data(raw_temperature, 0, 0);
+
+    bme280_data compensated_data{};
+
+    bme280_compensate_data(BME280_TEMP, &uncompensated_data, &compensated_data, &calibration);
+
+    return compensated_data.temperature;
+}
+
+double BME280::get_pressure()
+{
+
+    auto calibration = to_bme280_calib_data(
+    calibration_data.dig_T1, calibration_data.dig_T2, calibration_data.dig_T3, calibration_data.dig_P1, calibration_data.dig_P2, calibration_data.dig_P3,
+    calibration_data.dig_P4, calibration_data.dig_P5, calibration_data.dig_P6, calibration_data.dig_P7, calibration_data.dig_P8, calibration_data.dig_P9,
+    calibration_data.dig_H1, calibration_data.dig_H2, calibration_data.dig_H3, calibration_data.dig_H4, calibration_data.dig_H5, calibration_data.dig_H6);
+
+    auto raw_temperature = get_raw_temperature();
+    auto raw_pressure = get_raw_pressure();
+
+    auto uncompensated_data = to_bme280_uncomp_data(raw_temperature, raw_pressure, 0);
+
+    bme280_data compensated_data{};
+
+    bme280_compensate_data(BME280_PRESS, &uncompensated_data, &compensated_data, &calibration);
+
+    return compensated_data.pressure;
+}
+
+double BME280::get_humidity()
+{
+    auto calibration = to_bme280_calib_data(
+    calibration_data.dig_T1, calibration_data.dig_T2, calibration_data.dig_T3, calibration_data.dig_P1, calibration_data.dig_P2, calibration_data.dig_P3,
+    calibration_data.dig_P4, calibration_data.dig_P5, calibration_data.dig_P6, calibration_data.dig_P7, calibration_data.dig_P8, calibration_data.dig_P9,
+    calibration_data.dig_H1, calibration_data.dig_H2, calibration_data.dig_H3, calibration_data.dig_H4, calibration_data.dig_H5, calibration_data.dig_H6);
+
+    auto raw_temperature = get_raw_temperature();
+    auto raw_humidity = get_raw_humidity();
+
+    auto uncompensated_data = to_bme280_uncomp_data(raw_temperature, 0, raw_humidity);
+
+    bme280_data compensated_data{};
+
+    bme280_compensate_data(BME280_HUM, &uncompensated_data, &compensated_data, &calibration);
+
+    return compensated_data.humidity;
 }
 
 void BME280::get_calibration_data()
@@ -132,74 +224,6 @@ void BME280::get_calibration_data()
 
     constexpr uint8_t CALIBRATION_H6_REGISTER_ADDRESS{0xE7};
     calibration_data.dig_H6 = read_8_bits_register_as<int8_t>(CALIBRATION_H6_REGISTER_ADDRESS);
-}
-
-float BME280::convert_to_RH(int32_t register_value)
-{
-    int32_t v_x1_u32r{};
-    v_x1_u32r = (get_t_fine() - (static_cast<int32_t>(76800)));
-    v_x1_u32r =
-    (((((register_value << 14) - ((static_cast<int32_t>(calibration_data.dig_H4)) << 20) - ((static_cast<int32_t>(calibration_data.dig_H5)) * v_x1_u32r)) +
-       (static_cast<int32_t>(16384))) >>
-      15) *
-     (((((((v_x1_u32r * (static_cast<int32_t>(calibration_data.dig_H6))) >> 10) *
-          (((v_x1_u32r * (static_cast<int32_t>(calibration_data.dig_H3))) >> 11) + (static_cast<int32_t>(32768)))) >>
-         10) +
-        (static_cast<int32_t>(2097152))) *
-       (static_cast<int32_t>(calibration_data.dig_H2)) +
-       8192) >>
-      14));
-
-    v_x1_u32r = (v_x1_u32r - (((((v_x1_u32r >> 15) * (v_x1_u32r >> 15)) >> 7) * (static_cast<int32_t>(calibration_data.dig_H1))) >> 4));
-    v_x1_u32r = (v_x1_u32r < 0 ? 0 : v_x1_u32r);
-    v_x1_u32r = (v_x1_u32r > 419430400 ? 419430400 : v_x1_u32r);
-    return static_cast<uint32_t>(v_x1_u32r >> 12) / 1024.0;
-}
-
-int32_t BME280::get_raw_temperature()
-{
-    constexpr uint8_t RAW_TEMPERATURE_MSB_REGISTER_ADDRESS{0xFA};
-    constexpr uint8_t RAW_TEMPERATURE_LSB_REGISTER_ADDRESS{0xFB};
-    constexpr uint8_t RAW_TEMPERATURE_XLSB_REGISTER_ADDRESS{0xFC};
-
-    const auto temperature =
-    read_20_bits_register_as<int32_t>(RAW_TEMPERATURE_MSB_REGISTER_ADDRESS, RAW_TEMPERATURE_LSB_REGISTER_ADDRESS, RAW_TEMPERATURE_XLSB_REGISTER_ADDRESS);
-
-    return temperature;
-}
-
-float BME280::convert_to_Pa(int32_t raw_pressure)
-{
-    int64_t var1{}, var2{}, p{};
-    var1 = get_t_fine() - 128000;
-    var2 = var1 * var1 * static_cast<int64_t>(calibration_data.dig_P6);
-    var2 = var2 + ((var1 * static_cast<int64_t>(calibration_data.dig_P5)) << 17);
-    var2 = var2 + (static_cast<int64_t>(calibration_data.dig_P4) << 35);
-    var1 = ((var1 * var1 * static_cast<int64_t>(calibration_data.dig_P3)) >> 8) + ((var1 * static_cast<int64_t>(calibration_data.dig_P2)) << 12);
-    var1 = ((((static_cast<int64_t>(1)) << 47) + var1)) * static_cast<int64_t>(calibration_data.dig_P1) >> 33;
-    if (var1 == 0)
-    {
-        return 0;  // avoid exception caused by division by zero
-    }
-    p = 1048576 - raw_pressure;
-    p = (((p << 31) - var2) * 3125) / var1;
-    var1 = ((static_cast<int64_t>(calibration_data.dig_P9)) * (p >> 13) * (p >> 13)) >> 25;
-    var2 = ((static_cast<int64_t>(calibration_data.dig_P8)) * p) >> 19;
-    p = ((p + var1 + var2) >> 8) + ((static_cast<int64_t>(calibration_data.dig_P7)) << 4);
-    return p / 256.0;
-}
-
-int32_t BME280::get_t_fine()
-{
-    const int32_t raw_temperature = get_raw_temperature();
-
-    auto var1 = ((((raw_temperature >> 3) - (static_cast<int32_t>(calibration_data.dig_T1) << 1))) * (static_cast<int32_t>(calibration_data.dig_T2))) >> 11;
-    auto var2 =
-    (((((raw_temperature >> 4) - static_cast<int32_t>(calibration_data.dig_T1)) * ((raw_temperature >> 4) - static_cast<int32_t>(calibration_data.dig_T1))) >>
-      12) *
-     (static_cast<int32_t>(calibration_data.dig_T3))) >>
-    14;
-    return var1 + var2;
 }
 
 uint8_t BME280::read_8_bits_register(uint8_t register_address)
