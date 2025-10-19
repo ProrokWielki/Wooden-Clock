@@ -13,8 +13,6 @@
 #include <limits>
 #include <span>
 
-#include <stm32l4xx.h>
-
 #include <HAL/DMA.hpp>
 #include <HAL/Register.hpp>
 #include <cmsis_bridge/cmsis_bridge.hpp>
@@ -39,6 +37,9 @@ constexpr static uint8_t DIRECTION_BIT_LENGTH{1};
 constexpr static uint8_t REGISTER_OFFSET_7BIT_ADDRESS{1};
 constexpr static uint8_t REGISTER_OFFSET_10BIT_ADDRESS{0};
 constexpr static uint8_t REGISTER_OFFSET_DIRECTION_ADDRESS{10};
+
+static constexpr uint8_t ENABLE_BIT_POSITION{0};
+static constexpr uint8_t ANALOG_FILTER_STATE_BIT_POSITION{12};
 }  // namespace
 
 using namespace I2C_Types;
@@ -69,12 +70,13 @@ I2C::I2C(Clock & clock, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double
 
 void I2C::enable()
 {
-    CR1.set_bit(I2C_CR1_PE_Pos);
+
+    CR1.set_bit(ENABLE_BIT_POSITION);
 }
 
 void I2C::disable()
 {
-    CR1.clear_bit(I2C_CR1_PE_Pos);
+    CR1.clear_bit(ENABLE_BIT_POSITION);
 }
 
 void I2C::enable_interrupt(Interrupt interrupt)
@@ -89,17 +91,19 @@ void I2C::disable_interrupt(Interrupt interrupt)
 
 void I2C::set_digital_filter(DigitalFilter digital_filter)
 {
-    CR1.set_value(to_value(digital_filter), I2C_CR1_DNF_Pos, DIGITAL_FILTER_FIELD_BIT_LENGTH);
+    static constexpr uint8_t DIGITAL_FILTER_VALUE_POSITION{8};
+
+    CR1.set_value(to_value(digital_filter), DIGITAL_FILTER_VALUE_POSITION, DIGITAL_FILTER_FIELD_BIT_LENGTH);
 }
 
 void I2C::enable_analog_filter()
 {
-    CR1.set_bit(I2C_CR1_ANFOFF_Pos);
+    CR1.set_bit(ANALOG_FILTER_STATE_BIT_POSITION);
 }
 
 void I2C::disable_analog_filter()
 {
-    CR1.clear_bit(I2C_CR1_ANFOFF_Pos);
+    CR1.clear_bit(ANALOG_FILTER_STATE_BIT_POSITION);
 }
 
 void I2C::enable_DMA_request(DMARequest dma_request)
@@ -114,19 +118,21 @@ void I2C::disable_DMA_request(DMARequest dma_request)
 
 void I2C::set_slave_address(uint16_t slave_address, AddressLength address_length)
 {
+    static constexpr uint8_t ADDRESS_LENGTH_BIT_POSITION{11};
+
     if (address_length == AddressLength::bits7)
     {
         constexpr static uint8_t I2C_7_BIT_ADDRESS_VALUE_LENGTH{10};
 
         CR2.set_value(slave_address, REGISTER_OFFSET_7BIT_ADDRESS, I2C_7_BIT_ADDRESS_VALUE_LENGTH);
-        CR2.clear_bit(I2C_CR2_ADD10_Pos);
+        CR2.clear_bit(ADDRESS_LENGTH_BIT_POSITION);
     }
     else
     {
         constexpr static uint8_t I2C_10_BIT_ADDRESS_VALUE_LENGTH{10};
 
         CR2.set_value(slave_address, REGISTER_OFFSET_10BIT_ADDRESS, I2C_10_BIT_ADDRESS_VALUE_LENGTH);
-        CR2.set_bit(I2C_CR2_ADD10_Pos);
+        CR2.set_bit(ADDRESS_LENGTH_BIT_POSITION);
     }
 }
 
@@ -170,7 +176,9 @@ void I2C::write_data(std::span<uint8_t> data)
 void I2C::write_data_DMA(uint8_t * data, uint16_t numberOfBytes)
 {
     dma_->enable_memory_increment();
-    dma_->set_memory_address(reinterpret_cast<uint32_t>(data));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+
+    dma_->set_memory_address(reinterpret_cast<intptr_t>(data));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+
     dma_->set_peripheral_address(TXDR.get_address());
     dma_->set_read_direction(DMA_Types::ReadDirection::ReadFromMemory);
     dma_->set_memory_size(DMA_Types::DataSize::Bits8);
@@ -236,11 +244,20 @@ void I2C::read_data_from_register(uint8_t register_address, std::span<uint8_t> &
 
 void I2C::set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHold, uint8_t u8SCLHigh, uint8_t u8SCLLow)
 {
-    TIMINGR.set_value(u8Prescaler, I2C_TIMINGR_PRESC_Pos, PRESCALER_FIELD_BIT_LENGTH);
-    TIMINGR.set_value(u8DataSetup, I2C_TIMINGR_SCLDEL_Pos, DATA_SETUP_FIELD_BIT_LENGTH);
-    TIMINGR.set_value(u8DataHold, I2C_TIMINGR_SDADEL_Pos, DATA_HOLD_FIELD_BIT_LENGTH);
-    TIMINGR.set_value(u8SCLHigh, I2C_TIMINGR_SCLH_Pos, SCL_HIGH_FIELD_BIT_LENGTH);
-    TIMINGR.set_value(u8SCLLow, I2C_TIMINGR_SCLL_Pos, SCL_LOW_FIELD_BIT_LENGTH);
+    static constexpr uint8_t PRESCALER_VALUE_POSITION{28};
+    TIMINGR.set_value(u8Prescaler, PRESCALER_VALUE_POSITION, PRESCALER_FIELD_BIT_LENGTH);
+
+    static constexpr uint8_t DATA_SETUP_VALUE_POSITION{20};
+    TIMINGR.set_value(u8DataSetup, DATA_SETUP_VALUE_POSITION, DATA_SETUP_FIELD_BIT_LENGTH);
+
+    static constexpr uint8_t DATA_HOLD_VALUE_POSITION{16};
+    TIMINGR.set_value(u8DataHold, DATA_HOLD_VALUE_POSITION, DATA_HOLD_FIELD_BIT_LENGTH);
+
+    static constexpr uint8_t SCL_HIGH_VALUE_POSITION{8};
+    TIMINGR.set_value(u8SCLHigh, SCL_HIGH_VALUE_POSITION, SCL_HIGH_FIELD_BIT_LENGTH);
+
+    static constexpr uint8_t SCL_LOW_VALUE_POSITION{0};
+    TIMINGR.set_value(u8SCLLow, SCL_LOW_VALUE_POSITION, SCL_LOW_FIELD_BIT_LENGTH);
 }
 
 DMA * I2C::get_DMA()
@@ -250,22 +267,26 @@ DMA * I2C::get_DMA()
 
 bool I2C::is_transfer_completed()
 {
-    return ISR.get_bit(I2C_ISR_TXE_Pos) == 1;
+    static constexpr uint8_t TRANSMIT_EMPTY_BIT_POSITION{0};
+    return ISR.get_bit(TRANSMIT_EMPTY_BIT_POSITION) == 1;
 }
 
 bool I2C::is_data_received()
 {
-    return ISR.get_bit(I2C_ISR_RXNE_Pos) == 1;
+    static constexpr uint8_t RECEIVE_NOT_EMPTY_BIT_POSITION{2};
+    return ISR.get_bit(RECEIVE_NOT_EMPTY_BIT_POSITION) == 1;
 }
 
 void I2C::set_transfer_size(uint8_t u8TransferSize)
 {
-    CR2.set_value(u8TransferSize, I2C_CR2_NBYTES_Pos, TRANSFER_SIZE_FIELD_BIT_LENGTH);
+    static constexpr uint8_t TRANSFER_SIZE_POSITION{16};
+    CR2.set_value(u8TransferSize, TRANSFER_SIZE_POSITION, TRANSFER_SIZE_FIELD_BIT_LENGTH);
 }
 
 void I2C::set_data_to_be_send(uint8_t u8DataToSend)
 {
-    TXDR.set_value(u8DataToSend, I2C_TXDR_TXDATA_Pos, DATA_FIELD_BIT_LENGTH);
+    static constexpr uint8_t TX_DATA_POSITION{0};
+    TXDR.set_value(u8DataToSend, TX_DATA_POSITION, DATA_FIELD_BIT_LENGTH);
 }
 
 void I2C::enable_option(Option option)
@@ -279,11 +300,13 @@ void I2C::disable_option(Option option)
 
 void I2C::start_transfer()
 {
-    CR2.set_bit(I2C_CR2_START_Pos);
+    static constexpr uint8_t START_BIT_POSITION{13};
+    CR2.set_bit(START_BIT_POSITION);
 }
 void I2C::stop_transfer()
 {
-    CR2.set_bit(I2C_CR2_STOP_Pos);
+    static constexpr uint8_t STOP_BIT_POSITION{14};
+    CR2.set_bit(STOP_BIT_POSITION);
 }
 
 void I2C::set_frequency(double frequency)
