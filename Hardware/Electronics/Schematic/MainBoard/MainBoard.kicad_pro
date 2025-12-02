@@ -405,7 +405,6 @@
     "rule_severities": {
       "bus_definition_conflict": "error",
       "bus_entry_needed": "error",
-      "bus_label_syntax": "error",
       "bus_to_bus_conflict": "error",
       "bus_to_net_conflict": "error",
       "different_unit_footprint": "error",
@@ -454,7 +453,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "woodenClock.kicad_pro",
+    "filename": "MainBoard.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -472,9 +471,9 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2147483647,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.25,
-        "via_diameter": 0.8,
-        "via_drill": 0.4,
+        "track_width": 0.2,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
         "wire_width": 6
       }
     ],
@@ -489,7 +488,7 @@
     "last_paths": {
       "gencad": "",
       "idf": "",
-      "netlist": "ButtonBoard/ButtonBoard.netnet",
+      "netlist": "",
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
@@ -603,7 +602,6 @@
     "page_layout_descr_file": "",
     "plot_directory": "",
     "space_save_all_events": true,
-    "spice_adjust_passive_values": false,
     "spice_current_sheet_as_root": false,
     "spice_external_command": "spice \"%I\"",
     "spice_model_current_sheet_as_root": true,
@@ -613,43 +611,6 @@
     "subpart_first_id": 65,
     "subpart_id_separator": 0
   },
-  "sheets": [
-    [
-      "7595fa3b-1a8a-46c6-a70c-b1f1812979bd",
-      "Root"
-    ],
-    [
-      "00000000-0000-0000-0000-00005ea45859",
-      "ButtonBoard"
-    ],
-    [
-      "00000000-0000-0000-0000-00005ccd8ec9",
-      "MainBoard"
-    ],
-    [
-      "00000000-0000-0000-0000-00005bcdfda6",
-      "DisplayBoard"
-    ],
-    [
-      "00000000-0000-0000-0000-00005b5ce941",
-      "MosfetMultiplexer1-8"
-    ],
-    [
-      "00000000-0000-0000-0000-00005b5c4a51",
-      "Display"
-    ],
-    [
-      "00000000-0000-0000-0000-00005b5ce81e",
-      "MosfetMultiplexer9-16"
-    ],
-    [
-      "00000000-0000-0000-0000-00005b593cb9",
-      "MosfetMultiplexer17-24"
-    ],
-    [
-      "00000000-0000-0000-0000-00005b5cdf8e",
-      "MosfetMultiplexer25-32"
-    ]
-  ],
+  "sheets": [],
   "text_variables": {}
 }
