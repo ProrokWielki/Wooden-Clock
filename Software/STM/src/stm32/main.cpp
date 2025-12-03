@@ -16,7 +16,7 @@ int main()
     HAL::get().init();
     BSP::get().init();
 
-    BSP::get().display.set_frame_buffer(getImage(ImageType::MARIO).get_pixel_map());
+    BSP::get().display.set_frame_buffer(BSP::get().frame_buffer1);
 
     NVIC_EnableIRQ(DMA1_Channel2_IRQn);
     NVIC_EnableIRQ(DMA1_Channel4_IRQn);

@@ -92,10 +92,9 @@ public:
     /**
      * @brief  Writes the data to the slave, using DMA.
      *
-     * @param pu8Data Pointer to the data to be sent.
-     * @param u16NumberOfBytes Number of the bytes to be sent.
+     * @param data data to be sent.
      */
-    void write_data_dma(uint8_t * data, uint16_t numberOfBytes);
+    void write_data_dma(std::span<uint8_t> data);
 
     void read_data(std::span<uint8_t> & received_data, uint16_t num_of_bytes_to_read);
 

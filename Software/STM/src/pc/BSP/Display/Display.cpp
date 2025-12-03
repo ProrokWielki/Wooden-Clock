@@ -61,7 +61,7 @@ void Display::ShowExampleAppCustomRendering() const
     // ImGui::End();
 }
 
-Display::Display(uint8_t width, uint8_t height, const uint8_t * frameBuffer) : displayWidth(width), displayHeight(height), displayFrameBuffer(frameBuffer)
+Display::Display(uint8_t width, uint8_t height, std::span<uint8_t> frameBuffer) : displayWidth(width), displayHeight(height), displayFrameBuffer(frameBuffer)
 {
     // Setup Allegro
     al_init();

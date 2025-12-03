@@ -11,6 +11,7 @@
 #include <array>
 #include <cstdint>
 #include <functional>
+#include <span>
 
 struct ALLEGRO_DISPLAY;
 struct ALLEGRO_EVENT_QUEUE;
@@ -25,23 +26,23 @@ public:
      * @param height display height in pixels.
      * @param fameBuffer pointer to frame buffer.
      */
-    Display(uint8_t width, uint8_t height, const uint8_t * fameBuffer);
+    Display(uint8_t width, uint8_t height, std::span<uint8_t> fameBuffer);
 
     ~Display();
 
     void draw() const;
 
     void set_display_redrawn_callback(std::function<void()> callback)
-{
-    display_redrawn_callback = callback;
-}
+    {
+        display_redrawn_callback = callback;
+    }
 
     /**
      * @brief Sets the frame buffer to be displayed.
      *
      * @param buffer pointer to new frame buffer
      */
-    void set_frame_buffer(const uint8_t * buffer)
+    void set_frame_buffer(std::span<uint8_t> buffer)
     {
         displayFrameBuffer = buffer;
     }
@@ -52,7 +53,7 @@ private:
     uint8_t displayWidth;
     uint8_t displayHeight;
 
-    const uint8_t * displayFrameBuffer;
+    std::span<uint8_t> displayFrameBuffer;
 
     ALLEGRO_DISPLAY * display;
     ALLEGRO_EVENT_QUEUE * queue;

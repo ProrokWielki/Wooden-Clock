@@ -48,7 +48,7 @@ constexpr static std::array<Transition, NUM_OF_TRANSITIONS> transitions{
 
 DataContainer::DataContainer()
 : stateMachine{BSP::get().frame_buffer1.data(), BSP::get().frame_buffer2.data(), {transitions}, &DataContainer::Mario, [](uint8_t * new_frame_buffer) {
-                   BSP::get().display.set_frame_buffer(new_frame_buffer);
+                   BSP::get().display.set_frame_buffer({new_frame_buffer, BSP::DISPLAY_HEIGHT * BSP::DISPLAY_WIDTH});
                }}
 {
 }

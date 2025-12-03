@@ -11,8 +11,9 @@
 #include <array>
 #include <cstdint>
 #include <functional>
+#include <span>
 
-enum class Transfer: uint8_t;
+enum class Transfer : uint8_t;
 
 class Display
 {
@@ -24,7 +25,7 @@ public:
      * @param height display height in pixels.
      * @param fameBuffer pointer to frame buffer.
      */
-    Display(uint8_t width, uint8_t height, const uint8_t * fameBuffer);
+    Display(uint8_t width, uint8_t height, std::span<uint8_t> fameBuffer);
 
     void init();
 
@@ -33,7 +34,7 @@ public:
      *
      * @param buffer pointer to new frame buffer
      */
-    void set_frame_buffer(const uint8_t * buffer)
+    void set_frame_buffer(std::span<uint8_t> buffer)
     {
         displayFrameBuffer = buffer;
     }
@@ -76,7 +77,7 @@ private:
     uint8_t displayWidth;
     uint8_t displayHeight;
 
-    const uint8_t * displayFrameBuffer;
+    std::span<uint8_t> displayFrameBuffer;
 
     std::array<volatile bool, 4> transferComplete;
 

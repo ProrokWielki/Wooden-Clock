@@ -5,6 +5,7 @@
  *  @author: Paweł Warzecha
  */
 
+#include <array>
 #include <cstring>
 
 #include <HAL/DMA.hpp>
@@ -32,35 +33,35 @@ void TLC59208F::init()
 
 void TLC59208F::set_register_value(uint8_t registerAddress, uint8_t valueToBeSet)
 {
-    uint8_t dataToBeSend[2];
+    std::array<uint8_t, 2> dataToBeSend{};
 
     dataToBeSend[0] = registerAddress;
     dataToBeSend[1] = valueToBeSet;
 
-    i2c_.write_data({dataToBeSend, 2});
+    i2c_.write_data(dataToBeSend);
 }
 
 void TLC59208F::set_registers_values(const uint8_t registerStartAddress, uint8_t const * const valuesToBeSet, const uint8_t numberOfValues)
 {
 
-    uint8_t dataToBeSend[16];
+    std::array<uint8_t, 16> dataToBeSend{};
 
     dataToBeSend[0] = registerStartAddress | 0x80;
     memcpy(&(dataToBeSend[1]), valuesToBeSet, (numberOfValues + 1) * sizeof(uint8_t));
 
-    i2c_.write_data({dataToBeSend, numberOfValues + 1U});
+    i2c_.write_data({dataToBeSend.begin(), dataToBeSend.begin() + numberOfValues + 1});
 }
 
-void TLC59208F::set_all_leds_values(uint8_t const * const allLedsValues)
+void TLC59208F::set_all_leds_values(const std::array<uint8_t, 8> & allLedsValues)
 {
-    memcpy(&(ledValues_[1]), allLedsValues, 8 * sizeof(uint8_t));
+    memcpy(&(ledValues_[1]), allLedsValues.data(), allLedsValues.size() * sizeof(uint8_t));
 
-    i2c_.write_data_dma(ledValues_, 9);
+    i2c_.write_data_dma(ledValues_);
 }
 
-void TLC59208F::cache_all_leds_values(uint8_t const * const allLedsValues)
+void TLC59208F::cache_all_leds_values(std::span<uint8_t> allLedsValues)
 {
-    memcpy(&(cashedLedValues_[1]), allLedsValues, 8 * sizeof(uint8_t));
+    memcpy(&(cashedLedValues_[1]), allLedsValues.data(), NUM_OF_LEDS * sizeof(uint8_t));
 }
 
 void TLC59208F::send_cashed_leds_values()

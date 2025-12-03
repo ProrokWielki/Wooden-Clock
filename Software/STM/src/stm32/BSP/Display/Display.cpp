@@ -25,7 +25,7 @@ enum class Transfer : uint8_t
     TLC59208F_4_Transfer = 3
 };
 
-Display::Display(uint8_t width, uint8_t height, const uint8_t * frameBuffer)
+Display::Display(uint8_t width, uint8_t height, std::span<uint8_t> frameBuffer)
 : displayWidth(width), displayHeight(height), displayFrameBuffer(frameBuffer), transferComplete{true, true, true, true}
 {
 }
@@ -59,15 +59,16 @@ void Display::draw_next_line()
 
         const uint16_t current_line_offset = displayWidth * currentLine_;
 
+        constexpr uint8_t NUM_OF_LEDS{8};
         constexpr uint8_t TLC59208F_1_LED_OFFSET{0};
-        constexpr uint8_t TLC59208F_2_LED_OFFSET{8};
-        constexpr uint8_t TLC59208F_3_LED_OFFSET{16};
-        constexpr uint8_t TLC59208F_4_LED_OFFSET{24};
+        constexpr uint8_t TLC59208F_2_LED_OFFSET{TLC59208F_1_LED_OFFSET + NUM_OF_LEDS};
+        constexpr uint8_t TLC59208F_3_LED_OFFSET{TLC59208F_2_LED_OFFSET + NUM_OF_LEDS};
+        constexpr uint8_t TLC59208F_4_LED_OFFSET{TLC59208F_3_LED_OFFSET + NUM_OF_LEDS};
 
-        HAL::get().TLC59208F_1.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_1_LED_OFFSET]));
-        HAL::get().TLC59208F_2.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_2_LED_OFFSET]));
-        HAL::get().TLC59208F_3.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_3_LED_OFFSET]));
-        HAL::get().TLC59208F_4.cache_all_leds_values(&(displayFrameBuffer[current_line_offset + TLC59208F_4_LED_OFFSET]));
+        HAL::get().TLC59208F_1.cache_all_leds_values(displayFrameBuffer.subspan(current_line_offset + TLC59208F_1_LED_OFFSET, NUM_OF_LEDS));
+        HAL::get().TLC59208F_2.cache_all_leds_values(displayFrameBuffer.subspan(current_line_offset + TLC59208F_2_LED_OFFSET, NUM_OF_LEDS));
+        HAL::get().TLC59208F_3.cache_all_leds_values(displayFrameBuffer.subspan(current_line_offset + TLC59208F_3_LED_OFFSET, NUM_OF_LEDS));
+        HAL::get().TLC59208F_4.cache_all_leds_values(displayFrameBuffer.subspan(current_line_offset + TLC59208F_4_LED_OFFSET, NUM_OF_LEDS));
 
         HAL::get().SR_74HC595_1.output_enable(false);
 

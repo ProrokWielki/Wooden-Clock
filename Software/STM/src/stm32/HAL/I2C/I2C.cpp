@@ -182,19 +182,19 @@ void I2C::write_data(std::span<uint8_t> data)
     }
 }
 
-void I2C::write_data_dma(uint8_t * data, uint16_t numberOfBytes)
+void I2C::write_data_dma(std::span<uint8_t> data)
 {
     dma_->enable_memory_increment();
 
-    dma_->set_memory_address(reinterpret_cast<intptr_t>(data));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+    dma_->set_memory_address(reinterpret_cast<intptr_t>(data.data()));  // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
 
     dma_->set_peripheral_address(TXDR.get_address());
     dma_->set_read_direction(DMA_Types::ReadDirection::ReadFromMemory);
     dma_->set_memory_size(DMA_Types::DataSize::Bits8);
     dma_->set_peripheral_size(DMA_Types::DataSize::Bits8);
-    dma_->set_transfer_size(numberOfBytes);
+    dma_->set_transfer_size(data.size());
 
-    set_transfer_size(numberOfBytes);
+    set_transfer_size(data.size());
     start_transfer();
 
     enable_dma_request(DMARequest::Transmit);

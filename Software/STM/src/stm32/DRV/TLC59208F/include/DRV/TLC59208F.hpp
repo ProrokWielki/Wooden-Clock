@@ -10,12 +10,17 @@
 
 #include <cstdint>
 #include <functional>
+#include <span>
 
 #include <HAL/GPIO.hpp>
 #include <HAL/I2C.hpp>
 
 class TLC59208F
 {
+    static constexpr uint8_t ADDRESS_LENGTH{1U};
+    static constexpr uint8_t NUM_OF_LEDS{8U};
+    static constexpr uint8_t BUFFER_LENGTH{ADDRESS_LENGTH + NUM_OF_LEDS};
+
 public:
     TLC59208F(I2C & i2c, const uint8_t deviceAddress, GPIO & resetPin);
 
@@ -25,9 +30,9 @@ public:
 
     void set_registers_values(const uint8_t registerStartAddress, const uint8_t * const valuesToBeSet, const uint8_t numberOfValues);
 
-    void set_all_leds_values(const uint8_t * allLedsValues);
+    void set_all_leds_values(const std::array<uint8_t, 8> & allLedsValues);
 
-    void cache_all_leds_values(const uint8_t * allLedsValues);
+    void cache_all_leds_values(std::span<uint8_t> allLedsValues);
 
     void send_cashed_leds_values();
 
@@ -40,8 +45,8 @@ private:
     const uint8_t deviceAddress_;
     GPIO & resetPin_;
 
-    uint8_t ledValues_[9];
-    uint8_t cashedLedValues_[9];
+    std::array<uint8_t, BUFFER_LENGTH> ledValues_{};
+    std::array<uint8_t, BUFFER_LENGTH> cashedLedValues_{};
 };
 
 #endif /* DRV_TLC59208F_TLC59208F_HPP_ */
