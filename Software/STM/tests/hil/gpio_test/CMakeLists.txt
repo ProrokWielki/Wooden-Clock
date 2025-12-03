@@ -1,8 +1,16 @@
 IF((CMAKE_BUILD_TYPE STREQUAL "ARM_Debug"))
   ADD_EXECUTABLE(GpioTest gpio_test.cpp)
 
-  TARGET_LINK_LIBRARIES(GpioTest PRIVATE CMSIS MCU Clock GPIO HalTypes
-                                         TestingFramework FakeHandlers)
+  TARGET_LINK_LIBRARIES(
+    GpioTest
+    PRIVATE CMSIS
+            MCU
+            Clock
+            GPIO
+            HalTypes
+            SysConfig
+            TestingFramework
+            FakeHandlers)
 
   TARGET_LINK_OPTIONS(
     GpioTest PRIVATE

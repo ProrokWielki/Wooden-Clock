@@ -16,6 +16,7 @@ IF(NOT ((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
            LSM9DS1
            BME280
            TLC59208F
+           SysConfig
            ISR
            RTC
            USART

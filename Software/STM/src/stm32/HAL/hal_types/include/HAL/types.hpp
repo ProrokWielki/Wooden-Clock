@@ -295,6 +295,21 @@ enum class PeripheralWithSelectableClockSource
     RTC_1,
 };
 
+enum class SysConfigRegister
+{
+    MEMRMP,
+    CFGR1,
+    EXTICR1,
+    EXTICR2,
+    EXTICR3,
+    EXTICR4,
+    SCSR,
+    CFGR2,
+    SWPR,
+    SKR
+
+};
+
 namespace I2C_Types
 {
 
@@ -383,6 +398,14 @@ enum class TransferDirection
 {
     READ,  ///< Read from the slave
     WRITE  ///< Write to the slave
+};
+
+/// Enumerates I2C modes
+enum class Mode
+{
+    STANDARD,  ///< Standard mode
+    FAST,      ///< Fast mode
+    FAST_PLUS  ///< Fast mode plus
 };
 
 }  // namespace I2C_Types
@@ -746,6 +769,8 @@ uint8_t to_bit_position(DMA_Types::Interrupt interrupt);
 uint8_t to_bit_position(DMA_Types::Channel channel, DMA_Types::Interrupt interrupt);
 uint8_t to_bit_position(Peripheral peripheral);
 uint8_t to_bit_position(timer_types::Interrupt interrupt);
+uint8_t to_bit_position(I2C_Types::I2CNumber number, I2C_Types::Mode mode);
+uint8_t to_bit_position(GPIO_Types::Port port, uint8_t pin_number, I2C_Types::Mode mode);
 
 uint8_t to_enable_bit_position(ClockSource clock_source);
 

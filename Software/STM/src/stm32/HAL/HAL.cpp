@@ -82,30 +82,30 @@ constexpr unsigned int DEBUG_UART_SPEED{115200};
 // bool HAL::parse_time{false};
 
 HAL::HAL()
-: clock{}, power{}, I2C1_SCL(clock, GPIO_Types::Port::A, I2C_1_SCL_PIN_NUMBER), I2C1_SDA(clock, GPIO_Types::Port::A, I2C_1_SDA_PIN_NUMBER),
-  I2C2_SCL(clock, GPIO_Types::Port::B, I2C_2_SCL_PIN_NUMBER), I2C2_SDA(clock, GPIO_Types::Port::B, I2C_2_SDA_PIN_NUMBER),
-  I2C3_SCL(clock, GPIO_Types::Port::C, I2C_3_SCL_PIN_NUMBER), I2C3_SDA(clock, GPIO_Types::Port::C, I2C_3_SDA_PIN_NUMBER),
-  I2C4_SCL(clock, GPIO_Types::Port::B, I2C_4_SCL_PIN_NUMBER), I2C4_SDA(clock, GPIO_Types::Port::B, I2C_4_SDA_PIN_NUMBER),
-  SPI1_MISO(clock, GPIO_Types::Port::A, SPI_1_MISO_PIN_NUMBER), SPI1_MOSI(clock, GPIO_Types::Port::A, SPI_1_MOSI_PIN_NUMBER),
-  SPI1_SCK(clock, GPIO_Types::Port::A, SPI_1_SCK_PIN_NUMBER), SPI1_CS1(clock, GPIO_Types::Port::E, SPI_1_CS1_PIN_NUMBER),
-  SPI1_CS2(clock, GPIO_Types::Port::B, SPI_1_CS2_PIN_NUMBER), SPI1_CS3(clock, GPIO_Types::Port::E, SPI_1_CS3_PIN_NUMBER),
-  QSPI_IO0(clock, GPIO_Types::Port::B, QSPI_IO0_PIN_NUMBER), QSPI_IO1(clock, GPIO_Types::Port::B, QSPI_IO1_PIN_NUMBER),
-  QSPI_IO2(clock, GPIO_Types::Port::A, QSPI_IO2_PIN_NUMBER), QSPI_IO3(clock, GPIO_Types::Port::A, QSPI_IO3_PIN_NUMBER),
-  QSPI_CLK(clock, GPIO_Types::Port::A, QSPI_CLK_PIN_NUMBER), QSPI_CS(clock, GPIO_Types::Port::A, QSPI_CS_PIN_NUMBER),
-  UART3_TX(clock, GPIO_Types::Port::C, UART_3_TX_PIN_NUMBER), UART3_RX(clock, GPIO_Types::Port::C, UART_3_RX_PIN_NUMBER),
-  UART4_TX(clock, GPIO_Types::Port::A, UART_4_TX_PIN_NUMBER), UART4_RX(clock, GPIO_Types::Port::A, UART_4_RX_PIN_NUMBER),
-  TLC_RESET(clock, GPIO_Types::Port::C, TLC_RESET_PIN_NUMBER), SR_DATAIN(clock, GPIO_Types::Port::B, SR_DATAIN_PIN_NUMBER),
-  SR_RCLOCK(clock, GPIO_Types::Port::C, SR_RCLOCK_PIN_NUMBER), SR_SCLOCK(clock, GPIO_Types::Port::C, SR_SCLOCK_PIN_NUMBER),
-  SR_OE(clock, GPIO_Types::Port::B, SR_OE_PIN_NUMBER), SR_CLEAR(clock, GPIO_Types::Port::C, SR_CLEAR_PIN_NUMBER),
-  BUTTON1(clock, GPIO_Types::Port::A, BUTTON1_PIN_NUMBER), BUTTON2(clock, GPIO_Types::Port::B, BUTTON2_PIN_NUMBER),
-  BUTTON3(clock, GPIO_Types::Port::C, BUTTON3_PIN_NUMBER), BUTTON4(clock, GPIO_Types::Port::E, BUTTON4_PIN_NUMBER),
-  DMA1_2(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel2), DMA1_4(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel4),
-  DMA2_2(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel2), DMA2_4(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel4),
-  DMA2_7(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel7),
-  I2C_1(clock, I2C_Types::I2CNumber::I2C_1, I2C1_SCL, I2C1_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_7),
-  I2C_2(clock, I2C_Types::I2CNumber::I2C_2, I2C2_SCL, I2C2_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA1_4),
-  I2C_3(clock, I2C_Types::I2CNumber::I2C_3, I2C3_SCL, I2C3_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA1_2),
-  I2C_4(clock, I2C_Types::I2CNumber::I2C_4, I2C4_SCL, I2C4_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_2),
+: clock{}, power{}, sys_config{}, I2C1_SCL(clock, sys_config, GPIO_Types::Port::A, I2C_1_SCL_PIN_NUMBER),
+  I2C1_SDA(clock, sys_config, GPIO_Types::Port::A, I2C_1_SDA_PIN_NUMBER), I2C2_SCL(clock, sys_config, GPIO_Types::Port::B, I2C_2_SCL_PIN_NUMBER),
+  I2C2_SDA(clock, sys_config, GPIO_Types::Port::B, I2C_2_SDA_PIN_NUMBER), I2C3_SCL(clock, sys_config, GPIO_Types::Port::C, I2C_3_SCL_PIN_NUMBER),
+  I2C3_SDA(clock, sys_config, GPIO_Types::Port::C, I2C_3_SDA_PIN_NUMBER), I2C4_SCL(clock, sys_config, GPIO_Types::Port::B, I2C_4_SCL_PIN_NUMBER),
+  I2C4_SDA(clock, sys_config, GPIO_Types::Port::B, I2C_4_SDA_PIN_NUMBER), SPI1_MISO(clock, sys_config, GPIO_Types::Port::A, SPI_1_MISO_PIN_NUMBER),
+  SPI1_MOSI(clock, sys_config, GPIO_Types::Port::A, SPI_1_MOSI_PIN_NUMBER), SPI1_SCK(clock, sys_config, GPIO_Types::Port::A, SPI_1_SCK_PIN_NUMBER),
+  SPI1_CS1(clock, sys_config, GPIO_Types::Port::E, SPI_1_CS1_PIN_NUMBER), SPI1_CS2(clock, sys_config, GPIO_Types::Port::B, SPI_1_CS2_PIN_NUMBER),
+  SPI1_CS3(clock, sys_config, GPIO_Types::Port::E, SPI_1_CS3_PIN_NUMBER), QSPI_IO0(clock, sys_config, GPIO_Types::Port::B, QSPI_IO0_PIN_NUMBER),
+  QSPI_IO1(clock, sys_config, GPIO_Types::Port::B, QSPI_IO1_PIN_NUMBER), QSPI_IO2(clock, sys_config, GPIO_Types::Port::A, QSPI_IO2_PIN_NUMBER),
+  QSPI_IO3(clock, sys_config, GPIO_Types::Port::A, QSPI_IO3_PIN_NUMBER), QSPI_CLK(clock, sys_config, GPIO_Types::Port::A, QSPI_CLK_PIN_NUMBER),
+  QSPI_CS(clock, sys_config, GPIO_Types::Port::A, QSPI_CS_PIN_NUMBER), UART3_TX(clock, sys_config, GPIO_Types::Port::C, UART_3_TX_PIN_NUMBER),
+  UART3_RX(clock, sys_config, GPIO_Types::Port::C, UART_3_RX_PIN_NUMBER), UART4_TX(clock, sys_config, GPIO_Types::Port::A, UART_4_TX_PIN_NUMBER),
+  UART4_RX(clock, sys_config, GPIO_Types::Port::A, UART_4_RX_PIN_NUMBER), TLC_RESET(clock, sys_config, GPIO_Types::Port::C, TLC_RESET_PIN_NUMBER),
+  SR_DATAIN(clock, sys_config, GPIO_Types::Port::B, SR_DATAIN_PIN_NUMBER), SR_RCLOCK(clock, sys_config, GPIO_Types::Port::C, SR_RCLOCK_PIN_NUMBER),
+  SR_SCLOCK(clock, sys_config, GPIO_Types::Port::C, SR_SCLOCK_PIN_NUMBER), SR_OE(clock, sys_config, GPIO_Types::Port::B, SR_OE_PIN_NUMBER),
+  SR_CLEAR(clock, sys_config, GPIO_Types::Port::C, SR_CLEAR_PIN_NUMBER), BUTTON1(clock, sys_config, GPIO_Types::Port::A, BUTTON1_PIN_NUMBER),
+  BUTTON2(clock, sys_config, GPIO_Types::Port::B, BUTTON2_PIN_NUMBER), BUTTON3(clock, sys_config, GPIO_Types::Port::C, BUTTON3_PIN_NUMBER),
+  BUTTON4(clock, sys_config, GPIO_Types::Port::E, BUTTON4_PIN_NUMBER), DMA1_2(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel2),
+  DMA1_4(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel4), DMA2_2(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel2),
+  DMA2_4(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel4), DMA2_7(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel7),
+  I2C_1(clock, sys_config, I2C_Types::I2CNumber::I2C_1, I2C1_SCL, I2C1_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_7),
+  I2C_2(clock, sys_config, I2C_Types::I2CNumber::I2C_2, I2C2_SCL, I2C2_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA1_4),
+  I2C_3(clock, sys_config, I2C_Types::I2CNumber::I2C_3, I2C3_SCL, I2C3_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA1_2),
+  I2C_4(clock, sys_config, I2C_Types::I2CNumber::I2C_4, I2C4_SCL, I2C4_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_2),
   SPI_1(clock, SPI_types::SPI_Number::SPI_1, SPI1_MOSI, SPI1_MISO, SPI1_SCK, SPI_types::SPIMode::master, SPI_types::SPIDataSize::_8bits,
         SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
         SPI_types::BaudRatePrescaller::Prescaller_256),
@@ -415,13 +415,13 @@ void HAL::i2c_init()
     // clock.enable_clock_for(Peripheral::I2C_4);
 
     /* Fast-mode Plus enable */
-    SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C1_FMP;  // Enable FM+ for I2C1
-    SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C2_FMP;  // Enable FM+ for I2C2
-    SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C3_FMP;  // Enable FM+ for I2C3
-    SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C4_FMP;  // Enable FM+ for I2C4
+    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C1_FMP;  // Enable FM+ for I2C1
+    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C2_FMP;  // Enable FM+ for I2C2
+    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C3_FMP;  // Enable FM+ for I2C3
+    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C4_FMP;  // Enable FM+ for I2C4
 
-    SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C_PB6_FMP |  // Enable FM+ on PB6
-                     SYSCFG_CFGR1_I2C_PB7_FMP;   // Enable FM+ on PB7
+    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C_PB6_FMP |  // Enable FM+ on PB6
+    //                  SYSCFG_CFGR1_I2C_PB7_FMP;   // Enable FM+ on PB7
 
     /* I2C set timing*/
     // I2C_1.set_timing(4, 1, 0, 3, 6);

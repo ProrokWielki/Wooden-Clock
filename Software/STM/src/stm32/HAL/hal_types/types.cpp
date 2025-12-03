@@ -1167,6 +1167,79 @@ uint8_t to_start_position(DMA_Types::Channel channel)
     };
 }
 
+uint8_t to_bit_position(I2C_Types::I2CNumber number, I2C_Types::Mode mode)
+{
+    switch (mode)
+    {
+        case I2C_Types::Mode::FAST_PLUS:
+
+            switch (number)
+            {
+                case I2C_Types::I2CNumber::I2C_1:
+                    return 20;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                case I2C_Types::I2CNumber::I2C_2:
+                    return 21;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                case I2C_Types::I2CNumber::I2C_3:
+                    return 22;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                case I2C_Types::I2CNumber::I2C_4:
+                    return 23;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                default:
+                    assert(false && "invalid i2c");
+                    return 0;
+            }
+        case I2C_Types::Mode::FAST:
+        case I2C_Types::Mode::STANDARD:
+            assert(false && "mode does not need to be set");
+            return 0;
+        default:
+            assert(false && "invalid mode");
+            return 0;
+    };
+}
+
+uint8_t to_bit_position(GPIO_Types::Port port, uint8_t pin_number, I2C_Types::Mode mode)
+{
+    switch (mode)
+    {
+        case I2C_Types::Mode::FAST_PLUS:
+
+            switch (port)
+            {
+                case GPIO_Types::Port::B:
+                    switch (pin_number)
+                    {
+                        case 6:         // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                            return 16;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case 7:         // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                            return 17;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case 8:         // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                            return 18;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        case 9:         // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                            return 19;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+                        default:
+                            assert(false && "mode does not need to be set");
+                            return 0;
+                    }
+                case GPIO_Types::Port::A:
+                case GPIO_Types::Port::C:
+                case GPIO_Types::Port::D:
+                case GPIO_Types::Port::E:
+                    assert(false && "mode does not need to be set");
+                    return 0;
+                default:
+                    assert(false && "invalid port");
+                    return 0;
+            }
+        case I2C_Types::Mode::FAST:
+        case I2C_Types::Mode::STANDARD:
+            assert(false && "mode does not need to be set");
+            return 0;
+        default:
+            assert(false && "invalid mode");
+            return 0;
+    }
+}
+
 uint32_t to_value(DMA_Types::Priority priority)
 {
     switch (priority)

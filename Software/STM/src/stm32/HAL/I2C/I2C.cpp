@@ -21,6 +21,7 @@
 #include <HAL/Clock.hpp>
 #include <HAL/GPIO.hpp>
 #include <HAL/I2C.hpp>
+#include <HAL/SysConfig.hpp>
 
 namespace
 {
@@ -44,11 +45,11 @@ static constexpr uint8_t ANALOG_FILTER_STATE_BIT_POSITION{12};
 
 using namespace I2C_Types;
 
-I2C::I2C(Clock & clock, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double frequency, DMA * dma)
+I2C::I2C(Clock & clock, SysConfig & sys_config, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double frequency, DMA * dma)
 : CR1(to_address(i2c, I2C_Types::Register::CR1)), CR2(to_address(i2c, I2C_Types::Register::CR2)), ICR(to_address(i2c, I2C_Types::Register::ICR)),
   ISR(to_address(i2c, I2C_Types::Register::ISR)), OAR1(to_address(i2c, I2C_Types::Register::OAR1)), OAR2(to_address(i2c, I2C_Types::Register::OAR2)),
   PECR(to_address(i2c, I2C_Types::Register::PECR)), RXDR(to_address(i2c, I2C_Types::Register::RXDR)), TIMEOUTR(to_address(i2c, I2C_Types::Register::TIMEOUTR)),
-  TIMINGR(to_address(i2c, I2C_Types::Register::TIMINGR)), TXDR(to_address(i2c, I2C_Types::Register::TXDR)), dma_(dma)
+  TIMINGR(to_address(i2c, I2C_Types::Register::TIMINGR)), TXDR(to_address(i2c, I2C_Types::Register::TXDR)), dma_(dma), i2c_number_(i2c), sys_config(sys_config)
 {
     clock.enable_clock_for(to_peripheral(i2c));
     clock.set_clock_source_for(to_peripheral_with_clock_select(i2c), ClockSource::SYSTEM_CLOCK);
@@ -63,14 +64,22 @@ I2C::I2C(Clock & clock, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double
         scl.set_as_i2c_pin(GPIO_Types::AlternateFunction::AF5);
         sda.set_as_i2c_pin(GPIO_Types::AlternateFunction::AF5);  // make it generic
     }
+
     set_frequency(frequency);
+
+    constexpr uint16_t FAST_MODE_PLUS_MIN_FREQUENCY{400};
+    if (frequency > FAST_MODE_PLUS_MIN_FREQUENCY)
+    {
+        set_mode(I2C_Types::Mode::FAST_PLUS);
+        sda.set_fast_mode_plus();
+        scl.set_fast_mode_plus();
+    }
 
     enable();
 }
 
 void I2C::enable()
 {
-
     CR1.set_bit(ENABLE_BIT_POSITION);
 }
 
@@ -106,12 +115,12 @@ void I2C::disable_analog_filter()
     CR1.clear_bit(ANALOG_FILTER_STATE_BIT_POSITION);
 }
 
-void I2C::enable_DMA_request(DMARequest dma_request)
+void I2C::enable_dma_request(DMARequest dma_request)
 {
     CR1.set_bit(to_bit_position(dma_request));
 }
 
-void I2C::disable_DMA_request(DMARequest dma_request)
+void I2C::disable_dma_request(DMARequest dma_request)
 {
     CR1.clear_bit(to_bit_position(dma_request));
 }
@@ -340,4 +349,12 @@ void I2C::set_frequency(double frequency)
         }
     }
     set_timing(found_prescaller - 1, 2, 2, found_num_of_ticks - 1, found_num_of_ticks - 1);
+}
+
+void I2C::set_mode(I2C_Types::Mode mode)
+{
+    if (mode == I2C_Types::Mode::FAST_PLUS)
+    {
+        sys_config.set_fast_mode_plus(i2c_number_);
+    }
 }

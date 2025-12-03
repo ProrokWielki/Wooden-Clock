@@ -4,7 +4,7 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   GPIO
-  PRIVATE CmsisBridge Clock
+  PRIVATE CmsisBridge Clock SysConfig
   PUBLIC Register HalTypes)
 
 TARGET_INCLUDE_DIRECTORIES(GPIO PUBLIC include)

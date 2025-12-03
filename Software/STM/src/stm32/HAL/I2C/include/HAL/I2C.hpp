@@ -18,6 +18,7 @@
 
 class DMA;
 class Clock;
+class SysConfig;
 class GPIO;
 
 /**
@@ -30,7 +31,7 @@ class I2C
 {
 public:
     /// Constructor.
-    I2C(Clock & clock, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double frequency, DMA * dma = nullptr);
+    I2C(Clock & clock, SysConfig & sys_config, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double frequency, DMA * dma = nullptr);
 
     /// Enables the I2C.
     void enable();
@@ -125,6 +126,8 @@ private:
 
     void set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHold, uint8_t u8SCLHigh, uint8_t u8SCLLow);
 
+    void set_mode(I2C_Types::Mode mode);
+
     Register<uint32_t> CR1;
     Register<uint32_t> CR2;
     Register<uint32_t> ICR;
@@ -138,6 +141,9 @@ private:
     Register<uint32_t> TXDR;
 
     DMA * dma_;
+
+    I2C_Types::I2CNumber i2c_number_;
+    SysConfig & sys_config;
 
     // uint32_t addressTXDR;
 };

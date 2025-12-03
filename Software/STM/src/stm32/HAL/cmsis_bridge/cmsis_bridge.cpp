@@ -187,6 +187,36 @@ volatile uint32_t * to_address(ClockRegister clock_register)
     };
 }
 
+volatile uint32_t * to_address(SysConfigRegister sys_config_register)
+{
+    switch (sys_config_register)
+    {
+        case SysConfigRegister::MEMRMP:
+            return &(SYSCFG->MEMRMP);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::CFGR1:
+            return &(SYSCFG->CFGR1);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::EXTICR1:
+            return &(SYSCFG->EXTICR[0]);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::EXTICR2:
+            return &(SYSCFG->EXTICR[1]);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::EXTICR3:
+            return &(SYSCFG->EXTICR[2]);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::EXTICR4:
+            return &(SYSCFG->EXTICR[3]);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::SCSR:
+            return &(SYSCFG->SCSR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::CFGR2:
+            return &(SYSCFG->CFGR2);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::SWPR:
+            return &(SYSCFG->SWPR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case SysConfigRegister::SKR:
+            return &(SYSCFG->SKR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        default:
+            assert(false && "invalid system config register");
+            return nullptr;
+    };
+}
+
 volatile uint32_t * to_address(Power_Types::Register power_register)
 {
     switch (power_register)

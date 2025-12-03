@@ -15,6 +15,7 @@
 #include <HAL/Power.hpp>
 #include <HAL/RTC.hpp>
 #include <HAL/SPI.hpp>
+#include <HAL/SysConfig.hpp>
 #include <HAL/Timer.hpp>
 #include <HAL/USART.hpp>
 
@@ -32,6 +33,7 @@ public:
 
     Clock clock;
     Power power;
+    SysConfig sys_config;
 
     GPIO I2C1_SCL;
     GPIO I2C1_SDA;

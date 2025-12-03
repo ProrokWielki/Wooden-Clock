@@ -15,6 +15,7 @@
 #include "HAL/types.hpp"
 
 class Clock;
+class SysConfig;
 
 /**
  *  @brief Class for operations on GPIOs.
@@ -31,7 +32,7 @@ public:
      * @param gpio Pointer to GPIO port register
      * @param pinNumber GPIO pin number
      */
-    GPIO(Clock & clock, GPIO_Types::Port gpio, const uint8_t pinNumber);
+    GPIO(Clock & clock, SysConfig & sys_config, GPIO_Types::Port gpio, const uint8_t pinNumber);
 
     /** Sets GPIO mode.
      *
@@ -78,6 +79,8 @@ public:
     /// Toggles output level.
     void toggle_output_value();
 
+    void set_fast_mode_plus();
+
     /** Gets the GPIO's output level
      *
      * @return The value of the GPIO
@@ -99,6 +102,7 @@ public:
 protected:
 private:
     Clock & clock_;
+    SysConfig & sys_config_;
 
     Register<uint32_t> MODER;
     Register<uint32_t> OTYPER;
@@ -111,7 +115,8 @@ private:
     Register<uint32_t> ODR;
     Register<uint32_t> IDR;
 
-    uint8_t pinNumber_;
+    GPIO_Types::Port port_;
+    uint8_t pin_number_;
 };
 
 #endif /* HAL_GPIO_GPIO_HPP_ */

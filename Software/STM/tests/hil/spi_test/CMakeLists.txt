@@ -6,6 +6,7 @@ IF((CMAKE_BUILD_TYPE STREQUAL "ARM_Debug"))
     PRIVATE CMSIS
             SPI
             Clock
+            SysConfig
             HalTypes
             GPIO
             MCU

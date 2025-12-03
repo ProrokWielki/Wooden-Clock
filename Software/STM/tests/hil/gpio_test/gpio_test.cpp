@@ -6,12 +6,14 @@
 
 #include <HAL/Clock.hpp>
 #include <HAL/GPIO.hpp>
+#include <HAL/SysConfig.hpp>
 #include <HAL/types.hpp>
 
 RegisterTest(GpioTest, SetAsOutput, [](Test * test) {
     Clock clock{};
+    SysConfig sys_config{};
 
-    GPIO sut = GPIO(clock, GPIO_Types::Port::C, 9);
+    GPIO sut = GPIO(clock, sys_config, GPIO_Types::Port::C, 9);
     EXPECT_EQ(RCC->AHB2ENR & (1 << 2), 1 << 2);
 
     sut.set_mode(GPIO_Types::PortMode::Output);

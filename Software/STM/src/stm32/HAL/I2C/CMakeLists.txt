@@ -5,6 +5,12 @@ ADD_LIBRARY(
 TARGET_LINK_LIBRARIES(
   I2C
   PUBLIC Register
-  PRIVATE CMSIS Clock CmsisBridge HalTypes GPIO DMA)
+  PRIVATE CMSIS
+          Clock
+          CmsisBridge
+          HalTypes
+          GPIO
+          DMA
+          SysConfig)
 
 TARGET_INCLUDE_DIRECTORIES(I2C PUBLIC include)

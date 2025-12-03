@@ -17,6 +17,7 @@
 
 volatile uint32_t * to_address(GPIO_Types::Port port, GPIO_Types::PortRegister portRegister);
 volatile uint32_t * to_address(ClockRegister clock_register);
+volatile uint32_t * to_address(SysConfigRegister sys_config_register);
 volatile uint32_t * to_address(I2C_Types::I2CNumber i2c, I2C_Types::Register i2c_register);
 volatile uint32_t * to_address(DMA_Types::DmaNumber dma, DMA_Types::Channel channel, DMA_Types::DmaRegister dma_register);
 volatile uint32_t * to_address(SPI_types::SPI_Number spi, SPI_types::Register spi_register);
