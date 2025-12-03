@@ -35,12 +35,10 @@ PROJECT(WoodenClock)
 
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_custom_target(
-    copy-compile-commands ALL
-    ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_BINARY_DIR}/compile_commands.json
-        ${CMAKE_CURRENT_LIST_DIR}
-    )
+ADD_CUSTOM_TARGET(
+  copy-compile-commands ALL
+  ${CMAKE_COMMAND} -E copy_if_different
+  ${CMAKE_BINARY_DIR}/compile_commands.json ${CMAKE_CURRENT_LIST_DIR})
 
 SET(CMAKE_CXX_STANDARD 23)
 ENABLE_LANGUAGE(C ASM CXX)
