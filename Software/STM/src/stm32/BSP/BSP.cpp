@@ -10,11 +10,6 @@
 #include <HAL/HAL.hpp>
 #include <array>
 
-namespace ISR
-{
-extern "C" void Dispaly_Redrawn(void);
-}
-
 BSP::BSP()
 : display(DISPLAY_WIDTH, DISPLAY_HEIGHT, {frame_buffer1.data(), DISPLAY_WIDTH * DISPLAY_HEIGHT}),
   button_right(HAL::get().BUTTON1, GPIO_Types::SignalLevel::High), button_left(HAL::get().BUTTON4, GPIO_Types::SignalLevel::High),

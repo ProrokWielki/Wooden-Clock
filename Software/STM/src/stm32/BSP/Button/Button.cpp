@@ -9,8 +9,7 @@
 
 #include "HAL/types.hpp"
 
-Button::Button(GPIO & buttonGpio, GPIO_Types::SignalLevel pressedLevel)
-: buttonGpio_(buttonGpio), pressedLevel_(pressedLevel), previousLevel_(pressedLevel)
+Button::Button(GPIO & buttonGpio, GPIO_Types::SignalLevel pressedLevel) : buttonGpio_(buttonGpio), pressedLevel_(pressedLevel), previousLevel_(pressedLevel)
 {
     buttonGpio_.set_mode(GPIO_Types::PortMode::Input);
     buttonGpio_.set_pull_up_pull_down(GPIO_Types::PortPullUpPullDown::None);

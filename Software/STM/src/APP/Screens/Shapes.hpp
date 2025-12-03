@@ -17,7 +17,7 @@ public:
     void init() override
     {
         add(&filled_circle_, 0, 0);
-        add(&outline_circle_, 16, 0);
+        add(&outline_circle_, get_width() / 2, 0);
         // add(&counter_text3, 0, 21);
         // add(&counter_text4, 0, 30);
         // validate();
@@ -28,6 +28,8 @@ public:
     }
 
 private:
-    Circle<8> filled_circle_{true};
-    Circle<8> outline_circle_{false};
+    static constexpr uint8_t FIGURE_WIDTH{8};
+
+    Circle<FIGURE_WIDTH> filled_circle_{true};
+    Circle<FIGURE_WIDTH> outline_circle_{false};
 };

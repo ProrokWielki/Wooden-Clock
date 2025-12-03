@@ -53,8 +53,8 @@ public:
         speed_x_ += accel_x * delta_t;
         speed_y_ += accel_y * delta_t;
 
-        speed_x_ = std::max(std::min(speed_x_, max_speed), min_speed);
-        speed_y_ = std::max(std::min(speed_y_, max_speed), min_speed);
+        speed_x_ = std::clamp(speed_x_, min_speed, max_speed);
+        speed_y_ = std::clamp(speed_y_, min_speed, max_speed);
     }
 
     void stop()
@@ -105,6 +105,8 @@ private:
 template<size_t N>
 class ParticleContainer
 {
+    constexpr static uint8_t NUM_OF_POSSIBLE_NEXT_POSITIONS{5};
+
 public:
     ParticleContainer()
     {
@@ -114,14 +116,15 @@ public:
 
             while (true)
             {
-                auto next_position = std::make_tuple<int8_t, int8_t>(rand() % BSP::DISPLAY_WIDTH, rand() % BSP::DISPLAY_HEIGHT);
+                auto next_position =
+                std::make_tuple<int8_t, int8_t>(static_cast<int8_t>(rand() % BSP::DISPLAY_WIDTH), static_cast<int8_t>(rand() % BSP::DISPLAY_HEIGHT));
                 const std::span<std::tuple<int8_t, int8_t>> populated_indices(initial_positions.data(), i);
                 if (std::ranges::find(populated_indices, next_position) != populated_indices.end())
                 {
                     continue;
                 }
-                initial_positions[i] = next_position;
-                particles[i] = Particle(std::get<0>(next_position), std::get<1>(next_position));
+                initial_positions.at(i) = next_position;
+                particles.at(i) = Particle(std::get<0>(next_position), std::get<1>(next_position));
                 break;
             }
         }
@@ -153,32 +156,35 @@ public:
         }
     }
 
-    [[nodiscard]] std::array<std::tuple<int8_t, int8_t>, 5> get_all_possible_next_positions(const Particle & particle) const
+    [[nodiscard]] std::array<std::tuple<int8_t, int8_t>, NUM_OF_POSSIBLE_NEXT_POSITIONS> get_all_possible_next_positions(const Particle & particle) const
     {
-        // constexpr static double EPSILON{22.5};
         auto [acceleration_x, acceleration_y] = particle.get_speed();
         auto gravity_vector = atan2(-acceleration_y, acceleration_x);
 
         auto [particle_x, particle_y] = particle.get_position_as_int();
 
+        static constexpr double DIAGONAL_OFFSET{0.5};
+        static constexpr double HORIZONTAL_OFFSET{1.0};
+
         return {{
         {particle_x + std::round(std::cos(gravity_vector)), particle_y - std::round(std::sin(gravity_vector))},
-        {particle_x + std::round(std::cos(gravity_vector - 0.5)), particle_y - std::round(std::sin(gravity_vector - 0.5))},
-        {particle_x + std::round(std::cos(gravity_vector + 0.5)), particle_y - std::round(std::sin(gravity_vector + 0.5))},
-        {particle_x + std::round(std::cos(gravity_vector - 1.0)), particle_y - std::round(std::sin(gravity_vector - 1.0))},
-        {particle_x + std::round(std::cos(gravity_vector + 1.0)), particle_y - std::round(std::sin(gravity_vector + 1.0))},
+        {particle_x + std::round(std::cos(gravity_vector - DIAGONAL_OFFSET)), particle_y - std::round(std::sin(gravity_vector - DIAGONAL_OFFSET))},
+        {particle_x + std::round(std::cos(gravity_vector + DIAGONAL_OFFSET)), particle_y - std::round(std::sin(gravity_vector + DIAGONAL_OFFSET))},
+        {particle_x + std::round(std::cos(gravity_vector - HORIZONTAL_OFFSET)), particle_y - std::round(std::sin(gravity_vector - HORIZONTAL_OFFSET))},
+        {particle_x + std::round(std::cos(gravity_vector + HORIZONTAL_OFFSET)), particle_y - std::round(std::sin(gravity_vector + HORIZONTAL_OFFSET))},
         }};
     }
 
     [[nodiscard]] std::span<std::tuple<int8_t, int8_t>> get_valid_next_positions(const Particle & particle) const
     {
         auto all_possible_next_positions = get_all_possible_next_positions(particle);
-        static std::array<std::tuple<int8_t, int8_t>, 5> valid_next_positions{};
+        static std::array<std::tuple<int8_t, int8_t>, NUM_OF_POSSIBLE_NEXT_POSITIONS> valid_next_positions{};
         uint8_t valid_next_positions_index{0};
 
         for (const auto & position : all_possible_next_positions)
         {
-            if (std::get<0>(position) < 0 || std::get<0>(position) > 31 || std::get<1>(position) < 0 || std::get<1>(position) > 31)
+            if (std::get<0>(position) < 0 || std::get<0>(position) >= static_cast<int8_t>(BSP::DISPLAY_WIDTH) || std::get<1>(position) < 0 ||
+                std::get<1>(position) >= static_cast<int8_t>(BSP::DISPLAY_HEIGHT))
             {
                 continue;
             }
@@ -189,7 +195,7 @@ public:
 
     [[nodiscard]] std::optional<std::tuple<int8_t, int8_t>> get_first_movable_positions(const Particle & particle) const
     {
-        std::array<std::tuple<int8_t, int8_t>, 5> movable_positions{};
+        std::array<std::tuple<int8_t, int8_t>, NUM_OF_POSSIBLE_NEXT_POSITIONS> movable_positions{};
         uint8_t movable_positions_index{0};
         auto valid_positions = get_valid_next_positions(particle);
 

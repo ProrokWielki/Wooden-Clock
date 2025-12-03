@@ -19,7 +19,7 @@
 class StateNorth: public Canvas
 {
 public:
-    explicit StateNorth(BSP2::Magnetometer & magneto) : magneto_(magneto), magnet(32, 32, &empty_frame_buffer[0][0])
+    explicit StateNorth(BSP2::Magnetometer & magneto) : magneto_(magneto), magnet(get_width(), get_height(), empty_frame_buffer.data())
     {
     }
 
@@ -36,25 +36,22 @@ public:
         int16_t x{magnetic_field.x};
         int16_t y{magnetic_field.y};
 
-        constexpr static uint8_t INDEX_HALF_SCREEN{static_cast<uint8_t>(get_width() / 2U)};
+        const static int8_t INDEX_HALF_SCREEN{static_cast<int8_t>(get_width() / 2U)};
 
-        x = -x * INDEX_HALF_SCREEN / std::numeric_limits<int16_t>::max() + INDEX_HALF_SCREEN;
-        y = -y * INDEX_HALF_SCREEN / std::numeric_limits<int16_t>::max() + INDEX_HALF_SCREEN;
+        x = static_cast<int16_t>(-x * INDEX_HALF_SCREEN / std::numeric_limits<int16_t>::max() + INDEX_HALF_SCREEN);
+        y = static_cast<int16_t>(-y * INDEX_HALF_SCREEN / std::numeric_limits<int16_t>::max() + INDEX_HALF_SCREEN);
 
-        x = x > get_width() - 1 ? get_width() - 1 : x;
-        y = y > get_height() - 1 ? get_height() - 1 : y;
+        x = std::clamp(x, static_cast<int16_t>(0), static_cast<int16_t>(get_width() - 1));
+        y = std::clamp(y, static_cast<int16_t>(0), static_cast<int16_t>(get_width() - 1));
 
-        x = x < 0 ? 0 : x;
-        y = y < 0 ? 0 : y;
-
-        empty_frame_buffer[y][x] = std::numeric_limits<uint8_t>::max();
+        empty_frame_buffer.at(y * get_width() + x) = std::numeric_limits<uint8_t>::max();
 
         // validate();
     }
 
 private:
     BSP2::Magnetometer & magneto_;
-    std::array<std::array<uint8_t, get_width()>, get_height()> empty_frame_buffer{};
+    std::array<uint8_t, get_width() * get_height()> empty_frame_buffer{};
     Image magnet;
 };
 

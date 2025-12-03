@@ -71,7 +71,7 @@ void Clock::wait_for_clock_source_to_be_ready(ClockSource clock_source)
 
 bool Clock::is_clock_source_ready(ClockSource clock_source)
 {
-    Register<uint32_t> & clock_source_register{get_clock_source_register(clock_source)};
+    const Register<uint32_t> & clock_source_register{get_clock_source_register(clock_source)};
 
     return clock_source_register.get_bit(to_ready_bit_position(clock_source));
 }

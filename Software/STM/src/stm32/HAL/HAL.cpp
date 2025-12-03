@@ -520,15 +520,18 @@ void HAL::tlc59208f_init()
     TLC59208F_3.init();
     TLC59208F_4.init();
 
-    TLC59208F_1.set_registers_values(0x00, first.data(), first.size());
-    TLC59208F_2.set_registers_values(0x00, first.data(), first.size());
-    TLC59208F_3.set_registers_values(0x00, first.data(), first.size());
-    TLC59208F_4.set_registers_values(0x00, first.data(), first.size());
+    constexpr uint8_t LEDOUT0_REG{0x0C};
+    constexpr uint8_t MODE1_REG{0x00};
 
-    TLC59208F_1.set_registers_values(0x0C, second.data(), second.size());
-    TLC59208F_2.set_registers_values(0x0C, second.data(), second.size());
-    TLC59208F_3.set_registers_values(0x0C, second.data(), second.size());
-    TLC59208F_4.set_registers_values(0x0C, second.data(), second.size());
+    TLC59208F_1.set_registers_values(MODE1_REG, first.data(), first.size());
+    TLC59208F_2.set_registers_values(MODE1_REG, first.data(), first.size());
+    TLC59208F_3.set_registers_values(MODE1_REG, first.data(), first.size());
+    TLC59208F_4.set_registers_values(MODE1_REG, first.data(), first.size());
+
+    TLC59208F_1.set_registers_values(LEDOUT0_REG, second.data(), second.size());
+    TLC59208F_2.set_registers_values(LEDOUT0_REG, second.data(), second.size());
+    TLC59208F_3.set_registers_values(LEDOUT0_REG, second.data(), second.size());
+    TLC59208F_4.set_registers_values(LEDOUT0_REG, second.data(), second.size());
 }
 
 void HAL::sr_74hc595_init()

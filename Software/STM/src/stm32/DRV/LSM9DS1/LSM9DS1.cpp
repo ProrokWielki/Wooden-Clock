@@ -10,7 +10,17 @@
 #include <array>
 #include <chrono>
 
-constexpr uint8_t READ_BIT = 0x80;
+constexpr uint8_t READ_BIT{0x80};
+
+constexpr uint8_t CTRL_REG8{0x22};
+constexpr uint8_t CTRL_REG9{0x23};
+
+constexpr uint8_t CTRL_REG5_LINEAR_ACCELERATION{0x1F};
+constexpr uint8_t CTRL_REG6_LINEAR_ACCELERATION{0x20};
+
+constexpr uint8_t CTRL_REG1_ANGULAR_RATE{0x10};
+
+constexpr uint8_t FIFO_CTRL{0x2E};
 
 LSM9DS1::LSM9DS1(SPI & spi, GPIO & gyro_cs, GPIO & magnet_cs) : spi_(spi), gyro_cs_(gyro_cs), magneto_cs_(magnet_cs)
 {
@@ -22,26 +32,25 @@ LSM9DS1::LSM9DS1(SPI & spi, GPIO & gyro_cs, GPIO & magnet_cs) : spi_(spi), gyro_
 
     std::array<uint8_t, 1> data_to_write1{0x05};
 
-    spi.write_data_to_register(gyro_cs, 0x22, {data_to_write1});
-    spi.write_data_to_register(magnet_cs, 0x22, {data_to_write1});
+    spi.write_data_to_register(gyro_cs, CTRL_REG8, {data_to_write1});
+    spi.write_data_to_register(magnet_cs, CTRL_REG8, {data_to_write1});
 
     std::array<uint8_t, 1> data_to_write3{0x02};
 
-    spi.write_data_to_register(gyro_cs, 0x23, {data_to_write3});
+    spi.write_data_to_register(gyro_cs, CTRL_REG9, {data_to_write3});
 
     std::array<uint8_t, 1> data_to_write1f{0b00111000};
 
-    spi.write_data_to_register(gyro_cs, 0x1f, {data_to_write1f});
+    spi.write_data_to_register(gyro_cs, CTRL_REG5_LINEAR_ACCELERATION, {data_to_write1f});
 
     std::array<uint8_t, 1> data_to_write2{0b11000000};
 
-    spi.write_data_to_register(gyro_cs, 0x2E, {data_to_write2});
-    // // spi.write_data_to_register(magnet_cs, 0x22, {data_to_write1});
+    spi.write_data_to_register(gyro_cs, FIFO_CTRL, {data_to_write2});
 
     std::array<uint8_t, 1> data_to_write10{0xBB};
     std::array<uint8_t, 1> data_to_write20{0xA0};
-    spi.write_data_to_register(gyro_cs_, 0x10, data_to_write10);  // 119 Hz, 2000 dps, 16 Hz BW
-    spi.write_data_to_register(gyro_cs_, 0x20, data_to_write20);  // 119 Hz, 2g
+    spi.write_data_to_register(gyro_cs_, CTRL_REG1_ANGULAR_RATE, data_to_write10);         // 119 Hz, 2000 dps, 16 Hz BW
+    spi.write_data_to_register(gyro_cs_, CTRL_REG6_LINEAR_ACCELERATION, data_to_write20);  // 119 Hz, 2g
 
     set_data_rate(MagnetometerDataRate::Hz_80);
     set_xy_operation_mode(MagnetometerXYOperationMode::ultra_performance);
@@ -64,7 +73,11 @@ void LSM9DS1::set_operation_mode(MagnetometerOperationMode operation_mode)
 void LSM9DS1::set_data_rate(DataRateG data_rate)
 {
     Register<uint8_t> control_register_1{read_register(GyroscopeRegister::CTRL_REG1)};
-    control_register_1.set_value(static_cast<uint8_t>(data_rate), 5, 3);
+
+    constexpr uint8_t DATA_RATE_VALUE_POSITION{5};
+    constexpr uint8_t DATA_RATE_VALUE_LENGTH{3};
+
+    control_register_1.set_value(static_cast<uint8_t>(data_rate), DATA_RATE_VALUE_POSITION, DATA_RATE_VALUE_LENGTH);
 
     write_register(GyroscopeRegister::CTRL_REG1, control_register_1.read());
 }
@@ -113,8 +126,8 @@ void LSM9DS1::set_full_scale(MagnetometerFullScale full_scale)
 int16_t LSM9DS1::get_angular_velocity(Axis axis)
 {
 
-    const auto angular_velocity_register_l = static_cast<GyroscopeRegister>(GYROSCPE_DATA | static_cast<uint8_t>(axis));
-    const auto angular_velocity_register_h = static_cast<GyroscopeRegister>((GYROSCPE_DATA | static_cast<uint8_t>(axis)) + 1U);
+    const auto angular_velocity_register_l = static_cast<GyroscopeRegister>(GYROSCOPE_DATA | static_cast<uint8_t>(axis));
+    const auto angular_velocity_register_h = static_cast<GyroscopeRegister>((GYROSCOPE_DATA | static_cast<uint8_t>(axis)) + 1U);
 
     const uint16_t angular_velocity_l{read_register(angular_velocity_register_l)};
     const uint16_t angular_velocity_h{read_register(angular_velocity_register_h)};

@@ -11,6 +11,8 @@
 
 #include <DRV/BME280.hpp>
 
+namespace
+{
 bme280_uncomp_data to_bme280_uncomp_data(uint32_t temperature, uint32_t pressure, uint32_t humidity)
 {
     return {.pressure = pressure, .temperature = temperature, .humidity = humidity};
@@ -42,6 +44,7 @@ bme280_calib_data to_bme280_calib_data(uint16_t dig_t1, int16_t dig_t2, int16_t 
             .dig_h6 = dig_h6,
             .t_fine = 0};
 }
+}  // namespace
 
 BME280::BME280(SPI & spi, GPIO & chip_select) : spi_(spi), chip_select_(chip_select)
 {
@@ -252,7 +255,10 @@ uint8_t BME280::read_data(uint8_t register_address)
 {
     uint8_t received_data{};
     std::span<uint8_t> received_data_buffer{&received_data, 1};
-    spi_.read_data_from_register(chip_select_, 0x80 | register_address, received_data_buffer, 1);
+
+    constexpr uint8_t READ_BIT{0x80};
+
+    spi_.read_data_from_register(chip_select_, READ_BIT | register_address, received_data_buffer, 1);
     return received_data;
 }
 

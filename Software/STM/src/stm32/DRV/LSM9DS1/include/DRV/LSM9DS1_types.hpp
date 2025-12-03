@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-constexpr uint8_t GYROSCPE_DATA = 0x10;
+constexpr uint8_t GYROSCOPE_DATA = 0x10;
 constexpr uint8_t ACCELEROMETER_DATA = 0x20;
 constexpr uint8_t MAGNETOMETER_DATA = 0x20;
 

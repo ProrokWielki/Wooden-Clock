@@ -26,8 +26,8 @@ public:
 
     void init();
 
-    std::array<uint8_t, DISPLAY_WIDTH * DISPLAY_HEIGHT> frame_buffer1{};
-    std::array<uint8_t, DISPLAY_WIDTH * DISPLAY_HEIGHT> frame_buffer2{};
+    std::array<uint8_t, static_cast<size_t>(DISPLAY_WIDTH * DISPLAY_HEIGHT)> frame_buffer1{};
+    std::array<uint8_t, static_cast<size_t>(DISPLAY_WIDTH * DISPLAY_HEIGHT)> frame_buffer2{};
 
     Display display;
 

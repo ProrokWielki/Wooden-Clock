@@ -14,7 +14,8 @@
 using namespace GPIO_Types;
 
 SR_74HC595::SR_74HC595(GPIO & dataInPin, GPIO & registerClockPin, GPIO & storageClockPin, GPIO & outputEnablePin, GPIO & clearPin, uint8_t chain_length)
-: dataInPin_(dataInPin), registerClockPin_(registerClockPin), storageClockPin_(storageClockPin), outputEnablePin_(outputEnablePin), clearPin_(clearPin), chain_length_{chain_length}
+: dataInPin_(dataInPin), registerClockPin_(registerClockPin), storageClockPin_(storageClockPin), outputEnablePin_(outputEnablePin), clearPin_(clearPin),
+  chain_length_{chain_length}
 {
     dataInPin_.set_mode(PortMode::Output);
     dataInPin_.set_speed(PortOutputSpeed::VeryHigh);
@@ -44,7 +45,6 @@ void SR_74HC595::clear()
 
 void SR_74HC595::output_enable(bool enable)
 {
-
     outputEnablePin_.set_output_value(enable ? SignalLevel::Low : SignalLevel::High);
 }
 
@@ -71,7 +71,7 @@ void SR_74HC595::show()
 
 void SR_74HC595::set_all_outputs_high()
 {
-    for (uint8_t i{0}; i< chain_length_ * NUM_OF_OUTPUTS ; ++i)
+    for (uint8_t i{0}; i < chain_length_ * NUM_OF_OUTPUTS; ++i)
     {
         shift_bit(GPIO_Types::SignalLevel::High);
     }

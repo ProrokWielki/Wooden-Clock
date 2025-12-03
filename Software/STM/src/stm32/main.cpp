@@ -1,10 +1,6 @@
-#include <cassert>
-
 #include "APP.hpp"
 #include <BSP/BSP.hpp>
 #include <HAL/HAL.hpp>
-
-#include <HAL/RTC.hpp>
 
 #include "Assets/Images/Images.hpp"
 #include <widgets/Image.hpp>

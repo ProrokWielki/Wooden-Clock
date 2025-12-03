@@ -19,7 +19,7 @@
 class StateAccel: public Canvas
 {
 public:
-    explicit StateAccel(BSP2::Accelerometer & accel) : accel_(accel), magnet(32, 32, empty_frame_buffer.data())
+    explicit StateAccel(BSP2::Accelerometer & accel) : accel_(accel), magnet(get_width(), get_height(), empty_frame_buffer.data())
     {
     }
 
@@ -41,14 +41,14 @@ public:
         const auto display_x = static_cast<uint8_t>(scaled_x);
         const auto display_y = static_cast<uint8_t>(scaled_y);
 
-        empty_frame_buffer[std::min(display_y, max_y_index()) * BSP::DISPLAY_WIDTH + std::min(display_x, max_x_index())] = std::numeric_limits<uint8_t>::max();
+        empty_frame_buffer.at(std::min(display_y, max_y_index()) * get_width() + std::min(display_x, max_x_index())) = std::numeric_limits<uint8_t>::max();
 
         // validate();
     }
 
 private:
     BSP2::Accelerometer & accel_;
-    std::array<uint8_t, BSP::DISPLAY_HEIGHT*BSP::DISPLAY_WIDTH> empty_frame_buffer{};
+    std::array<uint8_t, get_width()* get_height()> empty_frame_buffer{};
     Image magnet;
 };
 

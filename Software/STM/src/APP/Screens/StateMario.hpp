@@ -33,7 +33,7 @@ public:
     }
 
 private:
-    Image& mario;
+    Image & mario;
 };
 
 #endif /* APP_STATEMACHINE_STATES_STATEMARIO_HPP_ */
