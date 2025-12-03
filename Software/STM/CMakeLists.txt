@@ -69,8 +69,9 @@ ADD_CUSTOM_TARGET(
   coverage
   COMMAND
     mkdir -p coverage && lcov --ignore-errors inconsistent --ignore-errors
-    mismatch -c -d . -o coverage/coverage.in && genhtml coverage/coverage.in -o
-    coverage/)
+    mismatch -c -d . -o coverage/coverage.in && lcov -r coverage/coverage.in
+    '*/tests/*' '/usr/include/*' 'googlemock/*' 'googletest/*' -o
+    coverage/filtered.in && genhtml coverage/filtered.in -o coverage/)
 
 ENABLE_TESTING()
 
