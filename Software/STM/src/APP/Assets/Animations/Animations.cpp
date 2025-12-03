@@ -4,14 +4,14 @@
 #include "Arrows/Arrows.hpp"
 #include "Hourglass/Hourglass.hpp"
 
-Animation & getAnimation(AnimationType animation)
+Animation & get_animation(AnimationType animation)
 {
     switch (animation)
     {
         case AnimationType::HOURGLASS:
-            return getHourglassAnimation();
+            return get_hourglass_animation();
         case AnimationType::ARROWS:
-            return getArrowsAnimation();
+            return get_arrows_animation();
         default:
             assert(false && "Unknown animation");
     }

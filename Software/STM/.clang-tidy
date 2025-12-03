@@ -1,4 +1,4 @@
-Checks: '-*,bugprone-*,cppcoreguidelines*,misc*,modernize-*,-readability-identifier-naming,-misc-include-cleaner,-modernize-use-trailing-return-type,-bugprone-easily-swappable-parameters,-cppcoreguidelines-avoid-const-or-ref-data-members,-misc-non-private-member-variables-in-classes'
+Checks: '-*,bugprone-*,cppcoreguidelines*,misc*,modernize-*,readability-identifier-naming,-misc-include-cleaner,-modernize-use-trailing-return-type,-bugprone-easily-swappable-parameters,-cppcoreguidelines-avoid-const-or-ref-data-members,-misc-non-private-member-variables-in-classes'
 
 ExcludeHeaderFilterRegex: '.*\/lib\/.*'
 HeaderFilterRegex: '.*\/src\/.*'

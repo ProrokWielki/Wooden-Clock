@@ -18,8 +18,8 @@ public:
      * @brief Constructor.
      */
     StateButtons()
-    : up_arrow_(getImage(ImageType::UP_ARROW)), down_arrow_(getImage(ImageType::DOWN_ARROW)), left_arrow_(getImage(ImageType::LEFT_ARROW)),
-      right_arrow_(getImage(ImageType::RIGHT_ARROW))
+    : up_arrow_(get_image(ImageType::UP_ARROW)), down_arrow_(get_image(ImageType::DOWN_ARROW)), left_arrow_(get_image(ImageType::LEFT_ARROW)),
+      right_arrow_(get_image(ImageType::RIGHT_ARROW))
     {
     }
 
@@ -57,19 +57,19 @@ public:
         left_arrow_.hide();
         right_arrow_.hide();
 
-        if (BSP::get().button_down.isPressed())
+        if (BSP::get().button_down.is_pressed())
         {
             down_arrow_.show();
         }
-        if (BSP::get().button_up.isPressed())
+        if (BSP::get().button_up.is_pressed())
         {
             up_arrow_.show();
         }
-        if (BSP::get().button_left.isPressed())
+        if (BSP::get().button_left.is_pressed())
         {
             left_arrow_.show();
         }
-        if (BSP::get().button_right.isPressed())
+        if (BSP::get().button_right.is_pressed())
         {
             right_arrow_.show();
         }

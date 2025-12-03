@@ -1,3 +1,3 @@
 #include <widgets/Animation.hpp>
 
-Animation& getHourglassAnimation();
+Animation & get_hourglass_animation();

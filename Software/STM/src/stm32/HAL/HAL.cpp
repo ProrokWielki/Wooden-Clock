@@ -456,28 +456,28 @@ void HAL::gpio_init()
     // I2C4_SCL.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF5);
     // I2C4_SDA.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF5);
 
-    SPI1_MISO.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF5);
-    SPI1_MOSI.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF5);
-    SPI1_SCK.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF5);
+    SPI1_MISO.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);
+    SPI1_MOSI.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);
+    SPI1_SCK.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);
 
     SPI1_CS1.set_mode(GPIO_Types::PortMode::Output);
     SPI1_CS1.set_output_type(GPIO_Types::PortOutputType::PushPull);
-    SPI1_CS1.set_pullUp_pullDown(GPIO_Types::PortPullUpPullDown::None);
+    SPI1_CS1.set_pull_up_pull_down(GPIO_Types::PortPullUpPullDown::None);
 
     SPI1_CS2.set_mode(GPIO_Types::PortMode::Output);
     SPI1_CS2.set_output_type(GPIO_Types::PortOutputType::PushPull);
-    SPI1_CS2.set_pullUp_pullDown(GPIO_Types::PortPullUpPullDown::None);
+    SPI1_CS2.set_pull_up_pull_down(GPIO_Types::PortPullUpPullDown::None);
 
     SPI1_CS3.set_mode(GPIO_Types::PortMode::Output);
     SPI1_CS3.set_output_type(GPIO_Types::PortOutputType::PushPull);
-    SPI1_CS3.set_pullUp_pullDown(GPIO_Types::PortPullUpPullDown::None);
+    SPI1_CS3.set_pull_up_pull_down(GPIO_Types::PortPullUpPullDown::None);
 
-    QSPI_IO0.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF10);
-    QSPI_IO1.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF10);
-    QSPI_IO2.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF10);
-    QSPI_IO3.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF10);
-    QSPI_CLK.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF10);
-    QSPI_CS.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF10);
+    QSPI_IO0.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
+    QSPI_IO1.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
+    QSPI_IO2.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
+    QSPI_IO3.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
+    QSPI_CLK.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
+    QSPI_CS.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
 
     // UART3_RX.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF7);  // ToDo not spi :)
     // UART3_TX.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF7);
@@ -539,7 +539,7 @@ void HAL::sr_74hc595_init()
 void HAL::lsm9ds1_init()
 {
     LSM9DS1_1.set_data_rate(MagnetometerDataRate::Hz_80);
-    LSM9DS1_1.set_XY_operation_mode(MagnetometerXYOperationMode::ultra_performance);
+    LSM9DS1_1.set_xy_operation_mode(MagnetometerXYOperationMode::ultra_performance);
     LSM9DS1_1.set_full_scale(MagnetometerFullScale::Gs_16);
     LSM9DS1_1.set_operation_mode(MagnetometerOperationMode::continuous_conversion);
 }

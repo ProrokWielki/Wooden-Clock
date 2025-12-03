@@ -15,7 +15,7 @@
 #include "rightArrow.hpp"
 #include "upArrow.hpp"
 
-Image & getImage(ImageType image_type)
+Image & get_image(ImageType image_type)
 {
     static Image mario{Mario::WIDTH, Mario::HEIGHT, Mario::DATA.data()};
     static Image up_arrow{UpArrow::WIDTH, UpArrow::HEIGHT, UpArrow::DATA.data()};

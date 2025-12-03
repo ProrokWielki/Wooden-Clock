@@ -55,7 +55,7 @@ void TLC59208F::set_all_leds_values(uint8_t const * const allLedsValues)
 {
     memcpy(&(ledValues_[1]), allLedsValues, 8 * sizeof(uint8_t));
 
-    i2c_.write_data_DMA(ledValues_, 9);
+    i2c_.write_data_dma(ledValues_, 9);
 }
 
 void TLC59208F::cache_all_leds_values(uint8_t const * const allLedsValues)
@@ -65,17 +65,17 @@ void TLC59208F::cache_all_leds_values(uint8_t const * const allLedsValues)
 
 void TLC59208F::send_cashed_leds_values()
 {
-    i2c_.write_data_DMA(cashedLedValues_, 9);
+    i2c_.write_data_dma(cashedLedValues_);
 }
 
 void TLC59208F::set_transfer_complete_callback(std::function<void()> callback)
 {
-    i2c_.get_DMA()->set_transfer_complete_callback(std::move(callback));
-    i2c_.get_DMA()->enable_interrupt(DMA_Types::Interrupt::TransferCompleted);
+    i2c_.get_dma()->set_transfer_complete_callback(std::move(callback));
+    i2c_.get_dma()->enable_interrupt(DMA_Types::Interrupt::TransferCompleted);
 }
 
 void TLC59208F::set_half_transfer_callback(std::function<void()> callback)
 {
-    i2c_.get_DMA()->set_half_transfer_callback(std::move(callback));
-    i2c_.get_DMA()->enable_interrupt(DMA_Types::Interrupt::HalfTransfer);
+    i2c_.get_dma()->set_half_transfer_callback(std::move(callback));
+    i2c_.get_dma()->enable_interrupt(DMA_Types::Interrupt::HalfTransfer);
 }

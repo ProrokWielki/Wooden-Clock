@@ -28,13 +28,13 @@ USART::USART(Clock & clock, Usart_Types::UsartNumber usart_number, GPIO & tx_pin
 
     if (usart_number == Usart_Types::UsartNumber::UART_4)  // TODO: make generic
     {
-        rx_pin.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF8);  // TODO: not spi :)
-        tx_pin.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF8);
+        rx_pin.set_as_spi_pin(GPIO_Types::AlternateFunction::AF8);  // TODO: not spi :)
+        tx_pin.set_as_spi_pin(GPIO_Types::AlternateFunction::AF8);
     }
     else
     {
-        rx_pin.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF7);  // TODO: not spi :)
-        tx_pin.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF7);
+        rx_pin.set_as_spi_pin(GPIO_Types::AlternateFunction::AF7);  // TODO: not spi :)
+        tx_pin.set_as_spi_pin(GPIO_Types::AlternateFunction::AF7);
     }
 
     CR1.set_bit(PS_BIT_POSITION);

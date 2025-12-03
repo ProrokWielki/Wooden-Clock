@@ -10,4 +10,4 @@ enum class AnimationType
     ARROWS
 };
 
-Animation & getAnimation(AnimationType animation);
+Animation & get_animation(AnimationType animation);

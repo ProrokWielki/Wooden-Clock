@@ -7,7 +7,6 @@
 
 #pragma once
 
-
 class Image;
 
 enum class ImageType
@@ -19,4 +18,4 @@ enum class ImageType
     RIGHT_ARROW
 };
 
-Image & getImage(ImageType image_type);
+Image & get_image(ImageType image_type);

@@ -17,7 +17,7 @@
 class StateMario: public RotatableCanvas
 {
 public:
-    StateMario() : mario(getImage(ImageType::MARIO))
+    StateMario() : mario(get_image(ImageType::MARIO))
 
     {
     }

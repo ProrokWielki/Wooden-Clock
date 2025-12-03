@@ -25,7 +25,7 @@ int main()
     NVIC_EnableIRQ(USART3_IRQn);
     NVIC_EnableIRQ(TIM2_IRQn);
 
-    APP_init();
+    app_init();
 
     for (;;)
     {

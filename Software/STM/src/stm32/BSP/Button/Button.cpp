@@ -13,7 +13,7 @@ Button::Button(GPIO & buttonGpio, GPIO_Types::SignalLevel pressedLevel)
 : buttonGpio_(buttonGpio), pressedLevel_(pressedLevel), previousLevel_(pressedLevel)
 {
     buttonGpio_.set_mode(GPIO_Types::PortMode::Input);
-    buttonGpio_.set_pullUp_pullDown(GPIO_Types::PortPullUpPullDown::None);
+    buttonGpio_.set_pull_up_pull_down(GPIO_Types::PortPullUpPullDown::None);
 }
 
 void Button::update()
@@ -32,7 +32,7 @@ void Button::update()
     previousLevel_ = currentLevel;
 }
 
-bool Button::wasReleased()
+bool Button::was_released()
 {
     const bool returnValue = buttonReleased;
     buttonReleased = false;
@@ -40,7 +40,7 @@ bool Button::wasReleased()
     return returnValue;
 }
 
-bool Button::wasPressed()
+bool Button::was_pressed()
 {
     const bool returnValue = buttonPressed;
     buttonPressed = false;
@@ -48,7 +48,7 @@ bool Button::wasPressed()
     return returnValue;
 }
 
-bool Button::isPressed()
+bool Button::is_pressed()
 {
     auto currentLevel = buttonGpio_.get_input_value();
 

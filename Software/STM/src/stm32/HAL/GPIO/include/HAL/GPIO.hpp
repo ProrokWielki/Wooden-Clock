@@ -55,7 +55,7 @@ public:
      *
      * @param PortPullUpPullDown Pulling resistor to be set.
      */
-    void set_pullUp_pullDown(GPIO_Types::PortPullUpPullDown ePortPullUpPullDown);
+    void set_pull_up_pull_down(GPIO_Types::PortPullUpPullDown ePortPullUpPullDown);
 
     /** Sets the alternate function of the GPIO.
      *
@@ -88,13 +88,13 @@ public:
      *
      * @param AlternateFunction Alternate function which corresponds to the I2C.
      */
-    void set_as_I2C_pin(GPIO_Types::AlternateFunction AlternateFunction);
+    void set_as_i2c_pin(GPIO_Types::AlternateFunction AlternateFunction);
 
     /** Sets the GPIO as a SPI pin
      *
      * @param AlternateFunction Alternate function which corresponds to the SPI.
      */
-    void set_as_SPI_pin(GPIO_Types::AlternateFunction AlternateFunction);
+    void set_as_spi_pin(GPIO_Types::AlternateFunction AlternateFunction);
 
 protected:
 private:

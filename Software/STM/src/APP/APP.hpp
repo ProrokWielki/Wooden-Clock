@@ -8,6 +8,6 @@
 #ifndef APP_APP_HPP_
 #define APP_APP_HPP_
 
-void APP_init();
+void app_init();
 
 #endif /* APP_APP_HPP_ */

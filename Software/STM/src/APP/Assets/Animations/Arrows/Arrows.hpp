@@ -2,5 +2,4 @@
 
 #include <widgets/Animation.hpp>
 
- Animation & getArrowsAnimation();
-
+Animation & get_arrows_animation();

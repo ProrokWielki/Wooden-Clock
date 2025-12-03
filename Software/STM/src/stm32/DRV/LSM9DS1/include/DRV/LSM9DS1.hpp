@@ -32,7 +32,7 @@ public:
 
     void set_bandwidth(BandwidthG bandwidth);
 
-    void set_XY_operation_mode(MagnetometerXYOperationMode operation_mode);
+    void set_xy_operation_mode(MagnetometerXYOperationMode operation_mode);
 
     void set_data_rate(MagnetometerDataRate data_rate);
 

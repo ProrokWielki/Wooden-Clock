@@ -53,7 +53,7 @@ void GPIO::set_speed(PortOutputSpeed portOutputSpeed)
     OSPEEDR.set_value(to_register_value(portOutputSpeed), pinNumber_ * OSPEEDR_FIELD_BIT_LENGTH, OSPEEDR_FIELD_BIT_LENGTH);
 }
 
-void GPIO::set_pullUp_pullDown(PortPullUpPullDown PortPullUpPullDown)
+void GPIO::set_pull_up_pull_down(PortPullUpPullDown PortPullUpPullDown)
 {
     PUPDR.set_value(to_register_value(PortPullUpPullDown), pinNumber_ * PUPDR_FIELD_BIT_LENGTH, PUPDR_FIELD_BIT_LENGTH);
 }
@@ -96,20 +96,20 @@ SignalLevel GPIO::get_input_value()
     return IDR.get_bit(pinNumber_) == 1 ? SignalLevel::High : SignalLevel::Low;
 }
 
-void GPIO::set_as_I2C_pin(AlternateFunction AlternateFunction)
+void GPIO::set_as_i2c_pin(AlternateFunction AlternateFunction)
 {
     set_alternate_function(AlternateFunction);
-    set_pullUp_pullDown(PortPullUpPullDown::PullUp);
+    set_pull_up_pull_down(PortPullUpPullDown::PullUp);
     set_mode(PortMode::Alternate);
     set_output_type(PortOutputType::OpenDrain);
     set_speed(PortOutputSpeed::VeryHigh);
 }
 
-void GPIO::set_as_SPI_pin(AlternateFunction AlternateFunction)
+void GPIO::set_as_spi_pin(AlternateFunction AlternateFunction)
 {
     set_alternate_function(AlternateFunction);
     set_mode(PortMode::Alternate);
     set_output_type(PortOutputType::PushPull);
-    set_pullUp_pullDown(PortPullUpPullDown::None);
+    set_pull_up_pull_down(PortPullUpPullDown::None);
     set_speed(PortOutputSpeed::VeryHigh);
 }

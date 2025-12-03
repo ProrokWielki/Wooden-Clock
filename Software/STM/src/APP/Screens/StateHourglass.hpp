@@ -21,7 +21,7 @@ public:
     /**
      * @brief Constructor
      */
-    StateHourglass() : hourglass{getAnimation(AnimationType::HOURGLASS)}
+    StateHourglass() : hourglass{get_animation(AnimationType::HOURGLASS)}
     {
     }
 

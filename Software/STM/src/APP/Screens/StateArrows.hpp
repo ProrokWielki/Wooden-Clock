@@ -21,7 +21,7 @@ public:
     /**
      * @brief Constructor.
      */
-    StateArrows() : arrows{getAnimation(AnimationType::ARROWS)}
+    StateArrows() : arrows{get_animation(AnimationType::ARROWS)}
     {
     }
 

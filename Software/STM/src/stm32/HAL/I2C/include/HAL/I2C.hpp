@@ -66,13 +66,13 @@ public:
      *
      * @param dma_request DMA request type.
      */
-    void enable_DMA_request(I2C_Types::DMARequest dma_request);
+    void enable_dma_request(I2C_Types::DMARequest dma_request);
 
     /** Disables given DMA request.
      *
      * @param dma_request DMA request type.
      */
-    void disable_DMA_request(I2C_Types::DMARequest dma_request);
+    void disable_dma_request(I2C_Types::DMARequest dma_request);
 
     /** Sets the slave address.
      *
@@ -94,7 +94,7 @@ public:
      * @param pu8Data Pointer to the data to be sent.
      * @param u16NumberOfBytes Number of the bytes to be sent.
      */
-    void write_data_DMA(uint8_t * data, uint16_t numberOfBytes);
+    void write_data_dma(uint8_t * data, uint16_t numberOfBytes);
 
     void read_data(std::span<uint8_t> & received_data, uint16_t num_of_bytes_to_read);
 
@@ -102,7 +102,7 @@ public:
 
     void set_frequency(double frequency);
 
-    DMA * get_DMA();
+    DMA * get_dma();
 
 protected:
 private:

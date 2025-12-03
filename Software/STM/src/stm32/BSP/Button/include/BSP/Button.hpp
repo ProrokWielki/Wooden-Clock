@@ -17,11 +17,11 @@ public:
 
     void update();
 
-    bool wasReleased();
+    bool was_released();
 
-    bool wasPressed();
+    bool was_pressed();
 
-    bool isPressed();
+    bool is_pressed();
 
 private:
     GPIO & buttonGpio_;

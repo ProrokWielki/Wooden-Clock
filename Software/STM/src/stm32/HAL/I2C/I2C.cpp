@@ -55,13 +55,13 @@ I2C::I2C(Clock & clock, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double
 
     if (i2c != I2C_Types::I2CNumber::I2C_4)
     {
-        scl.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF4);
-        sda.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF4);  // make it generic
+        scl.set_as_i2c_pin(GPIO_Types::AlternateFunction::AF4);
+        sda.set_as_i2c_pin(GPIO_Types::AlternateFunction::AF4);  // make it generic
     }
     else
     {
-        scl.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF5);
-        sda.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF5);  // make it generic
+        scl.set_as_i2c_pin(GPIO_Types::AlternateFunction::AF5);
+        sda.set_as_i2c_pin(GPIO_Types::AlternateFunction::AF5);  // make it generic
     }
     set_frequency(frequency);
 
@@ -173,7 +173,7 @@ void I2C::write_data(std::span<uint8_t> data)
     }
 }
 
-void I2C::write_data_DMA(uint8_t * data, uint16_t numberOfBytes)
+void I2C::write_data_dma(uint8_t * data, uint16_t numberOfBytes)
 {
     dma_->enable_memory_increment();
 
@@ -188,7 +188,7 @@ void I2C::write_data_DMA(uint8_t * data, uint16_t numberOfBytes)
     set_transfer_size(numberOfBytes);
     start_transfer();
 
-    enable_DMA_request(DMARequest::Transmit);
+    enable_dma_request(DMARequest::Transmit);
     dma_->enable();
 }
 
@@ -260,7 +260,7 @@ void I2C::set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHol
     TIMINGR.set_value(u8SCLLow, SCL_LOW_VALUE_POSITION, SCL_LOW_FIELD_BIT_LENGTH);
 }
 
-DMA * I2C::get_DMA()
+DMA * I2C::get_dma()
 {
     return dma_;
 }

@@ -11,12 +11,11 @@
 
 #include <cmsis_bridge/cmsis_bridge.hpp>
 
-#include <HAL/Register.hpp>
 #include <HAL/Clock.hpp>
 #include <HAL/GPIO.hpp>
-#include <HAL/types.hpp>
-#include <HAL/GPIO.hpp>
+#include <HAL/Register.hpp>
 #include <HAL/SPI.hpp>
+#include <HAL/types.hpp>
 
 SPI::SPI(Clock & clock, SPI_types::SPI_Number spi, GPIO & MOSI, GPIO & MISO, GPIO & SCK, SPI_types::SPIMode mode, SPI_types::SPIDataSize data_size,
          SPI_types::SPIPolarity polarity, SPI_types::SPIPhase phase, SPI_types::SPIForamt format, SPI_types::BaudRatePrescaller baudrate_prescaller)
@@ -26,11 +25,11 @@ SPI::SPI(Clock & clock, SPI_types::SPI_Number spi, GPIO & MOSI, GPIO & MISO, GPI
 {
     clock.enable_clock_for(Peripheral::SPI_1);  // TODO:  use to_peripheral
 
-    MISO.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF5);  // TODO: Make it generic
-    MOSI.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF5);
-    SCK.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF5);
+    MISO.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);  // TODO: Make it generic
+    MOSI.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);
+    SCK.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);
 
-    configure(mode, data_size, polarity, phase, format,baudrate_prescaller);
+    configure(mode, data_size, polarity, phase, format, baudrate_prescaller);
     enable();
 }
 
@@ -119,7 +118,7 @@ void SPI::read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::
 
     cs_pin.set_output_low();
 
-    while (not is_transmit_finished() )
+    while (not is_transmit_finished())
         ;
 
     while (is_busy())
@@ -165,7 +164,7 @@ void SPI::write_data_to_register(GPIO & cs_pin, uint8_t register_address, const 
 
     cs_pin.set_output_low();
 
-    while (not is_transmit_finished() )
+    while (not is_transmit_finished())
         ;
 
     while (is_busy())
@@ -173,7 +172,7 @@ void SPI::write_data_to_register(GPIO & cs_pin, uint8_t register_address, const 
 
     DR.write(register_address);
 
-    while (not is_transmit_finished() )
+    while (not is_transmit_finished())
         ;
 
     while (is_busy())
@@ -184,7 +183,7 @@ void SPI::write_data_to_register(GPIO & cs_pin, uint8_t register_address, const 
     {
         while (is_busy())
             ;
-        while (not is_transmit_finished() )
+        while (not is_transmit_finished())
             ;
 
         DR.write(data_to_write[current_byte++]);

@@ -44,7 +44,7 @@ LSM9DS1::LSM9DS1(SPI & spi, GPIO & gyro_cs, GPIO & magnet_cs) : spi_(spi), gyro_
     spi.write_data_to_register(gyro_cs_, 0x20, data_to_write20);  // 119 Hz, 2g
 
     set_data_rate(MagnetometerDataRate::Hz_80);
-    set_XY_operation_mode(MagnetometerXYOperationMode::ultra_performance);
+    set_xy_operation_mode(MagnetometerXYOperationMode::ultra_performance);
     set_full_scale(MagnetometerFullScale::Gs_16);
     set_operation_mode(MagnetometerOperationMode::continuous_conversion);
 
@@ -85,7 +85,7 @@ void LSM9DS1::set_bandwidth(BandwidthG bandwidth)
     write_register(GyroscopeRegister::CTRL_REG1, control_register_1.read());
 }
 
-void LSM9DS1::set_XY_operation_mode(MagnetometerXYOperationMode operation_mode)
+void LSM9DS1::set_xy_operation_mode(MagnetometerXYOperationMode operation_mode)
 {
     Register<uint8_t> control_register_1{read_register(MagnetometerRegister::CTRL_REG1)};
     control_register_1.set_value(static_cast<uint8_t>(operation_mode), 5, 2);

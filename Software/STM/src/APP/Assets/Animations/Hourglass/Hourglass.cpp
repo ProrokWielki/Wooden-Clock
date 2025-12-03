@@ -50,7 +50,7 @@ const static Image frame_20{Hourglass_Frame_20::WIDTH, Hourglass_Frame_20::HEIGH
 const static Image frame_21{Hourglass_Frame_21::WIDTH, Hourglass_Frame_21::HEIGHT, Hourglass_Frame_21::DATA.data()};
 }  // namespace
 
-Animation & getHourglassAnimation()
+Animation & get_hourglass_animation()
 {
     static Animation Hourglass{{frame_1,  frame_2,  frame_3,  frame_4,  frame_5,  frame_6,  frame_7,  frame_8,  frame_9,  frame_10, frame_11,
                                 frame_12, frame_13, frame_14, frame_15, frame_16, frame_17, frame_18, frame_19, frame_20, frame_21}};
