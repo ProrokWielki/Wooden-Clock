@@ -39,5 +39,5 @@ public:
     }
 
 private:
-    Text temperature_text{"0*C"};
+    Text temperature_text{"0*C", get_width()};
 };

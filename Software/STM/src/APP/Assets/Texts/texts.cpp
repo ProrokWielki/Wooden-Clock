@@ -282,3 +282,9 @@ Image * TextFactory::to_image(char character)
             return nullptr;
     }
 }
+
+uint8_t TextFactory::font_height()
+{
+    constexpr uint8_t FONT_HEIGHT{11};
+    return FONT_HEIGHT;
+}
