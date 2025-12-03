@@ -5,7 +5,7 @@
 int main()
 {
 
-    APP_init();
+    app_init();
 
     while (true)
     {

@@ -1,2 +1,3 @@
 ADD_SUBDIRECTORY(register)
 ADD_SUBDIRECTORY(clock)
+ADD_SUBDIRECTORY(sys_config)

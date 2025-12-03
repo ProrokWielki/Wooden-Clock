@@ -123,41 +123,41 @@ void Display::draw() const
     ImGui::Button("up");
     if (ImGui::IsItemActive())
     {
-        BSP::get().button_up.setPressed();
+        BSP::get().button_up.set_pressed();
     }
     else
     {
-        BSP::get().button_up.setReleased();
+        BSP::get().button_up.set_released();
     }
 
     ImGui::Button("down");
     if (ImGui::IsItemActive())
     {
-        BSP::get().button_down.setPressed();
+        BSP::get().button_down.set_pressed();
     }
     else
     {
-        BSP::get().button_down.setReleased();
+        BSP::get().button_down.set_released();
     }
 
     ImGui::Button("left");
     if (ImGui::IsItemActive())
     {
-        BSP::get().button_left.setPressed();
+        BSP::get().button_left.set_pressed();
     }
     else
     {
-        BSP::get().button_left.setReleased();
+        BSP::get().button_left.set_released();
     }
 
     ImGui::Button("right");
     if (ImGui::IsItemActive())
     {
-        BSP::get().button_right.setPressed();
+        BSP::get().button_right.set_pressed();
     }
     else
     {
-        BSP::get().button_right.setReleased();
+        BSP::get().button_right.set_released();
     }
 
     ImGui::SliderAngle("roll", &roll);

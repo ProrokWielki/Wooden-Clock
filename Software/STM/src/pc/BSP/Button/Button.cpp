@@ -16,12 +16,12 @@ void Button::update()
 {
 }
 
-void Button::setPressed()
+void Button::set_pressed()
 {
     pressed_ = true;
 }
 
-void Button::setReleased()
+void Button::set_released()
 {
     if (pressed_)
     {
@@ -30,7 +30,7 @@ void Button::setReleased()
     }
 }
 
-bool Button::wasReleased()
+bool Button::was_released()
 {
     if (released_)
     {
@@ -40,7 +40,7 @@ bool Button::wasReleased()
     return false;
 }
 
-bool Button::wasPressed()
+bool Button::was_pressed()
 {
     // if (state_)
     // {
@@ -51,7 +51,7 @@ bool Button::wasPressed()
     return false;
 }
 
-bool Button::isPressed()
+bool Button::is_pressed()
 {
     return pressed_;
 }

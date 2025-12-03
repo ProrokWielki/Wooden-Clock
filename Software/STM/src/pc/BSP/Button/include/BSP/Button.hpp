@@ -17,15 +17,15 @@ public:
 
     void update();
 
-    bool wasReleased();
+    bool was_released();
 
-    bool wasPressed();
+    bool was_pressed();
 
-    bool isPressed();
+    bool is_pressed();
 
-    void setPressed();
+    void set_pressed();
 
-    void setReleased();
+    void set_released();
 
 private:
     // GPIO & buttonGpio_;
@@ -36,8 +36,8 @@ private:
     // bool buttonPressed{false};
     // bool buttonReleased{false};
     std::string name_;
-    bool pressed_{false};  // Current state of the button
-    bool released_{false}; // Previous state of the button
+    bool pressed_{false};   // Current state of the button
+    bool released_{false};  // Previous state of the button
 };
 
 #endif /* BSP_BUTTON_BUTTON_HPP_ */
