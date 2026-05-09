@@ -12,6 +12,7 @@
 
 #include <HAL/Register.hpp>
 #include <HAL/types.hpp>
+#include <cstdint>
 
 #include "cmsis_bridge/cmsis_bridge.hpp"
 #include "include/HAL/Clock.hpp"
@@ -20,7 +21,7 @@ Clock::Clock()
 : AHB1(to_address(ClockRegister::AHB1)), AHB2(to_address(ClockRegister::AHB2)), AHB3(to_address(ClockRegister::AHB3)),
   APB1_1(to_address(ClockRegister::APB1_1)), APB1_2(to_address(ClockRegister::APB1_2)), APB2(to_address(ClockRegister::APB2)),
   PLL_CONFIG(to_address(ClockRegister::PLL_CONFIG)), CCIPR(to_address(ClockRegister::CCIPR)), CCIPR2(to_address(ClockRegister::CCIPR2)),
-  BDCR(to_address(ClockRegister::BDCR)), CR(to_address(ClockRegister::CR))
+  BDCR(to_address(ClockRegister::BDCR)), CR(to_address(ClockRegister::CR)), CSR(to_address(ClockRegister::CSR)), CFGR(to_address(ClockRegister::CFGR))
 {
 }
 
@@ -40,6 +41,12 @@ void Clock::enable_clock_for(Peripheral peripheral)
     peripheral_clock_register.set_bit(to_bit_position(peripheral));
 }
 
+void Clock::enable_pll()
+{
+    constexpr uint8_t PLL_ENABLE_BIT{24};
+    PLL_CONFIG.set_bit(PLL_ENABLE_BIT);
+}
+
 void Clock::set_clock_source_for(PeripheralWithSelectableClockSource peripheral, ClockSource clock_source)
 {
     assert(is_clock_source_supported(peripheral, clock_source) && "Unsupported clock source.");
@@ -47,6 +54,33 @@ void Clock::set_clock_source_for(PeripheralWithSelectableClockSource peripheral,
     Register<uint32_t> & peripheral_clock_source_register{get_peripheral_clock_source_register(peripheral)};
     peripheral_clock_source_register.set_value(to_clock_source_value(peripheral, clock_source), to_clock_source_position(peripheral),
                                                to_peripheral_clock_select_field_length(peripheral));
+}
+
+void Clock::set_system_clock_source(ClockSource clock_source)
+{
+    assert(is_system_clock_source_supported(clock_source) && "Unsupported clock source.");
+
+    constexpr uint8_t SYSTEM_CLOCK_SWITCH_FIELD_LENGTH{2};
+    constexpr uint8_t SYSTEM_CLOCK_SWITCH_BIT_POSITION{0};
+    CFGR.set_value(to_system_clock_source_value(clock_source), SYSTEM_CLOCK_SWITCH_BIT_POSITION, SYSTEM_CLOCK_SWITCH_FIELD_LENGTH);
+}
+
+void Clock::set_pll_clock_source(ClockSource clock_source)
+{
+    assert(is_pll_clock_source_supported(clock_source) && "Unsupported clock source.");
+
+    constexpr uint8_t PLL_CLOCK_SOURCE_BIT_POSITION{0};
+    constexpr uint8_t PLL_CLOCK_SOURCE_FIELD_LENGTH{2};
+    PLL_CONFIG.set_value(to_pll_clock_source_value(clock_source), PLL_CLOCK_SOURCE_BIT_POSITION, PLL_CLOCK_SOURCE_FIELD_LENGTH);
+}
+
+void Clock::set_pll_factors(uint32_t m, uint32_t n, uint32_t r, uint32_t p, uint32_t q)
+{
+    PLL_CONFIG.set_value(m - 1, 4, 3);
+    PLL_CONFIG.set_value(n, 8, 7);
+    PLL_CONFIG.set_value(r == 2 ? 0 : (r == 4 ? 1 : (r == 6 ? 2 : 3)), 25, 2);
+    PLL_CONFIG.set_value(p == 7 ? 0 : 1, 18, 1);
+    PLL_CONFIG.set_value((q == 2) ? 0 : ((q == 4) ? 1 : ((q == 6) ? 2 : ((q == 8) ? 3 : 0))), 21, 2);
 }
 
 [[nodiscard]] uint32_t Clock::get_clock_frequency() const
@@ -151,14 +185,17 @@ Register<uint32_t> & Clock::get_clock_source_register(ClockSource clock_source)
     {
         case ClockSource::LSE:
             return BDCR;
-        case ClockSource::PCLK:
+        case ClockSource::HSE:
+        case ClockSource::MAIN_PLL:
+            return CR;
         case ClockSource::LSI:
+            return CSR;
+        case ClockSource::PCLK:
         case ClockSource::HSI16:
         case ClockSource::SYSTEM_CLOCK:
         case ClockSource::MSI:
         case ClockSource::HSI48:
         case ClockSource::PCLK1:
-        case ClockSource::HSE:
         case ClockSource::PLL_ADC_CLOCK:
         case ClockSource::PLL_48_M1_CLOCK:
         case ClockSource::PLL_48_M2_CLOCK:

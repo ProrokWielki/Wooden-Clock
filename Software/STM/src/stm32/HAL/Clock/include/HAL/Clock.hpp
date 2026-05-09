@@ -21,7 +21,11 @@ public:
 
     void enable_clock_for(Peripheral peripheral);
     void enable_clock_source(ClockSource clock_source);
+    void enable_pll();
     void set_clock_source_for(PeripheralWithSelectableClockSource peripheral, ClockSource clock_source);
+    void set_system_clock_source(ClockSource clock_source);
+    void set_pll_clock_source(ClockSource clock_source);
+    void set_pll_factors(uint32_t m, uint32_t n, uint32_t r, uint32_t p, uint32_t q);
 
     [[nodiscard]] uint32_t get_clock_frequency() const;
 
@@ -56,4 +60,6 @@ private:
     Register<uint32_t> CCIPR2;
     Register<uint32_t> BDCR;
     Register<uint32_t> CR;
+    Register<uint32_t> CSR;
+    Register<uint32_t> CFGR;
 };

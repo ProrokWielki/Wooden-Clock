@@ -4,7 +4,6 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   Clock
-  PRIVATE CmsisBridge
-  PUBLIC Register HalTypes)
+  PRIVATE CmsisBridge Register HalTypes)
 
 TARGET_INCLUDE_DIRECTORIES(Clock PUBLIC include)
