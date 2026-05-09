@@ -494,6 +494,42 @@ volatile uint32_t * to_address(Usart_Types::UsartNumber usart, Usart_Types::Regi
     };
 }
 
+volatile uint32_t * to_address(Flash_Types::FlashRegister flash_register)
+{
+    switch (flash_register)
+    {
+        case Flash_Types::FlashRegister::ACR:
+            return &(FLASH->ACR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::PDKEYR:
+            return &(FLASH->PDKEYR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::KEYR:
+            return &(FLASH->KEYR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::OPTKEYR:
+            return &(FLASH->OPTKEYR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::SR:
+            return &(FLASH->SR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::CR:
+            return &(FLASH->CR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::ECCR:
+            return &(FLASH->ECCR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::RESERVED1:
+            return &(FLASH->RESERVED1);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::OPTR:
+            return &(FLASH->OPTR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::PCROP1SR:
+            return &(FLASH->PCROP1SR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::PCROP1ER:
+            return &(FLASH->PCROP1ER);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::WRP1AR:
+            return &(FLASH->WRP1AR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case Flash_Types::FlashRegister::WRP1BR:
+            return &(FLASH->WRP1BR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        default:
+            assert(false && "invalid flash register");
+            return nullptr;
+    };
+}
+
 volatile uint16_t * to_16bit_register_address(Usart_Types::UsartNumber usart, Usart_Types::Register usart_register)
 {
     USART_TypeDef * usart_address{};
