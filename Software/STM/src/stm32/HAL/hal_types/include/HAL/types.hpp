@@ -175,7 +175,9 @@ enum class ClockRegister
     CCIPR,
     CCIPR2,
     BDCR,
-    CR
+    CR,
+    CSR,
+    CFGR
 };
 
 enum class PllSource
@@ -266,6 +268,7 @@ enum class ClockSource
     HSE,
     LSE,
     PCLK1,
+    MAIN_PLL,
     PLL_ADC_CLOCK,
     PLL_48_M1_CLOCK,
     PLL_48_M2_CLOCK,
@@ -778,8 +781,12 @@ Peripheral to_peripheral(DMA_Types::DmaNumber dma);
 Peripheral to_peripheral(Usart_Types::UsartNumber usart);
 
 uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, ClockSource clock_source);
+uint32_t to_system_clock_source_value(ClockSource clock_source);
 uint8_t to_clock_source_position(PeripheralWithSelectableClockSource peripheral);
+uint32_t to_pll_clock_source_value(ClockSource clock_source);
 bool is_clock_source_supported(PeripheralWithSelectableClockSource peripheral, ClockSource clock_source);
+bool is_system_clock_source_supported(ClockSource clock_source);
+bool is_pll_clock_source_supported(ClockSource clock_source);
 uint8_t to_peripheral_clock_select_field_length(PeripheralWithSelectableClockSource peripheral);
 
 uint8_t to_bit_position(I2C_Types::Interrupt interrupt);

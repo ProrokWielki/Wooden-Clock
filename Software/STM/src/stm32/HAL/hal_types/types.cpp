@@ -354,6 +354,56 @@ uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, C
     };
 }
 
+uint32_t to_system_clock_source_value(ClockSource clock_source)
+{
+    switch (clock_source)
+    {
+        case ClockSource::MSI:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::HSI16:
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::HSE:
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::MAIN_PLL:
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::N0_CLOCK:
+        case ClockSource::PCLK:
+        case ClockSource::LSE:
+        case ClockSource::LSI:
+        case ClockSource::HSI48:
+            assert(false && "Not Supported.");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        default:
+            assert(false && "invalid clock source");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    }
+}
+
+uint32_t to_pll_clock_source_value(ClockSource clock_source)
+{
+    switch (clock_source)
+    {
+        case ClockSource::N0_CLOCK:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::MSI:
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::HSI16:
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::HSE:
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::MAIN_PLL:
+        case ClockSource::PCLK:
+        case ClockSource::LSE:
+        case ClockSource::LSI:
+        case ClockSource::HSI48:
+            assert(false && "Not Supported.");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        default:
+            assert(false && "invalid clock source");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    }
+}
+
 uint8_t to_clock_source_position(PeripheralWithSelectableClockSource peripheral)
 {
     switch (peripheral)
@@ -555,15 +605,19 @@ uint8_t to_enable_bit_position(ClockSource clock_source)
     {
         case ClockSource::LSE:
             return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::HSE:
+            return 16;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::LSI:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::MAIN_PLL:
+            return 24;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case ClockSource::HSI48:
         case ClockSource::PLL_48_M1_CLOCK:
         case ClockSource::PLL_48_M2_CLOCK:
         case ClockSource::MSI:
         case ClockSource::PCLK:
         case ClockSource::SYSTEM_CLOCK:
-        case ClockSource::LSI:
         case ClockSource::HSI16:
-        case ClockSource::HSE:
         case ClockSource::PCLK1:
         case ClockSource::PLL_ADC_CLOCK:
         case ClockSource::PLL_SAI_CLOCK:
@@ -583,16 +637,19 @@ uint8_t to_ready_bit_position(ClockSource clock_source)
     switch (clock_source)
     {
         case ClockSource::LSE:
+        case ClockSource::LSI:
             return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::HSE:
+            return 17;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case ClockSource::MAIN_PLL:
+            return 25;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case ClockSource::HSI48:
         case ClockSource::PLL_48_M1_CLOCK:
         case ClockSource::PLL_48_M2_CLOCK:
         case ClockSource::MSI:
         case ClockSource::PCLK:
         case ClockSource::SYSTEM_CLOCK:
-        case ClockSource::LSI:
         case ClockSource::HSI16:
-        case ClockSource::HSE:
         case ClockSource::PCLK1:
         case ClockSource::PLL_ADC_CLOCK:
         case ClockSource::PLL_SAI_CLOCK:
@@ -850,6 +907,58 @@ uint8_t to_peripheral_clock_select_field_length(PeripheralWithSelectableClockSou
             assert(false && "Unsupported peripheral.");
             return 0;
     };
+}
+
+bool is_system_clock_source_supported(ClockSource clock_source)
+{
+    switch (clock_source)
+    {
+        case ClockSource::MSI:
+        case ClockSource::HSI16:
+        case ClockSource::HSE:
+        case ClockSource::MAIN_PLL:
+            return true;
+        case ClockSource::N0_CLOCK:
+        case ClockSource::LSE:
+        case ClockSource::LSI:
+        case ClockSource::PCLK:
+        case ClockSource::SYSTEM_CLOCK:
+        case ClockSource::HSI48:
+        case ClockSource::PCLK1:
+        case ClockSource::PLL_ADC_CLOCK:
+        case ClockSource::PLL_48_M1_CLOCK:
+        case ClockSource::PLL_48_M2_CLOCK:
+            return false;
+        default:
+            assert(false && "invalid clock source");
+            return false;
+    }
+}
+
+bool is_pll_clock_source_supported(ClockSource clock_source)
+{
+    switch (clock_source)
+    {
+        case ClockSource::MSI:
+        case ClockSource::HSI16:
+        case ClockSource::HSE:
+        case ClockSource::N0_CLOCK:
+            return true;
+        case ClockSource::LSE:
+        case ClockSource::LSI:
+        case ClockSource::PCLK:
+        case ClockSource::SYSTEM_CLOCK:
+        case ClockSource::HSI48:
+        case ClockSource::PCLK1:
+        case ClockSource::PLL_ADC_CLOCK:
+        case ClockSource::PLL_48_M1_CLOCK:
+        case ClockSource::PLL_48_M2_CLOCK:
+        case ClockSource::MAIN_PLL:
+            return false;
+        default:
+            assert(false && "invalid clock source");
+            return false;
+    }
 }
 
 Peripheral to_peripheral(I2C_Types::I2CNumber i2c)
