@@ -745,6 +745,26 @@ enum class WriteProtectionState
 };
 }  // namespace Power_Types
 
+namespace Flash_Types
+{
+enum class FlashRegister
+{
+    ACR,
+    PDKEYR,
+    KEYR,
+    OPTKEYR,
+    SR,
+    CR,
+    ECCR,
+    RESERVED1,
+    OPTR,
+    PCROP1SR,
+    PCROP1ER,
+    WRP1AR,
+    WRP1BR,
+};
+};
+
 uint32_t to_register_value(GPIO_Types::PortMode portMode);
 uint32_t to_register_value(GPIO_Types::AlternateFunction alteranteFunction);
 uint32_t to_register_value(GPIO_Types::SignalLevel signalLevel);
