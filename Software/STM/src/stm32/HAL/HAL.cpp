@@ -7,7 +7,7 @@
 
 #include <array>
 
-#include <stm32l4xx.h>
+// #include <stm32l4xx.h>
 
 #include <HAL/types.hpp>
 
@@ -126,7 +126,7 @@ HAL & HAL::get()
 void HAL::init()
 {
     clock_init();
-    SystemCoreClockUpdate();
+    // SystemCoreClockUpdate();
 
     gpio_init();
 
@@ -358,36 +358,51 @@ void HAL::qspi_init()
 void HAL::clock_init()
 {
     // M = 1
-    // N = 10
+    // N = 20
     // R = 2
     // P = 7
     // Q = 2
 
     //  while((RCC->CR & RCC_CR_PLLRDY) == 0);
 
-    FLASH->ACR |= FLASH_ACR_LATENCY_4WS;  // Latency set to 4 wait states
-    FLASH->ACR |= FLASH_ACR_PRFTEN;       // Prefetch enable
-    FLASH->ACR |= FLASH_ACR_DCEN;         // Data cashe enable
-    FLASH->ACR |= FLASH_ACR_ICEN;         // Instruction cashe enable
+    flash.set_latency();
+    flash.enable_prefetch();
+    flash.enable_data_cache();
+    flash.enable_instruction_cache();
 
-    RCC->CR |= RCC_CR_HSEON;
+    // FLASH->ACR |= FLASH_ACR_LATENCY_4WS;  // Latency set to 4 wait states
+    // FLASH->ACR |= FLASH_ACR_PRFTEN;       // Prefetch enable
+    // FLASH->ACR |= FLASH_ACR_DCEN;         // Data cashe enable
+    // FLASH->ACR |= FLASH_ACR_ICEN;         // Instruction cashe enable
 
-    while ((RCC->CR & RCC_CR_HSERDY) == 0)
-        ;
+    clock.enable_clock_source(ClockSource::HSE);
 
-    RCC->PLLCFGR = (3 << 0) | (20 << 8) | (1 << 24);
+    // RCC->CR |= RCC_CR_HSEON;
 
-    RCC->CR |= RCC_CR_PLLON;  // HSI turned on
+    // while ((RCC->CR & RCC_CR_HSERDY) == 0)
+    //     ;
 
-    while ((RCC->CR & RCC_CR_PLLRDY) == 0)
-        ;
+    // RCC->PLLCFGR = (3 << 0) | (20 << 8) | (1 << 24);
 
-    RCC->CSR |= 1;
+    clock.set_pll_clock_source(ClockSource::HSE);
+    clock.set_pll_factors(1, 20, 2, 7, 2);
+    clock.enable_pll();
+    clock.enable_clock_source(ClockSource::MAIN_PLL);
 
-    while ((RCC->CSR & 2) == 0)
-        ;
+    // RCC->CR |= RCC_CR_PLLON;  // HSI turned on
 
-    RCC->CFGR |= (3 << 0);
+    // while ((RCC->CR & RCC_CR_PLLRDY) == 0)
+    // ;
+
+    // RCC->CSR |= 1;
+
+    // while ((RCC->CSR & 2) == 0)
+    //     ;
+
+    clock.enable_clock_source(ClockSource::LSI);
+
+    clock.set_system_clock_source(ClockSource::MAIN_PLL);
+    // RCC->CFGR |= (3 << 0);
 }
 
 void HAL::i2c_init()
@@ -503,11 +518,11 @@ void HAL::timer_init()
 
 void HAL::nvic_init()
 {
-    NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-    NVIC_EnableIRQ(DMA1_Channel4_IRQn);
-    NVIC_EnableIRQ(DMA2_Channel7_IRQn);
-    NVIC_EnableIRQ(DMA2_Channel2_IRQn);
-    NVIC_EnableIRQ(TIM2_IRQn);
+    // NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+    // NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+    // NVIC_EnableIRQ(DMA2_Channel7_IRQn);
+    // NVIC_EnableIRQ(DMA2_Channel2_IRQn);
+    // NVIC_EnableIRQ(TIM2_IRQn);
 }
 
 void HAL::tlc59208f_init()

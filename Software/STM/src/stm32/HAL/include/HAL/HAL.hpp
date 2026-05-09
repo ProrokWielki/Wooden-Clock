@@ -10,6 +10,7 @@
 
 #include <HAL/Clock.hpp>
 #include <HAL/DMA.hpp>
+#include <HAL/Flash.hpp>
 #include <HAL/GPIO.hpp>
 #include <HAL/I2C.hpp>
 #include <HAL/Power.hpp>
@@ -34,6 +35,7 @@ public:
     Clock clock;
     Power power;
     SysConfig sys_config;
+    Flash flash;
 
     GPIO I2C1_SCL;
     GPIO I2C1_SDA;
@@ -126,12 +128,10 @@ public:
 
     void init();
 
-    bool reset;
-
-    bool new_time_set;
-    uint8_t new_hour;
-    uint8_t new_minutes;
-    bool parse_time;
+    bool new_time_set{false};
+    uint8_t new_hour{0};
+    uint8_t new_minutes{0};
+    bool parse_time{false};
 
 private:
     HAL();

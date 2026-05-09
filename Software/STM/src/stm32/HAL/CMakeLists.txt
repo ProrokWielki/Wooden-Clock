@@ -5,7 +5,6 @@ IF(NOT ((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
 
   TARGET_LINK_LIBRARIES(
     HAL
-    PRIVATE CMSIS # TODO: Remove
     PUBLIC I2C
            SPI
            Register
@@ -15,6 +14,7 @@ IF(NOT ((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
            74HC595
            LSM9DS1
            BME280
+           Flash
            TLC59208F
            SysConfig
            ISR
