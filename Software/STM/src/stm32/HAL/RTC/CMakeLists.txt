@@ -4,7 +4,6 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   RTC
-  PUBLIC Register HalTypes
-  PRIVATE CmsisBridge CMSIS Clock Power)
+  PRIVATE Register HalTypes CmsisBridge Clock Power)
 
 TARGET_INCLUDE_DIRECTORIES(RTC PUBLIC include)

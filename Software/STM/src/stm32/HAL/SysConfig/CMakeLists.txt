@@ -4,7 +4,6 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   SysConfig
-  PRIVATE CmsisBridge
-  PUBLIC Register HalTypes GPIO)
+  PRIVATE CmsisBridge Register HalTypes GPIO)
 
 TARGET_INCLUDE_DIRECTORIES(SysConfig PUBLIC include)

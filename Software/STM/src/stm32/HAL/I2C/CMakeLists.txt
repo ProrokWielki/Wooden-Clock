@@ -4,8 +4,7 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   I2C
-  PUBLIC Register
-  PRIVATE CMSIS
+  PRIVATE Register
           Clock
           CmsisBridge
           HalTypes

@@ -4,7 +4,6 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   SPI
-  PUBLIC Register
-  PRIVATE CmsisBridge HalTypes Clock GPIO)
+  PRIVATE CmsisBridge HalTypes Clock GPIO Register)
 
 TARGET_INCLUDE_DIRECTORIES(SPI PUBLIC include)

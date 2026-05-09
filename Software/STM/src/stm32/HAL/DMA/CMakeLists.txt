@@ -4,6 +4,6 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   DMA
-  PRIVATE CMSIS HalTypes APP CmsisBridge Clock Register)
+  PRIVATE HalTypes APP CmsisBridge Clock Register)
 
 TARGET_INCLUDE_DIRECTORIES(DMA PUBLIC include)

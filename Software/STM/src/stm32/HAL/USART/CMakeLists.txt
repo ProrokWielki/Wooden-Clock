@@ -6,5 +6,4 @@ TARGET_INCLUDE_DIRECTORIES(USART PUBLIC include)
 
 TARGET_LINK_LIBRARIES(
   USART
-  PRIVATE CmsisBridge HalTypes Clock
-  PUBLIC Register GPIO)
+  PRIVATE CmsisBridge HalTypes Clock Register GPIO)
