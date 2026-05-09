@@ -181,6 +181,10 @@ volatile uint32_t * to_address(ClockRegister clock_register)
             return &(RCC->BDCR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         case ClockRegister::CR:
             return &(RCC->CR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case ClockRegister::CSR:
+            return &(RCC->CSR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case ClockRegister::CFGR:
+            return &(RCC->CFGR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
         default:
             assert(false && "invalid clock register");
             return nullptr;
