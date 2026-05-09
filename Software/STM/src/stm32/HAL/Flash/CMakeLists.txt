@@ -4,7 +4,6 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   Flash
-  PRIVATE CmsisBridge
-  PUBLIC Register)
+  PRIVATE CmsisBridge Register HalTypes)
 
 TARGET_INCLUDE_DIRECTORIES(Flash PUBLIC include)
