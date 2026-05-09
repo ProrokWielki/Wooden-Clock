@@ -30,7 +30,7 @@ public:
 
     void set_registers_values(const uint8_t registerStartAddress, const uint8_t * const valuesToBeSet, const uint8_t numberOfValues);
 
-    void set_all_leds_values(const std::array<uint8_t, 8> & allLedsValues);
+    void set_all_leds_values(const std::array<uint8_t, NUM_OF_LEDS> & allLedsValues);
 
     void cache_all_leds_values(std::span<uint8_t> allLedsValues);
 

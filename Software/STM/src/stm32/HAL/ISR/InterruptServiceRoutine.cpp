@@ -5,8 +5,6 @@
  *  @author: Paweł Warzecha
  */
 
-#include <stm32l452xx.h>
-
 #include <FreeRTOS.h>
 #include <task.h>
 

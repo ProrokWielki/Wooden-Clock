@@ -2,9 +2,6 @@
 #include <BSP/BSP.hpp>
 #include <HAL/HAL.hpp>
 
-#include "Assets/Images/Images.hpp"
-#include <widgets/Image.hpp>
-
 #include <stm32l452xx.h>
 
 int main()

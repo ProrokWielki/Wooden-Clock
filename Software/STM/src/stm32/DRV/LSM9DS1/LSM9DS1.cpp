@@ -12,9 +12,6 @@
 
 constexpr uint8_t READ_BIT{0x80};
 
-constexpr uint8_t CTRL_REG8{0x22};
-constexpr uint8_t CTRL_REG9{0x23};
-
 constexpr uint8_t CTRL_REG5_LINEAR_ACCELERATION{0x1F};
 constexpr uint8_t CTRL_REG6_LINEAR_ACCELERATION{0x20};
 
@@ -30,14 +27,14 @@ LSM9DS1::LSM9DS1(SPI & spi, GPIO & gyro_cs, GPIO & magnet_cs) : spi_(spi), gyro_
     magneto_cs_.set_mode(GPIO_Types::PortMode::Output);
     magneto_cs_.set_output_high();
 
-    std::array<uint8_t, 1> data_to_write1{0x05};
+    // std::array<uint8_t, 1> data_to_write1{0x05};
 
-    spi.write_data_to_register(gyro_cs, CTRL_REG8, {data_to_write1});
-    spi.write_data_to_register(magnet_cs, CTRL_REG8, {data_to_write1});
+    // spi.write_data_to_register(gyro_cs, CTRL_REG8, {data_to_write1});
+    // spi.write_data_to_register(magnet_cs, CTRL_REG8, {data_to_write1});
 
-    std::array<uint8_t, 1> data_to_write3{0x02};
+    // std::array<uint8_t, 1> data_to_write3{0x02};
 
-    spi.write_data_to_register(gyro_cs, CTRL_REG9, {data_to_write3});
+    // spi.write_data_to_register(gyro_cs, CTRL_REG9, {data_to_write3});
 
     std::array<uint8_t, 1> data_to_write1f{0b00111000};
 
