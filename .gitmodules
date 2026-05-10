@@ -16,3 +16,6 @@
 [submodule "Software/STM/lib/BME280_API/BME280_SensorAPI"]
 	path = Software/STM/lib/BME280_API/BME280_SensorAPI
 	url = https://github.com/boschsensortec/BME280_SensorAPI.git
+[submodule "Software/STM/tools/nanopb"]
+	path = Software/STM/tools/nanopb
+	url = https://github.com/nanopb/nanopb.git
