@@ -4,7 +4,7 @@ ADD_LIBRARY(
 
 ADD_LIBRARY(
   OsAbstraction INTERFACE)
-  
+
 ADD_LIBRARY(
   BSP INTERFACE)
 
@@ -18,8 +18,8 @@ ENDIF()
 
 TARGET_LINK_LIBRARIES(
   APP
-  PRIVATE OsAbstraction BSP EmbedGUI)
+  PRIVATE OsAbstraction BSP EmbedGUI message_time)
 
 TARGET_INCLUDE_DIRECTORIES(APP PUBLIC .)
 
-add_subdirectory(Assets)
+ADD_SUBDIRECTORY(Assets)
