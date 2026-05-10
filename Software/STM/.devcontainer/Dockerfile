@@ -20,8 +20,8 @@ RUN apk update && \
     gdb \
     gdb-multiarch \
     gzip \ 
-    allegro-dev
+    allegro-dev \
+    graphviz
 
-# cmake-format
-RUN   pip install cmakelang --break-system-packages
+RUN pip install protobuf grpcio-tools cmakelang --break-system-packages
 
