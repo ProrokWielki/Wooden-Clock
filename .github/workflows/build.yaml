@@ -10,7 +10,7 @@ jobs:
   x86_Clang:
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:0.1.0
+      image: pawelwarzecha/wooden_clock:0.2.0
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -24,7 +24,7 @@ jobs:
   x86_GCC:
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:0.1.0
+      image: pawelwarzecha/wooden_clock:0.2.0
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
   ARM_Debug:
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:0.1.0
+      image: pawelwarzecha/wooden_clock:0.2.0
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -50,7 +50,7 @@ jobs:
   ARM_Release:
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:0.1.0
+      image: pawelwarzecha/wooden_clock:0.2.0
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -62,7 +62,7 @@ jobs:
   ARM_Size:
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:0.1.0
+      image: pawelwarzecha/wooden_clock:0.2.0
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -74,7 +74,7 @@ jobs:
   ARM_Speed:
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:0.1.0
+      image: pawelwarzecha/wooden_clock:0.2.0
     steps:
     - name: Check out code
       uses: actions/checkout@v3
