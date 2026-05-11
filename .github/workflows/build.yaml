@@ -1,19 +1,31 @@
 name: Build
 
-env:
-  IMAGE_VERSION: 0.3.0
-
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
+    inputs:
+      image_version:
+        description: 'Docker image version'
+        required: false
+        default: '0.3.0'
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      image-version: ${{ steps.version.outputs.value }}
+    steps:
+      - id: version
+        run: echo "value=${{ github.event.inputs.image_version || '0.3.0' }}" >> $GITHUB_OUTPUT
+
   x86_Clang:
+    needs: setup
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:${{ env.IMAGE_VERSION }}
+      image: pawelwarzecha/wooden_clock:${{ needs.setup.outputs.image-version }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -25,9 +37,10 @@ jobs:
     - name: test 
       run: cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_GCC .. && make test
   x86_GCC:
+    needs: setup
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:${{ env.IMAGE_VERSION }}
+      image: pawelwarzecha/wooden_clock:${{ needs.setup.outputs.image-version }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -39,9 +52,10 @@ jobs:
     - name: test 
       run: cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=x86_GCC .. && make test
   ARM_Debug:
+    needs: setup
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:${{ env.IMAGE_VERSION }}
+      image: pawelwarzecha/wooden_clock:${{ needs.setup.outputs.image-version }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -51,9 +65,10 @@ jobs:
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Debug .. && make
   ARM_Release:
+    needs: setup
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:${{ env.IMAGE_VERSION }}
+      image: pawelwarzecha/wooden_clock:${{ needs.setup.outputs.image-version }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -63,9 +78,10 @@ jobs:
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Release .. && make
   ARM_Size:
+    needs: setup
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:${{ env.IMAGE_VERSION }}
+      image: pawelwarzecha/wooden_clock:${{ needs.setup.outputs.image-version }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -75,9 +91,10 @@ jobs:
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Size .. && make
   ARM_Speed:
+    needs: setup
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:${{ env.IMAGE_VERSION }}
+      image: pawelwarzecha/wooden_clock:${{ needs.setup.outputs.image-version }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -87,9 +104,10 @@ jobs:
     - name: build 
       run: mkdir -p Software/STM/build && cd Software/STM/build && cmake -DCMAKE_BUILD_TYPE=ARM_Speed .. && make
   Arduino:
+    needs: setup
     runs-on: ubuntu-latest
     container:
-      image: pawelwarzecha/wooden_clock:${{ env.IMAGE_VERSION }}
+      image: pawelwarzecha/wooden_clock:${{ needs.setup.outputs.image-version }}
     steps:
     - name: Check out code
       uses: actions/checkout@v3
