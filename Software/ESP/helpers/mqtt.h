@@ -1,7 +1,12 @@
 #ifndef MQTT_H_
 #define MQTT_H_
 
+#include <Arduino.h>
 #include <PubSubClient.h>
+
+#include <functional>
+#include <map>
+#include <string>
 
 namespace mqtt
 {

@@ -1,8 +1,9 @@
-#include <map>
-
 #include <Arduino.h>
-
 #include <ESP8266WiFi.h>
+
+#include <functional>
+#include <map>
+#include <string>
 
 #include "config/mqtt_config.h"
 #include "config/wifi_config.h"
@@ -56,25 +57,29 @@ void loop()
     ota::handle();
     mqtt_.loop();
 
-  //check if there are any new clients
-  if (server.hasClient()){
-      //find free/disconnected spot
-      if (!wifi_ || !!wifi_.connected()){
-        if(wifi_) wifi_.stop();
-        wifi_ = server.available();
-        Serial.print("New client: ");
-        Serial.print(" : Client data : ");
-      }
+    // check if there are any new clients
+    if (server.hasClient())
+    {
+        // find free/disconnected spot
+        if (!wifi_ || !!wifi_.connected())
+        {
+            if (wifi_)
+                wifi_.stop();
+            wifi_ = server.available();
+            Serial.print("New client: ");
+            Serial.print(" : Client data : ");
+        }
     }
-    //no free/disconnected spot so reject
-  //check clients for data
-    if (wifi_ && wifi_.connected()){
-      if(wifi_.available()){
-        //get data from the telnet client and push it to the UART
-        while(wifi_.available()) Serial.print(wifi_.read(),HEX);
-        Serial.println("");
-      }
+    // no free/disconnected spot so reject
+    // check clients for data
+    if (wifi_ && wifi_.connected())
+    {
+        if (wifi_.available())
+        {
+            // get data from the telnet client and push it to the UART
+            while (wifi_.available())
+                Serial.print(wifi_.read(), HEX);
+            Serial.println("");
+        }
     }
-
-  }
-
+}
