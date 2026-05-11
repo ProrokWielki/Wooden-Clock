@@ -117,4 +117,4 @@ jobs:
     - name: Configure arduino-cli
       run: arduino-cli config add board_manager.additional_urls http://arduino.esp8266.com/stable/package_esp8266com_index.json
     - name: build 
-      run: cd Software/ESP && arduino-cli compile -b esp8266:esp8266:nodemcuv2 ESP.ino
+      run: cd Software/ESP && arduino-cli core --additional-urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json install esp8266:esp8266 &&arduino-cli compile -b esp8266:esp8266:nodemcuv2 ESP.ino
