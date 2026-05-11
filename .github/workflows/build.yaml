@@ -115,4 +115,4 @@ jobs:
         submodules: recursive
         token: ${{ secrets.PAT_TOKEN }}
     - name: build 
-      run: mkdir -p Software/ESP && arduino-cli compile -b esp8266:esp8266:nodemcuv2 ESP.ino
+      run: cd Software/ESP && arduino-cli compile -b esp8266:esp8266:nodemcuv2 ESP.ino
