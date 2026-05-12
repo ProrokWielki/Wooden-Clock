@@ -5,12 +5,6 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  workflow_dispatch:
-    inputs:
-      image_version:
-        description: 'Docker image version'
-        required: false
-        default: '0.4.1'
 
 jobs:
   setup:
@@ -19,7 +13,7 @@ jobs:
       image-version: ${{ steps.version.outputs.value }}
     steps:
       - id: version
-        run: echo "value=${{ github.event.inputs.image_version || '0.3.0' }}" >> $GITHUB_OUTPUT
+        run: echo "value=${{ '0.4.1' }}" >> $GITHUB_OUTPUT
 
   x86_Clang:
     needs: setup
