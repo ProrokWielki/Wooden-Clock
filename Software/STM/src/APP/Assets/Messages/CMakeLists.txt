@@ -1,4 +1,0 @@
-SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/nanopb/extra)
-FIND_PACKAGE(Nanopb REQUIRED)
-
-NANOPB_GENERATE_CPP(TARGET message_time time.proto)
