@@ -23,8 +23,11 @@
     ],
     "runArgs": [
         "--privileged",
+        "--network=host",
         "-v",
         "/dev/bus/usb:/dev/bus/usb",
+        "-v",
+        "/dev/:/dev/",
         "-e",
         "DISPLAY=:0",
         "-e",
