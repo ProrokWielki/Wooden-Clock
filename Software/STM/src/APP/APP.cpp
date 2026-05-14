@@ -5,18 +5,15 @@
  *  @author: Paweł Warzecha
  */
 
-#include <exception>
-
 #include <os_abstraction.hpp>
 
 #include <BSP/BSP.hpp>
-// #include <HAL/HAL.hpp>
 
 #include <GUI.hpp>
-#include <sys/types.h>
 
 #include "BSP/Clock.hpp"
 #include "DataContainer.hpp"
+#include "ProtobufWrapper/ProtobufWrapper.hpp"
 
 #include "APP.hpp"
 
@@ -73,6 +70,11 @@ void system_interface_task(void *)
                     default:
                         break;
                 }
+            }
+            else
+            {
+                auto time_message = ProtobufWrapper::parse_time_message(message.data.data(), message.length);
+                BSP::get().clock.set_time({time_message.hours, time_message.minutes, time_message.seconds});
             }
         }
 

@@ -25,9 +25,10 @@ class Clock
 {
 public:
     static Time get_time();
+    static void set_time(Time time);
     static void update();
 
 private:
     static Time time;
 };
-}
+}  // namespace BSP2

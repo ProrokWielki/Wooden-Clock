@@ -18,8 +18,9 @@ ENDIF()
 
 TARGET_LINK_LIBRARIES(
   APP
-  PRIVATE OsAbstraction BSP EmbedGUI message_time)
+  PRIVATE OsAbstraction BSP EmbedGUI protobuf_wrapper)
 
 TARGET_INCLUDE_DIRECTORIES(APP PUBLIC .)
 
 ADD_SUBDIRECTORY(Assets)
+ADD_SUBDIRECTORY(ProtobufWrapper)
