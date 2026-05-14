@@ -45,6 +45,7 @@ private:
     [[nodiscard]] bool is_idle_interrupt() const;
     void handle_idle_interrupt();
     void clear_idle_interrupt();
+    void clear_all_interrupts();
 
     std::function<void(uint8_t)> buffer_not_empty_callback_{};
     std::function<void()> idle_callback_{};

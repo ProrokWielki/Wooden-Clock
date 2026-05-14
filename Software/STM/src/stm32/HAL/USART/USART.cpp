@@ -64,6 +64,7 @@ void USART::handle_interrupts()
 {
     handle_read_buffer_not_empty();
     handle_idle_interrupt();
+    clear_all_interrupts();
 }
 
 void USART::set_baud_rate(uint32_t baud_rate)
@@ -136,4 +137,9 @@ void USART::clear_idle_interrupt()
 {
     constexpr static uint8_t IDLE_INTERRUPT_CLEAR_BIT{4};
     ICR.set_bit(IDLE_INTERRUPT_CLEAR_BIT);
+}
+
+void USART::clear_all_interrupts()
+{
+    ICR.write(0xffff);
 }
