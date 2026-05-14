@@ -26,6 +26,7 @@ class Clock
 public:
     static Time get_time();
     static void update();
+    static void set_time(Time time);
 
 private:
     static Time time;

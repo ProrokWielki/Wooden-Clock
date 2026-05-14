@@ -9,6 +9,11 @@ BSP2::Time BSP2::Clock::get_time()
     return time;
 }
 
+void BSP2::Clock::set_time(BSP2::Time)
+{
+    // Not implemented
+}
+
 void BSP2::Clock::update()
 {
     const time_t now{std::time(nullptr)};
