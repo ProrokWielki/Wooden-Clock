@@ -23,9 +23,10 @@ public:
     }
     void init() override
     {
-        add(&mario, 0, 0);
+        static const WidgetAndPositions im{.x = 0, .y = 0, .widget = mario};
+        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{im};
 
-        // validate();
+        add(widgets);
     }
 
     void up_date() override
@@ -33,7 +34,7 @@ public:
     }
 
 private:
-    Image & mario;
+    const Image & mario;
 };
 
 #endif /* APP_STATEMACHINE_STATES_STATEMARIO_HPP_ */

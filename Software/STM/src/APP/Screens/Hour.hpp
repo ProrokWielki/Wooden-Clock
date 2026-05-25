@@ -7,10 +7,16 @@
 
 #pragma once
 
+#include "Widget.hpp"
 #include <Canvas.hpp>
+#include <array>
+#include <functional>
+
 #include <widgets/Text.hpp>
 
 #include <BSP/Clock.hpp>
+
+#include "Texts/texts.hpp"
 
 class Hour: public Canvas
 {
@@ -25,7 +31,9 @@ public:
      */
     void init() override
     {
-        add(&time_text, 0, 0);
+        static const WidgetAndPositions time{.x = 0, .y = 0, .widget = time_text};
+        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{time};
+        add(widgets);
     }
 
     void up_date() override
@@ -39,5 +47,5 @@ public:
     }
 
 private:
-    Text time_text{"00:00", get_width()};
+    Text time_text{"00:00", TextFactory::to_image, get_width()};
 };

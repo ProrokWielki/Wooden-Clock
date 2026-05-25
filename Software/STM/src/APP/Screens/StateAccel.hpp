@@ -25,7 +25,11 @@ public:
 
     void init() override
     {
-        add(&magnet);
+
+        static const WidgetAndPositions mag{.x = 0, .y = 0, .widget = magnet};
+        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{mag};
+
+        add(widgets);
         // validate();
     }
 
@@ -48,7 +52,7 @@ public:
 
 private:
     BSP2::Accelerometer & accel_;
-    std::array<uint8_t, get_width()* get_height()> empty_frame_buffer{};
+    std::array<uint8_t, get_width() * get_height()> empty_frame_buffer{};
     Image magnet;
 };
 

@@ -15,13 +15,13 @@
 #include "rightArrow.hpp"
 #include "upArrow.hpp"
 
-Image & get_image(ImageType image_type)
+const Image & get_image(ImageType image_type)
 {
-    static Image mario{Mario::WIDTH, Mario::HEIGHT, Mario::DATA.data()};
-    static Image up_arrow{UpArrow::WIDTH, UpArrow::HEIGHT, UpArrow::DATA.data()};
-    static Image down_arrow{DownArrow::WIDTH, DownArrow::HEIGHT, DownArrow::DATA.data()};
-    static Image left_arrow{LeftArrow::WIDTH, LeftArrow::HEIGHT, LeftArrow::DATA.data()};
-    static Image right_arrow{RightArrow::WIDTH, RightArrow::HEIGHT, RightArrow::DATA.data()};
+    const static Image mario{Mario::WIDTH, Mario::HEIGHT, Mario::DATA.data()};
+    const static Image up_arrow{UpArrow::WIDTH, UpArrow::HEIGHT, UpArrow::DATA.data()};
+    const static Image down_arrow{DownArrow::WIDTH, DownArrow::HEIGHT, DownArrow::DATA.data()};
+    const static Image left_arrow{LeftArrow::WIDTH, LeftArrow::HEIGHT, LeftArrow::DATA.data()};
+    const static Image right_arrow{RightArrow::WIDTH, RightArrow::HEIGHT, RightArrow::DATA.data()};
 
     switch (image_type)
     {

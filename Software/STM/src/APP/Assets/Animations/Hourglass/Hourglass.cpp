@@ -48,12 +48,16 @@ const static Image frame_18{Hourglass_Frame_18::WIDTH, Hourglass_Frame_18::HEIGH
 const static Image frame_19{Hourglass_Frame_19::WIDTH, Hourglass_Frame_19::HEIGHT, Hourglass_Frame_19::DATA.data()};
 const static Image frame_20{Hourglass_Frame_20::WIDTH, Hourglass_Frame_20::HEIGHT, Hourglass_Frame_20::DATA.data()};
 const static Image frame_21{Hourglass_Frame_21::WIDTH, Hourglass_Frame_21::HEIGHT, Hourglass_Frame_21::DATA.data()};
+
+static constexpr uint8_t NUM_OF_FRAMES{21};
 }  // namespace
 
 Animation & get_hourglass_animation()
 {
-    static Animation Hourglass{{frame_1,  frame_2,  frame_3,  frame_4,  frame_5,  frame_6,  frame_7,  frame_8,  frame_9,  frame_10, frame_11,
-                                frame_12, frame_13, frame_14, frame_15, frame_16, frame_17, frame_18, frame_19, frame_20, frame_21}};
+    static std::array<std::reference_wrapper<const Image>, NUM_OF_FRAMES> frames{frame_1,  frame_2,  frame_3,  frame_4,  frame_5,  frame_6,  frame_7,
+                                                                                 frame_8,  frame_9,  frame_10, frame_11, frame_12, frame_13, frame_14,
+                                                                                 frame_15, frame_16, frame_17, frame_18, frame_19, frame_20, frame_21};
+    static Animation Hourglass{frames};
 
     return Hourglass;
 }

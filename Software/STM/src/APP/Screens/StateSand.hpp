@@ -254,7 +254,10 @@ public:
 
     void init() override
     {
-        add(&magnet);
+        static const WidgetAndPositions mag{.x = 0, .y = 0, .widget = magnet};
+        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{mag};
+
+        add(widgets);
         // validate();
     }
 

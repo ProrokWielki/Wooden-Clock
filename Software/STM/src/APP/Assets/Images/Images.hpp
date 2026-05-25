@@ -18,4 +18,4 @@ enum class ImageType
     RIGHT_ARROW
 };
 
-Image & get_image(ImageType image_type);
+const Image & get_image(ImageType image_type);

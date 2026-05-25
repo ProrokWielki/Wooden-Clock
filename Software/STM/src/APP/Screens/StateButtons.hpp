@@ -7,9 +7,12 @@
 
 #pragma once
 
+#include <array>
+#include <functional>
 #include <widgets/Image.hpp>
 
 #include "Images/Images.hpp"
+#include "Widget.hpp"
 
 class StateButtons: public Canvas
 {
@@ -42,12 +45,14 @@ public:
         left_arrow_.hide();
         right_arrow_.hide();
 
-        add(&up_arrow_, UP_ARROW_X, UP_ARROW_Y);
-        add(&down_arrow_, DOWN_ARROW_X, DOWN_ARROW_Y);
-        add(&left_arrow_, LEFT_ARROW_X, LEFT_ARROW_Y);
-        add(&right_arrow_, RIGHT_ARROW_X, RIGHT_ARROW_Y);
+        static const WidgetAndPositions up{.x = UP_ARROW_X, .y = UP_ARROW_Y, .widget = up_arrow_};
+        static const WidgetAndPositions down{.x = DOWN_ARROW_X, .y = DOWN_ARROW_Y, .widget = down_arrow_};
+        static const WidgetAndPositions left{.x = LEFT_ARROW_X, .y = LEFT_ARROW_Y, .widget = left_arrow_};
+        static const WidgetAndPositions right{.x = RIGHT_ARROW_X, .y = RIGHT_ARROW_Y, .widget = right_arrow_};
 
-        // validate();
+        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 4> widgets{up, down, left, right};
+
+        add(widgets);
     }
 
     void up_date() override
@@ -78,8 +83,8 @@ public:
     }
 
 private:
-    Image & up_arrow_;
-    Image & down_arrow_;
-    Image & left_arrow_;
-    Image & right_arrow_;
+    const Image & up_arrow_;
+    const Image & down_arrow_;
+    const Image & left_arrow_;
+    const Image & right_arrow_;
 };

@@ -28,7 +28,10 @@ public:
      */
     void init() override
     {
-        add(&temperature_text, 0, 0);
+        static const WidgetAndPositions temp{.x = 0, .y = 0, .widget = temperature_text};
+        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{temp};
+
+        add(widgets);
     }
 
     void up_date() override
@@ -39,5 +42,5 @@ public:
     }
 
 private:
-    Text temperature_text{"0*C", get_width()};
+    Text temperature_text{"0*C", TextFactory::to_image, get_width()};
 };

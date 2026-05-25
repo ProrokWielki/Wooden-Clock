@@ -14,6 +14,7 @@ const static Image frame_2{Arrows_Frame_2::WIDTH, Arrows_Frame_2::HEIGHT, Arrows
 
 Animation & get_arrows_animation()
 {
-    static Animation Arrows{{frame_1, frame_2}};
+    static std::array<std::reference_wrapper<const Image>, 2> frames{frame_1, frame_2};
+    static Animation Arrows{frames};
     return Arrows;
 }

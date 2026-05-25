@@ -30,8 +30,10 @@ public:
      */
     void init() override
     {
-        add(&hourglass);
-        // validate();
+        static const WidgetAndPositions hour{.x = 0, .y = 0, .widget = hourglass};
+        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{hour};
+
+        add(widgets);
     }
 
     void up_date() override

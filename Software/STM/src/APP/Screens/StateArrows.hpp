@@ -12,7 +12,10 @@
 
 #include "../Assets/Images/Images.hpp"
 #include "Assets/Animations/Animations.hpp"
+#include "Widget.hpp"
 #include <BSP/BSP.hpp>
+#include <array>
+#include <functional>
 #include <widgets/Animation.hpp>
 
 class StateArrows: public Canvas
@@ -30,7 +33,9 @@ public:
      */
     void init() override
     {
-        add(&arrows);
+        static const WidgetAndPositions arr{.x = 0, .y = 0, .widget = arrows};
+        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{arr};
+        add(widgets);
         // validate();
     }
 
