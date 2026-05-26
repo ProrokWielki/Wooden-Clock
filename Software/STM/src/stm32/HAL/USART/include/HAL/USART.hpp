@@ -11,6 +11,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <span>
 
 #include <HAL/GPIO.hpp>
 #include <HAL/Register.hpp>
@@ -30,6 +31,8 @@ public:
     USART(Clock & clock, Usart_Types::UsartNumber usart_number, GPIO & tx_pin, GPIO & rx_pin, uint32_t baud_rate);
 
     [[nodiscard]] uint8_t get_received_data();
+    void send_data(std::span<const uint8_t> data);
+    void send_data(char data);
 
     void handle_interrupts();
 

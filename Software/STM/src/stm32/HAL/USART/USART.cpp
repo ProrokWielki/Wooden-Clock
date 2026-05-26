@@ -1,6 +1,7 @@
 #include <bits/ranges_base.h>
 #include <cstdint>
 #include <cstdlib>
+#include <span>
 
 #include "HAL/types.hpp"
 #include <cmsis_bridge/cmsis_bridge.hpp>
@@ -58,6 +59,21 @@ void USART::set_idle_callback(std::function<void()> callback)
 uint8_t USART::get_received_data()
 {
     return RDR.read();
+}
+
+void USART::send_data(std::span<const uint8_t> data)
+{
+    for (const uint8_t byte : data)
+    {
+        send_data(byte);
+    }
+}
+
+void USART::send_data(char data)
+{
+    while (!ISR.get_bit(7))
+        ;
+    TDR.write<uint8_t>(data);
 }
 
 void USART::handle_interrupts()
@@ -141,5 +157,6 @@ void USART::clear_idle_interrupt()
 
 void USART::clear_all_interrupts()
 {
-    ICR.write(0xffff);
+    constexpr uint32_t ALL_INTERRUPTS_CLEAR_VALUE{0x00121bdf};
+    ICR.write(ALL_INTERRUPTS_CLEAR_VALUE);
 }
