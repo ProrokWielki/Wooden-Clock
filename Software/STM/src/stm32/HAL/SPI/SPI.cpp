@@ -124,7 +124,7 @@ void SPI::read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::
     while (is_busy())
         ;
 
-    DR.write_u8(register_address);
+    DR.write<uint8_t>(register_address);
 
     while (not is_transfer_finished())
         ;
@@ -139,7 +139,7 @@ void SPI::read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::
 
     while (current_byte < num_of_bytes_to_read)
     {
-        DR.write_u8(0);
+        DR.write<uint8_t>(0);
 
         while (not is_transfer_finished())
             ;

@@ -131,9 +131,10 @@ public:
      * @brief Writes data to register
      * @param value: value to be written to register
      */
-    void write_u8(uint8_t value)
+    template<typename TYPE_TO_WRITE_AS>
+    void write(TYPE_TO_WRITE_AS value)
     {
-        *(volatile uint8_t * const)register_ = value;
+        *(volatile TYPE_TO_WRITE_AS * const)register_ = value;
     }
 
     /**
@@ -143,6 +144,16 @@ public:
     [[nodiscard]] T read() const
     {
         return *register_;
+    }
+
+    /**
+     * @brief Reads data from the register.
+     * @return Register value.
+     */
+    template<typename TYPE_TO_READ_AS>
+    [[nodiscard]] TYPE_TO_READ_AS read() const
+    {
+        return *((volatile TYPE_TO_READ_AS * const)(register_));
     }
 
     [[nodiscard]] uintptr_t get_address() const
