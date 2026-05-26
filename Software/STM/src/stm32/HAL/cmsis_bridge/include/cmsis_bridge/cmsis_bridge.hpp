@@ -26,4 +26,5 @@ volatile uint32_t * to_address(Power_Types::Register power_register);
 volatile uint32_t * to_address(timer_types::Timer_number timer, timer_types::Register timer_register);
 volatile uint32_t * to_address(Usart_Types::UsartNumber usart, Usart_Types::Register usart_register);
 volatile uint32_t * to_address(Flash_Types::FlashRegister flash_register);
+volatile uint32_t * to_address(QSPI_types::Register register_name);
 volatile uint16_t * to_16bit_register_address(Usart_Types::UsartNumber usart, Usart_Types::Register usart_register);

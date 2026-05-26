@@ -768,6 +768,21 @@ enum class FlashRegister
 };
 };
 
+namespace QSPI_types
+{
+enum class Register
+{
+    CR,
+    DCR,
+    SR,
+    FCR,
+    DLR,
+    CCR,
+    AR,
+    ABR,
+    DR,
+};
+};
 uint32_t to_register_value(GPIO_Types::PortMode portMode);
 uint32_t to_register_value(GPIO_Types::AlternateFunction alteranteFunction);
 uint32_t to_register_value(GPIO_Types::SignalLevel signalLevel);

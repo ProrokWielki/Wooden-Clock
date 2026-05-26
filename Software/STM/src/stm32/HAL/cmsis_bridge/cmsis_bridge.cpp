@@ -534,6 +534,34 @@ volatile uint32_t * to_address(Flash_Types::FlashRegister flash_register)
     };
 }
 
+volatile uint32_t * to_address(QSPI_types::Register register_name)
+{
+    switch (register_name)
+    {
+        case QSPI_types::Register::CR:
+            return &(QUADSPI->CR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case QSPI_types::Register::DCR:
+            return &(QUADSPI->DCR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case QSPI_types::Register::SR:
+            return &(QUADSPI->SR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case QSPI_types::Register::FCR:
+            return &(QUADSPI->FCR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case QSPI_types::Register::DLR:
+            return &(QUADSPI->DLR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case QSPI_types::Register::CCR:
+            return &(QUADSPI->CCR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case QSPI_types::Register::AR:
+            return &(QUADSPI->AR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case QSPI_types::Register::ABR:
+            return &(QUADSPI->ABR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        case QSPI_types::Register::DR:
+            return &(QUADSPI->DR);  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+        default:
+            assert(false && "invalid QSPI register");
+            return nullptr;
+    }
+}
+
 volatile uint16_t * to_16bit_register_address(Usart_Types::UsartNumber usart, Usart_Types::Register usart_register)
 {
     USART_TypeDef * usart_address{};
