@@ -37,6 +37,10 @@ void USART3_IRQHandler(void)  // NOLINT(readability-identifier-naming)
 {
     HAL::get().USART_3.handle_interrupts();
 }
+void UART4_IRQHandler(void)  // NOLINT(readability-identifier-naming)
+{
+    HAL::get().USART_4.handle_interrupts();
+}
 
 void SysTick_Handler(void)  // NOLINT(readability-identifier-naming)
 {
