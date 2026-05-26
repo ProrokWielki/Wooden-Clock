@@ -25,6 +25,7 @@ enum class GyroscopeRegister : uint8_t
 {
     CTRL_REG1 = 0x10,
     CTRL_REG4 = 0x1E,
+    CTRL_REG5 = 0x1F,
 
     WHO_AM_I = 0x0F,
 
@@ -35,6 +36,7 @@ enum class GyroscopeRegister : uint8_t
     OUT_Z_G_L = 0x1C,
     OUT_Z_G_H = 0x1D,
 
+    FIFO_CONTROL = 0x2E,
 };
 
 enum class MagnetometerRegister : uint8_t
@@ -111,6 +113,15 @@ enum class MagnetometerOperationMode : uint8_t
     continuous_conversion = 0,
     single_conversion = 1,
     power_down = 2
+};
+
+enum class FIFOMode : uint8_t
+{
+    BYPASS = 0,
+    FIFO = 1,
+    CONTINUES_THEN_FIFO = 3,
+    BYPASS_THEN_CONTINUES = 4,
+    CONTINUES = 6,
 };
 
 GyroscopeRegister & operator++(GyroscopeRegister & a);

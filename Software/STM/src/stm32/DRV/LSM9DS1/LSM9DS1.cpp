@@ -12,12 +12,9 @@
 
 constexpr uint8_t READ_BIT{0x80};
 
-constexpr uint8_t CTRL_REG5_LINEAR_ACCELERATION{0x1F};
 constexpr uint8_t CTRL_REG6_LINEAR_ACCELERATION{0x20};
 
 constexpr uint8_t CTRL_REG1_ANGULAR_RATE{0x10};
-
-constexpr uint8_t FIFO_CTRL{0x2E};
 
 LSM9DS1::LSM9DS1(SPI & spi, GPIO & gyro_cs, GPIO & magnet_cs) : spi_(spi), gyro_cs_(gyro_cs), magneto_cs_(magnet_cs)
 {
@@ -27,22 +24,11 @@ LSM9DS1::LSM9DS1(SPI & spi, GPIO & gyro_cs, GPIO & magnet_cs) : spi_(spi), gyro_
     magneto_cs_.set_mode(GPIO_Types::PortMode::Output);
     magneto_cs_.set_output_high();
 
-    // std::array<uint8_t, 1> data_to_write1{0x05};
+    enable_accelerometer_output(Axis::X);
+    enable_accelerometer_output(Axis::Y);
+    enable_accelerometer_output(Axis::Z);
 
-    // spi.write_data_to_register(gyro_cs, CTRL_REG8, {data_to_write1});
-    // spi.write_data_to_register(magnet_cs, CTRL_REG8, {data_to_write1});
-
-    // std::array<uint8_t, 1> data_to_write3{0x02};
-
-    // spi.write_data_to_register(gyro_cs, CTRL_REG9, {data_to_write3});
-
-    std::array<uint8_t, 1> data_to_write1f{0b00111000};
-
-    spi.write_data_to_register(gyro_cs, CTRL_REG5_LINEAR_ACCELERATION, {data_to_write1f});
-
-    std::array<uint8_t, 1> data_to_write2{0b11000000};
-
-    spi.write_data_to_register(gyro_cs, FIFO_CTRL, {data_to_write2});
+    set_fifo_mode(FIFOMode::CONTINUES);
 
     std::array<uint8_t, 1> data_to_write10{0xBB};
     std::array<uint8_t, 1> data_to_write20{0xA0};
@@ -98,7 +84,10 @@ void LSM9DS1::set_bandwidth(BandwidthG bandwidth)
 void LSM9DS1::set_xy_operation_mode(MagnetometerXYOperationMode operation_mode)
 {
     Register<uint8_t> control_register_1{read_register(MagnetometerRegister::CTRL_REG1)};
-    control_register_1.set_value(static_cast<uint8_t>(operation_mode), 5, 2);
+
+    constexpr uint8_t XY_OPERATION_MODE_VALUE_POSITION{5};
+    constexpr uint8_t XY_OPERATION_MODE_VALUE_LENGTH{2};
+    control_register_1.set_value(static_cast<uint8_t>(operation_mode), XY_OPERATION_MODE_VALUE_POSITION, XY_OPERATION_MODE_VALUE_LENGTH);
 
     write_register(MagnetometerRegister::CTRL_REG1, control_register_1.read());
 }
@@ -106,7 +95,10 @@ void LSM9DS1::set_xy_operation_mode(MagnetometerXYOperationMode operation_mode)
 void LSM9DS1::set_data_rate(MagnetometerDataRate data_rate)
 {
     Register<uint8_t> control_register_1{read_register(MagnetometerRegister::CTRL_REG1)};
-    control_register_1.set_value(static_cast<uint8_t>(data_rate), 2, 3);
+
+    constexpr uint8_t DATA_RATE_VALUE_POSITION{2};
+    constexpr uint8_t DATA_RATE_VALUE_LENGTH{3};
+    control_register_1.set_value(static_cast<uint8_t>(data_rate), DATA_RATE_VALUE_POSITION, DATA_RATE_VALUE_LENGTH);
 
     write_register(MagnetometerRegister::CTRL_REG1, control_register_1.read());
 }
@@ -118,6 +110,38 @@ void LSM9DS1::set_full_scale(MagnetometerFullScale full_scale)
     register_value = ((register_value & ~(0b11 << 5)) | (static_cast<uint8_t>(full_scale) << 5));
 
     write_register(MagnetometerRegister::CTRL_REG2, register_value);
+}
+
+void LSM9DS1::enable_accelerometer_output(Axis axis)
+{
+    uint8_t bit_position{0};
+    switch (axis)
+    {
+        case Axis::X:
+            bit_position = 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            break;
+        case Axis::Y:
+            bit_position = 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            break;
+        case Axis::Z:
+            bit_position = 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+            break;
+    }
+
+    Register<uint8_t> control_register{read_register(GyroscopeRegister::CTRL_REG5)};
+    control_register.set_bit(bit_position);
+    write_register(GyroscopeRegister::CTRL_REG5, control_register.read());
+}
+
+void LSM9DS1::set_fifo_mode(FIFOMode mode)
+{
+    Register<uint8_t> fifo_control_register{read_register(GyroscopeRegister::FIFO_CONTROL)};
+
+    static constexpr uint8_t FIFO_MODE_VALUE_POSITION{5};
+    static constexpr uint8_t FIFO_MODE_VALUE_LENGTH{3};
+    fifo_control_register.set_value(static_cast<uint8_t>(mode), FIFO_MODE_VALUE_POSITION, FIFO_MODE_VALUE_LENGTH);
+
+    write_register(GyroscopeRegister::FIFO_CONTROL, fifo_control_register.read());
 }
 
 int16_t LSM9DS1::get_angular_velocity(Axis axis)
@@ -173,7 +197,8 @@ int16_t LSM9DS1::get_magnetic_field(Axis axis)
     const uint16_t magnetic_field_l{read_register(magnetic_field_register_l)};
     const uint16_t magnetic_field_h{read_register(magnetic_field_acceleration_register_h)};
 
-    return static_cast<int16_t>((magnetic_field_h << 8) | magnetic_field_l);
+    constexpr uint8_t H_REGISTER_BIT_POSITION{8};
+    return static_cast<int16_t>((magnetic_field_h << H_REGISTER_BIT_POSITION) | magnetic_field_l);
 }
 
 uint8_t LSM9DS1::read_register(GyroscopeRegister register_address)

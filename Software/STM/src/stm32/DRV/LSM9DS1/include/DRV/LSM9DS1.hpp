@@ -38,6 +38,10 @@ public:
 
     void set_full_scale(MagnetometerFullScale full_scale);
 
+    void enable_accelerometer_output(Axis axis);
+
+    void set_fifo_mode(FIFOMode mode);
+
     int16_t get_angular_velocity(Axis axis);
 
     Accelerations get_linear_acceleration();
