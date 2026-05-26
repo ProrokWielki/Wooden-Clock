@@ -1,10 +1,53 @@
 
-void flash() __attribute__((section(".flasher_section"))) __attribute__((noinline));
+#include "bootloader.hpp"
+
+#include <FreeRTOS.h>
+#include <task.h>
+
+#include <stm32l452xx.h>
+
+static void send_byte(uint8_t data) __attribute__((section(".flasher_section")));
+static uint32_t get_data() __attribute__((section(".flasher_section")));
+static uint8_t get_byte() __attribute__((section(".flasher_section")));
+
+void send_byte(uint8_t data)
+{
+    while (!(UART4->ISR & (1 << 7)))
+        ;
+    UART4->TDR = static_cast<uint16_t>(data);
+}
+
+void send_data(uint32_t data)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        uint8_t byte_to_send = (data >> ((3 - i) * 8)) & 0xFF;
+        send_byte(byte_to_send);
+    }
+}
+
+uint32_t get_data()
+{
+    uint32_t data_to_write{0};
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        uint8_t data = get_byte();
+        data_to_write |= (static_cast<uint32_t>(data) << ((3 - i) * 8));
+    }
+    return data_to_write;
+}
+
+uint8_t get_byte()
+{
+    while (!(UART4->ISR & (1 << 5)))
+        ;
+    return UART4->RDR;
+}
 
 void flash()
 {
     // disable screen and stop everything.
-    HAL::SR_74HC595_1.output_enable(false);
+    // HAL::SR_74HC595_1.output_enable(false);
     __disable_irq();
     vTaskSuspendAll();
 
@@ -12,6 +55,26 @@ void flash()
     /// erase
     FLASH->KEYR = 0x45670123;
     FLASH->KEYR = 0xCDEF89AB;
+
+    send_byte('g');
+
+    while (true)
+    {
+        auto data = get_byte();
+
+        if (data != 0xBE)
+            continue;
+
+        send_byte('g');
+
+        uint32_t data_to_write = get_data();
+        send_data(data_to_write);
+
+        if (data_to_write == 0x12345678)
+        {
+            break;
+        }
+    }
 
     while (FLASH->SR & (1 << 16))
     {
@@ -57,6 +120,7 @@ void flash()
 
     // write recived data to the flash
 
+    // reset
     SCB->AIRCR = ((0x5FAUL << 16) | (1 << 2));
 
     for (;;)
