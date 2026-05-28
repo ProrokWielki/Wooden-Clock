@@ -14,6 +14,7 @@
 #include <HAL/GPIO.hpp>
 #include <HAL/I2C.hpp>
 #include <HAL/Power.hpp>
+#include <HAL/QSPI.hpp>
 #include <HAL/RTC.hpp>
 #include <HAL/SPI.hpp>
 #include <HAL/SysConfig.hpp>
@@ -23,6 +24,7 @@
 #include <DRV/74HC595.hpp>
 #include <DRV/BME280.hpp>
 #include <DRV/LSM9DS1.hpp>
+#include <DRV/S25FL129P.hpp>
 #include <DRV/TLC59208F.hpp>
 
 class LSM9DS1;
@@ -95,8 +97,12 @@ public:
 
     SPI SPI_1;
 
+    QSPI QUAD_SPI;
+
     USART USART_3;
     USART USART_4;
+
+    S25FL129P external_flash{QUAD_SPI};
 
     SR_74HC595 SR_74HC595_1;
 

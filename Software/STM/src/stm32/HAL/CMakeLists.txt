@@ -14,10 +14,12 @@ IF(NOT ((CMAKE_BUILD_TYPE STREQUAL "x86_Clang") OR (CMAKE_BUILD_TYPE STREQUAL
            74HC595
            LSM9DS1
            BME280
+           S25FL129P
            Flash
            TLC59208F
            SysConfig
            ISR
+           QSPI
            RTC
            USART
            Clock

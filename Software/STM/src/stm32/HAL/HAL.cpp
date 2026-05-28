@@ -7,13 +7,10 @@
 
 #include <array>
 
-// #include <stm32l4xx.h>
-
-#include <HAL/types.hpp>
-
 #include "HAL/Clock.hpp"
 #include "HAL/Timer.hpp"
 #include "HAL/types.hpp"
+
 #include "include/HAL/HAL.hpp"
 
 namespace
@@ -109,6 +106,7 @@ HAL::HAL()
   SPI_1(clock, SPI_types::SPI_Number::SPI_1, SPI1_MOSI, SPI1_MISO, SPI1_SCK, SPI_types::SPIMode::master, SPI_types::SPIDataSize::_8bits,
         SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
         SPI_types::BaudRatePrescaller::Prescaller_256),
+  QUAD_SPI(clock, QSPI_IO0, QSPI_IO1, QSPI_IO2, QSPI_IO3, QSPI_CLK, QSPI_CS, 400000),
   USART_3(clock, Usart_Types::UsartNumber::USART_3, UART3_TX, UART3_RX, ESP_UART_SPEED),
   USART_4(clock, Usart_Types::UsartNumber::UART_4, UART4_TX, UART4_RX, DEBUG_UART_SPEED),
   SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR, SR_CHAIN_LENGTH), TLC59208F_1(I2C_4, TLC59208F_1_ADDRESS, TLC_RESET),
@@ -177,182 +175,17 @@ void HAL::init()
 
 void HAL::qspi_init()
 {
-    //     RCC->AHB3ENR = 1 << 8;  // QSPI_EN
 
-    //     QUADSPI->CR = 255 << 24;
+    auto id = external_flash.get_manufacturer_id();
+    // external_flash.erase_chip();
+    std::array<uint8_t, 8> data_to_write{0xDE, 0xAD, 0xBE, 0xEF, 0xBA, 0xAD, 0xF0, 0x0D};
+    external_flash.write_data(0, data_to_write);
 
-    //     QUADSPI->DCR |= 24 << 16;  // FSIZE = 24  -- 16MB
-    //     QUADSPI->DCR |= 1 << 8;    // nCS stays high for at least 8 cycles between Flash memory commands
+    external_flash.switch_to_memory_mapped_mode();
+    uint32_t data = *reinterpret_cast<volatile uint32_t *>(0x90000000);
 
-    //     QUADSPI->CR |= QUADSPI_CR_EN;  // Enable
-
-    //     ///////////////////////////
-
-    //     uint32_t ccr, sr;
-
-    //     uint32_t tmp;
-
-    //     /* Configure automatic polling mode to wait for memory ready */
-
-    //     QUADSPI->DLR = 647; /* use len-1 so 20 bytes is (20-1 == 19) */
-
-    //     /* Commands are sent through CCR */
-    //     tmp = 1 << 26; /* indirect read */
-    //     tmp |= 0x9F;
-    //     tmp |= 1 << 8;
-    //     tmp |= 1 << 24;
-    //     QUADSPI->CCR = tmp;
-
-    //     /////////////////////////////////////
-    //     int len;
-    //     int max_len = 648;
-    //     uint32_t buf[648];
-
-    //     uint32_t * a = buf;
-
-    //     len = 0;
-    //     /* manually transfer data from the QSPI peripheral, this
-    //      * loop runs while QUADSPI_SR_BUSY is set. It pulls 1 byte
-    //      * at a time.
-    //      */
-    //     do
-    //     {
-    //         sr = QUADSPI->SR;
-    //         if (sr & (1 << 2))
-    //         {
-    //             *a = QUADSPI->DR;
-    //             a++;
-    //             len++;
-    //             if (len >= max_len)
-    //             {
-    //                 break;
-    //             }
-    //         }
-    //     } while (sr & (1 << 5));
-
-    //     /// ///////////////////////////////
-
-    //     //    print_status(QUADSPI_SR);
-    //     //    printf("\nRead ID returned %d bytes\n", len);
-    //     QUADSPI->FCR = 0x1f;
-
-    //     /////////////////////////////////////////
-    // #if 1
-    //     ccr = 0x06;
-    //     ccr |= 1 << 8;
-    //     ccr |= 1 << 26;
-    //     QUADSPI->CCR = ccr;
-    //     do
-    //     {
-    //         sr = QUADSPI->SR;
-    //     } while (sr & (1 << 5));
-    //     QUADSPI->FCR = 0x1f; /* reset the flags */
-    //     ///
-
-    //     uint8_t buffer = 1;
-
-    //     ccr = 0;
-    //     /* adjusting this to 0 fixed the write issue. */
-    //     ccr |= 0x02; /* write 256 bytes */
-    //     /* For some reason 1-1-4 command */
-    //     ccr |= 1 << 8;
-    //     ccr |= 1 << 10;
-    //     ccr |= 2 << 12; /* 24 bit address */
-    //     ccr |= 1 << 24;
-    //     QUADSPI->DLR = 255;
-    //     QUADSPI->AR = 0;
-    //     QUADSPI->CCR = ccr; /* go write a page */
-    //     tmp = 0;
-    //     do
-    //     {
-    //         sr = QUADSPI->SR;
-    //         if (sr & (1 << 1))
-    //         {
-    //             break;
-    //         }
-    //         tmp++;
-    //         QUADSPI->DR = buffer++;
-    //     } while (QUADSPI->SR & (1 << 5));
-
-    //     QUADSPI->FCR = 0x1f;
-    // #else
-    //     ccr = 0x06;
-    //     ccr |= 1 << 8;
-    //     ccr |= 1 << 26;
-    //     QUADSPI->CCR = ccr;
-    //     do
-    //     {
-    //         sr = QUADSPI->SR;
-    //     } while (sr & (1 << 5));
-    //     QUADSPI->FCR = 0x1f; /* reset the flags */
-
-    //     ccr = 0xC7;
-    //     ccr |= 1 << 8;
-    //     ccr |= 1 << 26;
-    //     QUADSPI->CCR = ccr;
-    //     do
-    //     {
-    //         sr = QUADSPI->SR;
-    //     } while (sr & (1 << 5));
-    //     QUADSPI->FCR = 0x1f; /* reset the flags */
-    //                          ///
-    //     for (uint32_t dupa = 0; dupa < 0x3fffffff; dupa++)
-    //     {
-    //         (void)dupa;
-    //     }
-    // #endif
-
-    //     /* Commands are sent through CCR */
-    //     ccr = 0x03;
-    //     ccr |= 1 << 8;
-    //     ccr |= 2 << 18;
-    //     ccr |= 1 << 10;
-    //     ccr |= 2 << 12; /* 24 bit address */
-    //     ccr |= 1 << 24;
-    //     ccr |= 1 << 26;
-    //     QUADSPI->DLR = 255;
-    //     QUADSPI->CCR = ccr;
-    //     QUADSPI->AR = 0;
-
-    //     /////////////////////////////////////
-
-    //     a = buf;
-
-    //     len = 0;
-    //     /* manually transfer data from the QSPI peripheral, this
-    //      * loop runs while QUADSPI_SR_BUSY is set. It pulls 1 byte
-    //      * at a time.
-    //      */
-    //     do
-    //     {
-    //         sr = QUADSPI->SR;
-    //         if (sr & (1 << 2))
-    //         {
-    //             *a = QUADSPI->DR;
-    //             a++;
-    //             len++;
-    //             if (len >= max_len)
-    //             {
-    //                 break;
-    //             }
-    //         }
-    //     } while (sr & (1 << 5));
-
-    //     /// ///////////////////////////////
-
-    //     //    print_status(QUADSPI_SR);
-    //     //    printf("\nRead ID returned %d bytes\n", len);
-    //     QUADSPI->FCR = 0x1f;
-
-    //     /* Commands are sent through CCR */
-    //     ccr = 0x03;
-    //     ccr |= 1 << 8;
-    //     ccr |= 1 << 10;
-    //     ccr |= 2 << 12; /* 24 bit address */
-    //     ccr |= 2 << 18;
-    //     ccr |= 1 << 24;
-    //     ccr |= 3 << 26;
-    //     QUADSPI->CCR = ccr;
+    (void)(data);
+    (void)(id);
 }
 
 void HAL::clock_init()
