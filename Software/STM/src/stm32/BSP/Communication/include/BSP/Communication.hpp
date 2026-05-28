@@ -27,9 +27,11 @@ class Communication
 public:
     [[nodiscard]] bool is_message_available() const;
     Message get_message();
+    [[nodiscard]] char get_last_received_char() const;
+    void discard_last_received_char();
 
     void add_byte(uint8_t byte);
-    void message_end();
+    void message_end(bool add_zero_in_the_end = false);
 
 private:
     static constexpr uint8_t MAX_NUM_OF_MESSAGES{10};
