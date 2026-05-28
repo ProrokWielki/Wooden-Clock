@@ -23,7 +23,7 @@ ENDIF()
 
 TARGET_LINK_LIBRARIES(
   APP
-  PRIVATE OsAbstraction BSP EmbedGUI protobuf_wrapper)
+  PRIVATE OsAbstraction BSP EmbedGUI protobuf_wrapper debug_messages_handler)
 
 TARGET_INCLUDE_DIRECTORIES(APP PUBLIC .)
 

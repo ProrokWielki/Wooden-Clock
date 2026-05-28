@@ -13,6 +13,7 @@
 
 #include "BSP/Clock.hpp"
 #include "DataContainer.hpp"
+#include "DebugMessagesHandler/DebugMessagesHandler.hpp"
 #include "ProtobufWrapper/ProtobufWrapper.hpp"
 
 #include "APP.hpp"
@@ -34,6 +35,7 @@ void gui_task(void *)
 void system_interface_task(void *)
 {
     constexpr static uint8_t sleep_time_ms{20};
+    static DebugMessagesHandler debug_messages_handler;
 
     for (;;)
     {
@@ -51,7 +53,7 @@ void system_interface_task(void *)
         {
             auto message = BSP::get().communication_interface.get_message();
 
-            if (message.length == 1)
+            if (message.length == 2)
             {
                 switch (message.data[0])
                 {
@@ -74,7 +76,7 @@ void system_interface_task(void *)
             else
             {
                 auto time_message = ProtobufWrapper::parse_time_message(message.data.data(), message.length);
-                BSP::get().clock.set_time({time_message.hours, time_message.minutes, time_message.seconds});
+                BSP::get().clock.set_time({.hours = time_message.hours, .minutes = time_message.minutes, .seconds = time_message.seconds});
             }
         }
 
@@ -99,10 +101,13 @@ void system_interface_task(void *)
             BSP::get().right = false;
         }
 
-        // if (HAL::reset)
-        // {
-        //     // flash();
-        // }
+        if (BSP::get().debug_communication_interface.is_message_available())
+        {
+
+            auto message = BSP::get().debug_communication_interface.get_message();
+            debug_messages_handler.handle_debug_message(message);
+        }
+
         OsAbstraction::delay_ms(sleep_time_ms);
     }
 }
