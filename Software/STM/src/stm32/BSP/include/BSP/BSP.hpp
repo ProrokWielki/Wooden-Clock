@@ -47,6 +47,7 @@ public:
     bool right{};
 
     Communication communication_interface;
+    Communication debug_communication_interface;
 
 private:
     static void display_init();

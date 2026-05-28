@@ -42,6 +42,7 @@ public:
     Button button_down;
 
     Communication communication_interface;
+    Communication debug_communication_interface;
 
     bool up{false};
     bool down{false};
