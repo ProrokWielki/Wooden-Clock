@@ -40,10 +40,11 @@ _Min_Stack_Size = 0x4000; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)         : ORIGIN = 0x20000000, LENGTH = 160K
-FLASH (rx)        : ORIGIN = 0x8000000, LENGTH = 512K - 2K
-FLASHER(rx)       : ORIGIN = 0x807F800, LENGTH = 2K
-/*MEMORY_B1 (rx)  : ORIGIN = 0x90000000, LENGTH = 16M*/
+RAM (xrw)            : ORIGIN = 0x20000000, LENGTH = 160K
+FLASH (rx)           : ORIGIN = 0x8000000, LENGTH = 512K - 4K
+SETTINGS(rx)         : ORIGIN = 0x807F000, LENGTH = 2K
+FLASHER(rx)          : ORIGIN = 0x807F800, LENGTH = 2K
+EXTERNAL_FLASH (r)   : ORIGIN = 0x90000000, LENGTH = 16M
 }
 
 /* Define output sections */
@@ -161,15 +162,27 @@ SECTIONS
     . = ALIGN(4);
   } >RAM
 
+  .settings_section 0x807F000 :
+  {
+    KEEP(*(.settings_section)) /* keep my variable even if not referenced */
+  } > SETTINGS
+
   .flasher_section 0x807F800 :
   {
     KEEP(*(.flasher_section)) /* keep my variable even if not referenced */
   } > FLASHER
 
-  /*.external_flash :
+  .external_flash(READONLY) :
   {
-    *(.ExteranalFlash*);
-  } > MEMORY_B1*/
+    . = ALIGN(4);
+    PROVIDE(__external_flash_start__ = .);
+    
+    KEEP(*(.external_flash))    
+    KEEP(*(.external_flash.*))
+    
+    . = ALIGN(4);
+    PROVIDE(__external_flash_end__ = .);
+  } > EXTERNAL_FLASH
 
 
   /* Remove information from the standard libraries */
