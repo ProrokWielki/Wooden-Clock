@@ -14,4 +14,4 @@ while getopts "h?:" opt; do
     esac
 done
 
-cat $1/compile_commands.json | grep file | grep -v MCU | grep -v build | grep -v tests | grep -v lib |  awk -F '"' '{print $4}' | xargs clang-tidy -p $1 
+cat $1/compile_commands.json | grep file | grep -v MCU | grep -v build | grep -v tests | grep -v lib | grep -v Messages |  awk -F '"' '{print $4}' | xargs clang-tidy -p $1 
