@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+enum WeatherCondition {
+SUNNY = 0;
+CLOUDY = 1;
+RAINY = 2;
+}
+
+message WeatherForecast {
+    int32 temperature = 1;
+    WeatherCondition condition = 2;
+}
