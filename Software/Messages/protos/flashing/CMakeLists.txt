@@ -1,0 +1,3 @@
+nanopb_generate_cpp(TARGET flashing_start_msg flashing_start.proto)
+nanopb_generate_cpp(TARGET page_data_msg page_data.proto)
+nanopb_generate_cpp(TARGET mcu_flashing_state_msg mcu_flashing_state.proto)

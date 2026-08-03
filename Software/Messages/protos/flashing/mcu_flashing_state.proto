@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "nanopb.proto";
+
+enum FlashingState {
+  ERROR                 = 0;
+  IDLE                  = 1;
+  ERASING_IN_PROGRESS   = 2;
+  BUSY                  = 3;
+  WAITING_FOR_NEXT_PAGE = 4;
+  FLASHING_IN_PROGRESS  = 5;
+  FLASHING_DONE         = 6;
+}
+
+message McuFlashingState {
+  FlashingState state = 1;
+}
