@@ -11,9 +11,9 @@
 #include <HAL/types.hpp>
 
 QSPI::QSPI(Clock & clock, GPIO & IO1, GPIO & IO2, GPIO & IO3, GPIO & IO4, GPIO & SCK, GPIO & CS, uint32_t frequency)
-: CR{to_address(QSPI_types::Register::CR)}, CCR{to_address(QSPI_types::Register::CCR)}, SR{to_address(QSPI_types::Register::SR)},
-  DLR{to_address(QSPI_types::Register::DLR)}, DR{to_address(QSPI_types::Register::DR)}, FCR{to_address(QSPI_types::Register::FCR)},
-  AR{to_address(QSPI_types::Register::AR)}
+: CR{to_address(QSPI_types::Register::CR)}, DCR{to_address(QSPI_types::Register::DCR)}, CCR{to_address(QSPI_types::Register::CCR)},
+  SR{to_address(QSPI_types::Register::SR)}, DLR{to_address(QSPI_types::Register::DLR)}, DR{to_address(QSPI_types::Register::DR)},
+  FCR{to_address(QSPI_types::Register::FCR)}, AR{to_address(QSPI_types::Register::AR)}
 {
     clock.enable_clock_for(Peripheral::QSPI);
 
@@ -96,7 +96,12 @@ void QSPI::send_command(Mode mode, uint8_t instruction)
 
 void QSPI::enable()
 {
-    CR.set_bit(0);  // Enable the peripheral
+    CR.set_bit(0);
+}
+
+void QSPI::disable()
+{
+    CR.clear_bit(0);
 }
 
 bool QSPI::is_busy() const
@@ -110,13 +115,18 @@ void QSPI::enable_memory_mapped_mode(uint8_t instruction)
     while (is_busy())
         ;
 
-    Register<uint32_t> ccr{CCR.read()};
+    DCR.set_value(23, 16, 5);  // fsize - 24 bit address
+    DCR.set_value(4, 8, 3);    // csht - 4 cycle chip select high time
+
+    uint32_t cr_value = 0;
+    Register<uint32_t> ccr{&cr_value};
 
     ccr.set_value(1, 8, 2);   // 1 line instruction
-    ccr.set_value(1, 10, 2);  // no address
-    ccr.set_value(2, 12, 2);  // no address
-    ccr.set_value(8, 18, 4);  // no address
-    ccr.set_value(3, 24, 2);  // no data
+    ccr.set_value(1, 10, 2);  // address on 1 line
+    ccr.set_value(2, 12, 2);  // 24 bit address
+    ccr.set_value(0, 14, 2);  // no alternate bytes
+    ccr.set_value(8, 18, 5);  // 8 dummy cycles
+    ccr.set_value(3, 24, 2);  // dmode - 4 lines data
     ccr.set_value(3, 26, 2);  // memory-mapped mode
 
     constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
@@ -124,6 +134,9 @@ void QSPI::enable_memory_mapped_mode(uint8_t instruction)
     ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);  // Set the instruction
 
     CCR.write(ccr.read());
+
+    while (is_busy())
+        ;
 }
 
 void QSPI::write_data(Mode mode, uint8_t instruction, const std::span<uint8_t> data_to_write)

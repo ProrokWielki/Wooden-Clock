@@ -27,11 +27,13 @@ public:
     void write_data(Mode mode, uint8_t instruction, const std::span<uint8_t> data_to_write);
     void write_data(Mode mode, uint8_t instruction, uint32_t address, const std::span<uint8_t> data_to_write);
     void enable();
+    void disable();
 
 private:
     [[nodiscard]] bool is_busy() const;
 
     Register<uint32_t> CR;
+    Register<uint32_t> DCR;
     Register<uint32_t> CCR;
     Register<uint32_t> SR;
     Register<uint32_t> DLR;
