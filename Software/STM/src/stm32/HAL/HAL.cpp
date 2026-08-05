@@ -41,6 +41,8 @@ constexpr uint8_t QSPI_IO3_PIN_NUMBER{6};
 constexpr uint8_t QSPI_CLK_PIN_NUMBER{3};
 constexpr uint8_t QSPI_CS_PIN_NUMBER{2};
 
+constexpr uint32_t QSPI_CLOCK_SPEED{500'000};
+
 constexpr uint8_t UART_3_TX_PIN_NUMBER{10};
 constexpr uint8_t UART_3_RX_PIN_NUMBER{11};
 
@@ -106,7 +108,7 @@ HAL::HAL()
   SPI_1(clock, SPI_types::SPI_Number::SPI_1, SPI1_MOSI, SPI1_MISO, SPI1_SCK, SPI_types::SPIMode::master, SPI_types::SPIDataSize::_8bits,
         SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
         SPI_types::BaudRatePrescaller::Prescaller_256),
-  QUAD_SPI(clock, QSPI_IO0, QSPI_IO1, QSPI_IO2, QSPI_IO3, QSPI_CLK, QSPI_CS, 400000),
+  QUAD_SPI(clock, QSPI_IO0, QSPI_IO1, QSPI_IO2, QSPI_IO3, QSPI_CLK, QSPI_CS, QSPI_CLOCK_SPEED),
   USART_3(clock, Usart_Types::UsartNumber::USART_3, UART3_TX, UART3_RX, ESP_UART_SPEED),
   USART_4(clock, Usart_Types::UsartNumber::UART_4, UART4_TX, UART4_RX, DEBUG_UART_SPEED),
   SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR, SR_CHAIN_LENGTH), TLC59208F_1(I2C_4, TLC59208F_1_ADDRESS, TLC_RESET),
@@ -178,8 +180,8 @@ void HAL::qspi_init()
 
     auto id = external_flash.get_manufacturer_id();
     // external_flash.erase_chip();
-    std::array<uint8_t, 8> data_to_write{0xDE, 0xAD, 0xBE, 0xEF, 0xBA, 0xAD, 0xF0, 0x0D};
-    external_flash.write_data(0, data_to_write);
+    // std::array<uint8_t, 8> data_to_write{0xDE, 0xAD, 0xBE, 0xEF, 0xBA, 0xAD, 0xF0, 0x0D};
+    // external_flash.write_data(0, data_to_write);
 
     external_flash.switch_to_memory_mapped_mode();
     uint32_t data = *reinterpret_cast<volatile uint32_t *>(0x90000000);
