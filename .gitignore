@@ -30,3 +30,11 @@ _autosave-*
 Output/
 build/
 .vscode/
+
+# Protobuf generated files
+*_pb2.py
+*_pb2.pyi
+*_pb2_grpc.py
+
+# Python
+__pycache__/
