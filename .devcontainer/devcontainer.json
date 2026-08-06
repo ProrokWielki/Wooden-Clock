@@ -1,5 +1,5 @@
 {
-    "image": "pawelwarzecha/wooden_clock:0.4.1",
+    "image": "pawelwarzecha/wooden_clock:0.4.2",
     "customizations": {
         "vscode": {
             "extensions": [

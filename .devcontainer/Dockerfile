@@ -22,6 +22,7 @@ RUN apk update && \
     gzip \ 
     allegro-dev \
     graphviz \
-    gcompat
+    gcompat \ 
+    protobuf
 
 RUN pip install protobuf grpcio-tools cmakelang platformio --break-system-packages
