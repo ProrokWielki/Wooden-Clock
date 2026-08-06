@@ -11,7 +11,3 @@ enum FlashingState {
   FLASHING_IN_PROGRESS  = 5;
   FLASHING_DONE         = 6;
 }
-
-message McuFlashingState {
-  FlashingState state = 1;
-}
