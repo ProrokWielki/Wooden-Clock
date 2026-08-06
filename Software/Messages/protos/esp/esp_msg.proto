@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "nanopb.proto";
+
+import "time.proto";
+import "weather_forecast.proto";
+
+message EspToMcuMsg {
+  oneof msg {
+    Time            time             = 1;
+    WeatherForecast weather_forecast = 2;
+  }
+}

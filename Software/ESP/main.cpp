@@ -3,7 +3,7 @@
 #include <pb_encode.h>
 #include <time.h>
 
-#include "time_msg.pb.h"
+#include "esp_msg.pb.h"
 
 #include <functional>
 #include <map>
@@ -29,13 +29,15 @@ std::map<std::string, std::function<void(byte * payload, unsigned int length)>> 
      time_t now = time(nullptr);
      struct tm * timeinfo = localtime(&now);
 
-     time_msg msg = time_msg_init_zero;
-     msg.hours = timeinfo->tm_hour;
-     msg.minutes = timeinfo->tm_min;
-     msg.seconds = timeinfo->tm_sec;
-     uint8_t buffer[time_msg_size];
+     EspToMcuMsg msg = EspToMcuMsg_init_zero;
+     msg.which_msg = EspToMcuMsg_time_tag;
+
+     msg.msg.time.hours = timeinfo->tm_hour;
+     msg.msg.time.minutes = timeinfo->tm_min;
+     msg.msg.time.seconds = timeinfo->tm_sec;
+     uint8_t buffer[EspToMcuMsg_size];
      pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-     pb_encode(&stream, time_msg_fields, &msg);
+     pb_encode(&stream, EspToMcuMsg_fields, &msg);
      Serial.write(buffer, stream.bytes_written);
  }},
 };

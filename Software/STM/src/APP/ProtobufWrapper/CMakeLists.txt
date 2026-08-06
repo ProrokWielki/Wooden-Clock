@@ -4,4 +4,4 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   protobuf_wrapper
-  PRIVATE message_time)
+  PRIVATE esp_msg)
