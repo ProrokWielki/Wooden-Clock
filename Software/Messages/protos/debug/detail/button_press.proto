@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "nanopb.proto";
+
+enum Button {
+  TOP    = 0;
+  BOTTOM = 1;
+  LEFT   = 2;
+  RIGHT  = 3;
+}
+
+message ButtonPress {
+  Button button = 1;
+}

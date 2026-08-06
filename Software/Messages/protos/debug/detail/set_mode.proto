@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "nanopb.proto";
+
+enum Mode {
+  FLASHING = 0;
+  REBOOT   = 1;
+  NORMAL   = 2;
+}
+
+message SetMode {
+  Mode mode = 1;
+}

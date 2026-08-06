@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "nanopb.proto";
+
+import "button_press.proto";
+import "set_mode.proto";
+
+message PcToMcuMsg {
+  oneof msg {
+    ButtonPress button_press = 1;
+    SetMode     set_mode     = 2;
+  }
+}
