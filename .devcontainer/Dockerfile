@@ -1,4 +1,4 @@
-FROM alpine:3.21.3
+FROM alpine:3.23.5
 
 RUN apk update && \
     apk add \ 
@@ -23,6 +23,7 @@ RUN apk update && \
     allegro-dev \
     graphviz \
     gcompat \ 
-    protobuf
+    protobuf \
+    openjdk8-jre
 
-RUN pip install protobuf grpcio-tools cmakelang platformio --break-system-packages
+RUN pip install protobuf grpcio-tools cmakelang platformio readelf flake --break-system-packages
