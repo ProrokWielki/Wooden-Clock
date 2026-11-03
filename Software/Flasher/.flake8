@@ -1,0 +1,6 @@
+[flake8]
+max-line-length = 120
+exclude = generated_protos
+
+# Ignore E203 to prevent false positives on Black-formatted slices
+extend-ignore = E203 
