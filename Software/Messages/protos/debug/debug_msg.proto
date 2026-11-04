@@ -3,11 +3,11 @@ syntax = "proto3";
 import "nanopb.proto";
 
 import "button_press.proto";
-import "set_mode.proto";
+import "mode.proto";
 
-message PcToMcuMsg {
+message PcToMcuDebugMsg {
   oneof msg {
     ButtonPress button_press = 1;
-    SetMode     set_mode     = 2;
+    Mode        mode         = 2;
   }
 }

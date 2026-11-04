@@ -7,7 +7,3 @@ enum Mode {
   REBOOT   = 1;
   NORMAL   = 2;
 }
-
-message SetMode {
-  Mode mode = 1;
-}
