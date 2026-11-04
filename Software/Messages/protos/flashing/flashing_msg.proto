@@ -4,6 +4,7 @@ import "nanopb.proto";
 
 import "flashing_start.proto";
 import "flashing_state.proto";
+import "flashing_command.proto";
 import "page_data.proto";
 
 message McuToPcFlashingMsg {
@@ -14,7 +15,9 @@ message McuToPcFlashingMsg {
 
 message PcToMcuFlashingMsg {
   oneof msg {
-    FlashingStart flashing_start = 1;
-    PageData      page_data      = 2;
+    FlashingStart   flashing_start   = 1;
+    PageData        page_data        = 2;
+    FlashingCommand flashing_command = 3;
+
   }
 }
