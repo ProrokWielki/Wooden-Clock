@@ -3,4 +3,4 @@ nanopb_generate_cpp(
   RELPATH detail
   debug_msg.proto
   detail/button_press.proto
-  detail/set_mode.proto)
+  detail/mode.proto)
