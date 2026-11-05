@@ -41,7 +41,7 @@ constexpr uint8_t QSPI_IO3_PIN_NUMBER{6};
 constexpr uint8_t QSPI_CLK_PIN_NUMBER{3};
 constexpr uint8_t QSPI_CS_PIN_NUMBER{2};
 
-constexpr uint32_t QSPI_CLOCK_SPEED{500'000};
+constexpr uint32_t QSPI_CLOCK_SPEED{20'000'000};
 
 constexpr uint8_t UART_3_TX_PIN_NUMBER{10};
 constexpr uint8_t UART_3_RX_PIN_NUMBER{11};
