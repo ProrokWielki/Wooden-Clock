@@ -8,6 +8,14 @@ elf_parser = ElfParser("/workspaces/Wooden-Clock/Software/STM/build/Debug/src/st
 
 sections = elf_parser.get_sections()
 
+internal_flash_sections = list(
+    filter(
+        lambda section: section.address_in_flash >= STM32L452.INTERNAL_FLASH_START_ADDRESS
+        and section.address_in_flash <= STM32L452.INTERNAL_FLASH_END_ADDRESS,
+        sections,
+    )
+)
+
 internal_flash_sections_to_flash = list(
     filter(lambda section: section.name != ".flasher_section", internal_flash_sections)
 )
