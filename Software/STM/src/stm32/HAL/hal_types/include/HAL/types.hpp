@@ -793,6 +793,46 @@ enum class Register
     DR,
 };
 };
+
+namespace DAC_Types
+{
+
+enum class Register
+{
+    CR,
+    SWTRGR,
+    SR,
+    CCR,
+    MCR,
+    DHR12R1,
+    DHR8R1
+};
+
+enum class DacNumber
+{
+    DAC_1,
+};
+
+enum class DacChannel
+{
+    CHANNEL_1,
+    CHANNEL_2,
+};
+
+enum class DacTrigger
+{
+    TIM6_TRGO,
+    TIM8_TRGO,
+    TIM7_TRGO,
+    TIM5_TRGO,
+    TIM2_TRGO,
+    TIM4_TRGO,
+    EXTI9,
+    SWTRIG
+};
+
+};  // namespace DAC_Types
+
 uint32_t to_register_value(GPIO_Types::PortMode portMode);
 uint32_t to_register_value(GPIO_Types::AlternateFunction alteranteFunction);
 uint32_t to_register_value(GPIO_Types::SignalLevel signalLevel);
@@ -805,6 +845,7 @@ Peripheral to_peripheral(I2C_Types::I2CNumber i2c);
 Peripheral to_peripheral(DMA_Types::DmaNumber dma);
 Peripheral to_peripheral(Usart_Types::UsartNumber usart);
 Peripheral to_peripheral(timer_types::Timer_number timer);
+Peripheral to_peripheral(DAC_Types::DacNumber dac);
 
 uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, ClockSource clock_source);
 uint32_t to_system_clock_source_value(ClockSource clock_source);
@@ -841,6 +882,7 @@ uint32_t to_value(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, D
 uint32_t to_value(SPI_types::BaudRatePrescaller baudrate_prescaller);
 uint32_t to_value(Power_Types::WriteProtectionState state);
 uint32_t to_value(timer_types::MasterMode master_mode);
+uint32_t to_value(DAC_Types::DacTrigger trigger);
 
 PeripheralWithSelectableClockSource to_peripheral_with_clock_select(I2C_Types::I2CNumber i2c);
 

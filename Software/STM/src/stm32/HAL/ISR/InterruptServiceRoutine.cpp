@@ -21,6 +21,10 @@ void DMA1_Channel2_IRQHandler(void)  // NOLINT(readability-identifier-naming)
 {
     HAL::get().DMA1_2.transfer_complete_callback();
 }
+void DMA1_Channel3_IRQHandler(void)  // NOLINT(readability-identifier-naming)
+{
+    HAL::get().DMA1_3.transfer_complete_callback();
+}
 void DMA1_Channel4_IRQHandler(void)  // NOLINT(readability-identifier-naming)
 {
     HAL::get().DMA1_4.transfer_complete_callback();

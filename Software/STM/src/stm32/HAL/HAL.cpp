@@ -49,6 +49,8 @@ constexpr uint8_t UART_3_RX_PIN_NUMBER{11};
 constexpr uint8_t UART_4_TX_PIN_NUMBER{0};
 constexpr uint8_t UART_4_RX_PIN_NUMBER{1};
 
+constexpr uint8_t DAC_OUTPUT_PIN_NUMBER{4};
+
 constexpr uint8_t TLC_RESET_PIN_NUMBER{9};
 
 constexpr uint8_t SR_DATAIN_PIN_NUMBER{14};
@@ -101,7 +103,8 @@ HAL::HAL()
   SR_SCLOCK(clock, sys_config, GPIO_Types::Port::C, SR_SCLOCK_PIN_NUMBER), SR_OE(clock, sys_config, GPIO_Types::Port::B, SR_OE_PIN_NUMBER),
   SR_CLEAR(clock, sys_config, GPIO_Types::Port::C, SR_CLEAR_PIN_NUMBER), BUTTON1(clock, sys_config, GPIO_Types::Port::A, BUTTON1_PIN_NUMBER),
   BUTTON2(clock, sys_config, GPIO_Types::Port::B, BUTTON2_PIN_NUMBER), BUTTON3(clock, sys_config, GPIO_Types::Port::C, BUTTON3_PIN_NUMBER),
-  BUTTON4(clock, sys_config, GPIO_Types::Port::E, BUTTON4_PIN_NUMBER), DMA1_2(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel2),
+  BUTTON4(clock, sys_config, GPIO_Types::Port::E, BUTTON4_PIN_NUMBER), DAC_OUTPUT{clock, sys_config, GPIO_Types::Port::A, DAC_OUTPUT_PIN_NUMBER},
+  DMA1_2(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel2), DMA1_3(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel3),
   DMA1_4(clock, DMA_Types::DmaNumber::DMA_1, DMA_Types::Channel::Channel4), DMA2_2(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel2),
   DMA2_4(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel4), DMA2_7(clock, DMA_Types::DmaNumber::DMA_2, DMA_Types::Channel::Channel7),
   I2C_1(clock, sys_config, I2C_Types::I2CNumber::I2C_1, I2C1_SCL, I2C1_SDA, I2C_CLOCK_SPEED_1MHZ, &DMA2_7),
@@ -114,6 +117,7 @@ HAL::HAL()
   QUAD_SPI(clock, QSPI_IO0, QSPI_IO1, QSPI_IO2, QSPI_IO3, QSPI_CLK, QSPI_CS, QSPI_CLOCK_SPEED),
   USART_3(clock, Usart_Types::UsartNumber::USART_3, UART3_TX, UART3_RX, ESP_UART_SPEED),
   USART_4(clock, Usart_Types::UsartNumber::UART_4, UART4_TX, UART4_RX, DEBUG_UART_SPEED),
+  DAC1{clock, DAC_Types::DacNumber::DAC_1, DAC_Types::DacChannel::CHANNEL_1, DAC_Types::DacTrigger::TIM6_TRGO, DAC_OUTPUT, &DMA1_3},
   SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR, SR_CHAIN_LENGTH), TLC59208F_1(I2C_4, TLC59208F_1_ADDRESS, TLC_RESET),
   TLC59208F_2(I2C_1, TLC59208F_2_ADDRESS, TLC_RESET), TLC59208F_3(I2C_3, TLC59208F_3_ADDRESS, TLC_RESET), TLC59208F_4(I2C_2, TLC59208F_4_ADDRESS, TLC_RESET),
   LSM9DS1_1(SPI_1, SPI1_CS1, SPI1_CS2), BME280_1(SPI_1, SPI1_CS3), Timer2(clock, timer_types::Timer_number::Timer_2, TIMER_2_FREQUENCY),

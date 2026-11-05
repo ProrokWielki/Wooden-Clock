@@ -564,6 +564,49 @@ volatile uint32_t * to_address(QSPI_types::Register register_name)
     }
 }
 
+volatile uint32_t * to_address(DAC_Types::DacNumber dac_number, DAC_Types::Register register_name)
+{
+    DAC_TypeDef * dac_address{};
+
+    switch (dac_number)
+    {
+        case DAC_Types::DacNumber::DAC_1:
+            dac_address = DAC1;  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
+            break;
+        default:
+            assert(false && "invalid dac number");
+            return nullptr;
+    };
+
+    switch (register_name)
+    {
+        case DAC_Types::Register::CR:
+            return &(dac_address->CR);
+            break;
+        case DAC_Types::Register::CCR:
+            return &(dac_address->CCR);
+            break;
+        case DAC_Types::Register::MCR:
+            return &(dac_address->MCR);
+            break;
+        case DAC_Types::Register::SR:
+            return &(dac_address->CR);
+            break;
+        case DAC_Types::Register::SWTRGR:
+            return &(dac_address->SWTRIGR);
+            break;
+        case DAC_Types::Register::DHR12R1:
+            return &(dac_address->DHR12R1);
+            break;
+        case DAC_Types::Register::DHR8R1:
+            return &(dac_address->DHR8R1);
+            break;
+        default:
+            assert(false && "invalid DAC register");
+            return nullptr;
+    }
+}
+
 volatile uint16_t * to_16bit_register_address(Usart_Types::UsartNumber usart, Usart_Types::Register usart_register)
 {
     USART_TypeDef * usart_address{};

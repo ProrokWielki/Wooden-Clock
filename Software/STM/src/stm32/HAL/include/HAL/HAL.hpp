@@ -9,6 +9,7 @@
 #define HAL_HAL_HPP_
 
 #include <HAL/Clock.hpp>
+#include <HAL/DAC.hpp>
 #include <HAL/DMA.hpp>
 #include <HAL/Flash.hpp>
 #include <HAL/GPIO.hpp>
@@ -84,7 +85,10 @@ public:
     GPIO BUTTON3;
     GPIO BUTTON4;
 
+    GPIO DAC_OUTPUT;
+
     DMA DMA1_2;
+    DMA DMA1_3;
     DMA DMA1_4;
     DMA DMA2_2;
     DMA DMA2_4;
@@ -101,6 +105,8 @@ public:
 
     USART USART_3;
     USART USART_4;
+
+    DAC DAC1;
 
     S25FL129P external_flash{QUAD_SPI};
 

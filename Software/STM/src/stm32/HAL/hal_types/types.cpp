@@ -656,6 +656,18 @@ uint8_t to_enable_bit_position(ClockSource clock_source)
     }
 }
 
+Peripheral to_peripheral(DAC_Types::DacNumber dac)
+{
+    switch (dac)
+    {
+        case DAC_Types::DacNumber::DAC_1:
+            return Peripheral::DAC_1;
+        default:
+            assert(false && "invalid dac");
+            return Peripheral::DAC_1;
+    }
+}
+
 uint8_t to_ready_bit_position(ClockSource clock_source)
 {
     switch (clock_source)
@@ -1164,6 +1176,32 @@ uint32_t to_value(timer_types::MasterMode master_mode)
             return 2;
         default:
             assert(false && "Invalid master mode.");
+            return 0;
+    };
+}
+
+uint32_t to_value(DAC_Types::DacTrigger trigger)
+{
+    switch (trigger)
+    {
+        case DAC_Types::DacTrigger::TIM6_TRGO:
+            return 0;
+        case DAC_Types::DacTrigger::TIM8_TRGO:
+            return 1;
+        case DAC_Types::DacTrigger::TIM7_TRGO:
+            return 2;
+        case DAC_Types::DacTrigger::TIM5_TRGO:
+            return 3;
+        case DAC_Types::DacTrigger::TIM2_TRGO:
+            return 4;
+        case DAC_Types::DacTrigger::TIM4_TRGO:
+            return 5;
+        case DAC_Types::DacTrigger::EXTI9:
+            return 6;
+        case DAC_Types::DacTrigger::SWTRIG:
+            return 7;
+        default:
+            assert(false && "Invalid DAC trigger.");
             return 0;
     };
 }
