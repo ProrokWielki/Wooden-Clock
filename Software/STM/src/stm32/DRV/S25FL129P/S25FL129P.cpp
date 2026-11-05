@@ -1,15 +1,19 @@
 #include "include/DRV/S25FL129P.hpp"
+#include <array>
 
 S25FL129P::S25FL129P(QSPI & qspi) : qspi_(qspi)
 {
 }
 
-uint16_t S25FL129P::get_manufacturer_id()
+uint64_t S25FL129P::get_manufacturer_id()
 {
-    auto id = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x9F, 5);
-    // uint8_t manufacturer_id_buffer[2]{};
-    // spi_.read_data_from_register(cs_, 0x90, {manufacturer_id_buffer}, 2);
-    return (static_cast<uint16_t>(id[0]) << 8) | id[1];
+    constexpr uint8_t MANUFACTURER_ID_LENGTH{5};
+
+    std::array<uint8_t, MANUFACTURER_ID_LENGTH> id_buffer{};
+    auto id = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x9F, id_buffer);
+
+    return (static_cast<uint64_t>(id[0]) << 32) | (static_cast<uint64_t>(id[1]) << 24) | (static_cast<uint64_t>(id[2]) << 16) |
+           (static_cast<uint64_t>(id[3]) << 8) | static_cast<uint64_t>(id[5]);
 }
 
 // void S25FL129P::erase_sector(uint8_t sector)
@@ -38,8 +42,11 @@ void S25FL129P::write_data(uint32_t address, std::span<uint8_t> data)
     while (is_write_in_progress())
         ;
 
-    auto sr_value = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x05, 1);
-    auto cr_value = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x35, 1);
+    std::array<uint8_t, 1> sr_buffer{};
+    std::array<uint8_t, 1> cr_buffer{};
+
+    auto sr_value = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x05, sr_buffer);
+    auto cr_value = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x35, cr_buffer);
 
     std::array<uint8_t, 2> data_to_send{sr_value[0], static_cast<uint8_t>(cr_value[0] | 0x02)};
 
@@ -63,8 +70,11 @@ void S25FL129P::switch_to_memory_mapped_mode()
     while (is_write_in_progress())
         ;
 
-    auto sr_value = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x05, 1);
-    auto cr_value = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x35, 1);
+    std::array<uint8_t, 1> sr_buffer{};
+    std::array<uint8_t, 1> cr_buffer{};
+
+    auto sr_value = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x05, sr_buffer);
+    auto cr_value = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x35, cr_buffer);
 
     std::array<uint8_t, 2> data_to_send{sr_value[0], static_cast<uint8_t>(cr_value[0] | 0x02)};
 
@@ -95,13 +105,15 @@ void S25FL129P::enable_erase()
 
 bool S25FL129P::is_write_in_progress()
 {
-    auto status = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x05, 1);
+    std::array<uint8_t, 1> status_buffer{};
+    auto status = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x05, status_buffer);
     return (status[0] & 0x01) != 0;
 }
 
 bool S25FL129P::is_write_enabled()
 {
-    auto status = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x05, 1);
+    std::array<uint8_t, 1> status_buffer{};
+    auto status = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x05, status_buffer);
     return (status[0] & 0x02) != 0;
 }
 

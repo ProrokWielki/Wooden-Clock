@@ -10,7 +10,7 @@ class S25FL129P
 public:
     S25FL129P(QSPI & qspi);
 
-    uint16_t get_manufacturer_id();
+    uint64_t get_manufacturer_id();
     void erase_sector(uint8_t sector);
     void erase_chip();
     void write_data(uint32_t address, std::span<uint8_t> data);
