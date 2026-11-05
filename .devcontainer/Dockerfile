@@ -24,6 +24,8 @@ RUN apk update && \
     graphviz \
     gcompat \ 
     protobuf \
-    openjdk8-jre
+    openjdk8-jre \
+    black \
+    py3-flake8
 
-RUN pip install protobuf grpcio-tools cmakelang platformio readelf flake --break-system-packages
+RUN pip install protobuf grpcio-tools cmakelang platformio readelf --break-system-packages
