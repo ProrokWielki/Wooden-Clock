@@ -23,7 +23,7 @@ ELSEIF(CMAKE_BUILD_TYPE STREQUAL "ARM_Size")
 ENDIF()
 
 SET(EXTRA_FLAGS
-    "${DEBUG_FLAG} ${O_FLAG} -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wall -Wextra -Wpedantic -Werror"
+    "${DEBUG_FLAG} ${O_FLAG} -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wall -Wextra -Wpedantic -Werror -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables"
 )
 
 SET(CMAKE_EXE_LINKER_FLAGS
