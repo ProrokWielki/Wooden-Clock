@@ -22,7 +22,8 @@ public:
     QSPI(Clock & clock, GPIO & IO1, GPIO & IO2, GPIO & IO3, GPIO & IO4, GPIO & SCK, GPIO & CS, uint32_t frequency);
 
     void enable_memory_mapped_mode(uint8_t instruction);
-    std::span<uint8_t> read_data_from_register(Mode mode, uint8_t instruction, uint8_t data_to_receive_length);
+    void disable_memory_mapped_mode();
+    std::span<uint8_t> read_data_from_register(Mode mode, uint8_t instruction, std::span<uint8_t> read_data_buffer);
     void send_command(Mode mode, uint8_t instruction);
     void write_data(Mode mode, uint8_t instruction, const std::span<uint8_t> data_to_write);
     void write_data(Mode mode, uint8_t instruction, uint32_t address, const std::span<uint8_t> data_to_write);

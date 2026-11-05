@@ -32,12 +32,12 @@ QSPI::QSPI(Clock & clock, GPIO & IO1, GPIO & IO2, GPIO & IO3, GPIO & IO4, GPIO &
     enable();
 }
 
-std::span<uint8_t> QSPI::read_data_from_register(Mode mode, uint8_t instruction, uint8_t num_of_bytes_to_read)
+std::span<uint8_t> QSPI::read_data_from_register(Mode mode, uint8_t instruction, std::span<uint8_t> read_data_buffer)
 {
     while (is_busy())
         ;
 
-    DLR.write(num_of_bytes_to_read - 1);
+    DLR.write(read_data_buffer.size() - 1);
 
     Register<uint32_t> ccr{CCR.read()};
     if (mode == Mode::SingleLine)
@@ -58,15 +58,14 @@ std::span<uint8_t> QSPI::read_data_from_register(Mode mode, uint8_t instruction,
 
     CCR.write(ccr.read());
 
-    uint8_t id_buffer[100]{};
-    for (uint8_t i = 0; i < num_of_bytes_to_read; i++)
+    for (auto & byte : read_data_buffer)
     {
         while (!(SR.get_bit(2) || SR.get_bit(1)))
             ;
-        id_buffer[i] = DR.read<uint8_t>();
+        byte = DR.read<uint8_t>();
     }
 
-    return {id_buffer, num_of_bytes_to_read};
+    return read_data_buffer;
 }
 
 void QSPI::send_command(Mode mode, uint8_t instruction)
@@ -137,6 +136,22 @@ void QSPI::enable_memory_mapped_mode(uint8_t instruction)
 
     while (is_busy())
         ;
+}
+
+void QSPI::disable_memory_mapped_mode()
+{
+    constexpr uint8_t ABORT_BIT_POSITION{1};
+
+    CR.set_bit(ABORT_BIT_POSITION);
+
+    while (CR.get_bit(ABORT_BIT_POSITION))
+        ;
+
+    constexpr uint8_t FMODE_POSTION{26};
+    constexpr uint8_t FMODE_LENGTH{2};
+    constexpr uint8_t INDIRECT_WRITE_MODE_VALUE{0};
+
+    CCR.set_value(INDIRECT_WRITE_MODE_VALUE, FMODE_POSTION, FMODE_LENGTH);
 }
 
 void QSPI::write_data(Mode mode, uint8_t instruction, const std::span<uint8_t> data_to_write)
