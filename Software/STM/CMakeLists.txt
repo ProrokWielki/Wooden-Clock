@@ -57,7 +57,8 @@ ADD_CUSTOM_TARGET(
 ADD_CUSTOM_TARGET(tidy COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ci/run_clang_tidy.sh
                                ${CMAKE_CURRENT_LIST_DIR})
 
-ADD_CUSTOM_TARGET(iwyu COMMAND iwyu-tool -p ${CMAKE_BINARY_DIR})
+ADD_CUSTOM_TARGET(iwyu COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ci/run_iwyu.sh
+                               ${CMAKE_CURRENT_LIST_DIR})
 
 ADD_CUSTOM_TARGET(
   flash
