@@ -4,7 +4,8 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   PcBSP
-  PUBLIC PcDisplay
+  PUBLIC PcAudioOutput
+         PcDisplay
          PcClock
          PcAccelerometer
          PcMagnetometer
@@ -14,6 +15,7 @@ TARGET_LINK_LIBRARIES(
 
 TARGET_INCLUDE_DIRECTORIES(PcBSP PUBLIC include)
 
+ADD_SUBDIRECTORY(AudioOutput)
 ADD_SUBDIRECTORY(Display)
 ADD_SUBDIRECTORY(Accelerometer)
 ADD_SUBDIRECTORY(Magnetometer)

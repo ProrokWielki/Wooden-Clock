@@ -6,6 +6,7 @@ TARGET_LINK_LIBRARIES(
   StmBSP
   Button
   StmDisplay
+  StmAudioOutput
   APP
   HAL
   Magnetometer
@@ -16,6 +17,7 @@ TARGET_LINK_LIBRARIES(
 
 TARGET_INCLUDE_DIRECTORIES(StmBSP PUBLIC include)
 
+ADD_SUBDIRECTORY(AudioOutput)
 ADD_SUBDIRECTORY(Display)
 ADD_SUBDIRECTORY(Magnetometer)
 ADD_SUBDIRECTORY(Accelerometer)

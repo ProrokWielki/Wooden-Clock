@@ -9,6 +9,7 @@
 #define BSP_BSP_HPP_
 
 #include <BSP/Accelerometer.hpp>
+#include <BSP/AudioOutput.hpp>
 #include <BSP/Button.hpp>
 #include <BSP/Clock.hpp>
 #include <BSP/Communication.hpp>
@@ -35,6 +36,7 @@ public:
     BSP2::Accelerometer accelerometer{};
     BSP2::Clock clock{};
     BSP2::Thermometer thermometer{};
+    AudioOutput audio_output{};
 
     Button button_right;
     Button button_left;

@@ -9,6 +9,7 @@
 #define BSP_BSP_HPP_
 
 #include <BSP/Accelerometer.hpp>
+#include <BSP/AudioOutput.hpp>
 #include <BSP/Button.hpp>
 #include <BSP/Clock.hpp>
 #include <BSP/Communication.hpp>
@@ -48,6 +49,8 @@ public:
 
     Communication communication_interface;
     Communication debug_communication_interface;
+
+    AudioOutput audio_output{};
 
 private:
     static void display_init();
