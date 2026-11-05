@@ -3,12 +3,11 @@
 #include <array>
 #include <cstdint>
 
-
 struct DownArrow {
-    constexpr static uint8_t WIDTH{12};
-    constexpr static uint8_t HEIGHT{14};
+    constexpr static size_t WIDTH{12};
+    constexpr static size_t HEIGHT{14};
 
-    constexpr static std::array<uint8_t, static_cast<size_t>(WIDTH * HEIGHT)> DATA{
+    [[gnu::section(".external_flash")]] inline static const std::array<uint8_t, WIDTH * HEIGHT> DATA{
     // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
     0,   0,   0,   0,   255, 255, 255, 255, 0,   0,   0,   0,   0,   0,   0,   0,   255, 255, 255, 255, 0,   0,   0,   0,   0,   0,   0,   0,   255,
     255, 255, 255, 0,   0,   0,   0,   0,   0,   0,   0,   255, 255, 255, 255, 0,   0,   0,   0,   0,   0,   0,   0,   255, 255, 255, 255, 0,   0,

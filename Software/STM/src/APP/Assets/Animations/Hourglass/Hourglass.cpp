@@ -25,35 +25,32 @@
 #include "frames/8.hpp"
 #include "frames/9.hpp"
 
-namespace
-{
-const static Image frame_1{Hourglass_Frame_1::WIDTH, Hourglass_Frame_1::HEIGHT, Hourglass_Frame_1::DATA.data()};
-const static Image frame_2{Hourglass_Frame_2::WIDTH, Hourglass_Frame_2::HEIGHT, Hourglass_Frame_2::DATA.data()};
-const static Image frame_3{Hourglass_Frame_3::WIDTH, Hourglass_Frame_3::HEIGHT, Hourglass_Frame_3::DATA.data()};
-const static Image frame_4{Hourglass_Frame_4::WIDTH, Hourglass_Frame_4::HEIGHT, Hourglass_Frame_4::DATA.data()};
-const static Image frame_5{Hourglass_Frame_5::WIDTH, Hourglass_Frame_5::HEIGHT, Hourglass_Frame_5::DATA.data()};
-const static Image frame_6{Hourglass_Frame_6::WIDTH, Hourglass_Frame_6::HEIGHT, Hourglass_Frame_6::DATA.data()};
-const static Image frame_7{Hourglass_Frame_7::WIDTH, Hourglass_Frame_7::HEIGHT, Hourglass_Frame_7::DATA.data()};
-const static Image frame_8{Hourglass_Frame_8::WIDTH, Hourglass_Frame_8::HEIGHT, Hourglass_Frame_8::DATA.data()};
-const static Image frame_9{Hourglass_Frame_9::WIDTH, Hourglass_Frame_9::HEIGHT, Hourglass_Frame_9::DATA.data()};
-const static Image frame_10{Hourglass_Frame_10::WIDTH, Hourglass_Frame_10::HEIGHT, Hourglass_Frame_10::DATA.data()};
-const static Image frame_11{Hourglass_Frame_11::WIDTH, Hourglass_Frame_11::HEIGHT, Hourglass_Frame_11::DATA.data()};
-const static Image frame_12{Hourglass_Frame_12::WIDTH, Hourglass_Frame_12::HEIGHT, Hourglass_Frame_12::DATA.data()};
-const static Image frame_13{Hourglass_Frame_13::WIDTH, Hourglass_Frame_13::HEIGHT, Hourglass_Frame_13::DATA.data()};
-const static Image frame_14{Hourglass_Frame_14::WIDTH, Hourglass_Frame_14::HEIGHT, Hourglass_Frame_14::DATA.data()};
-const static Image frame_15{Hourglass_Frame_15::WIDTH, Hourglass_Frame_15::HEIGHT, Hourglass_Frame_15::DATA.data()};
-const static Image frame_16{Hourglass_Frame_16::WIDTH, Hourglass_Frame_16::HEIGHT, Hourglass_Frame_16::DATA.data()};
-const static Image frame_17{Hourglass_Frame_17::WIDTH, Hourglass_Frame_17::HEIGHT, Hourglass_Frame_17::DATA.data()};
-const static Image frame_18{Hourglass_Frame_18::WIDTH, Hourglass_Frame_18::HEIGHT, Hourglass_Frame_18::DATA.data()};
-const static Image frame_19{Hourglass_Frame_19::WIDTH, Hourglass_Frame_19::HEIGHT, Hourglass_Frame_19::DATA.data()};
-const static Image frame_20{Hourglass_Frame_20::WIDTH, Hourglass_Frame_20::HEIGHT, Hourglass_Frame_20::DATA.data()};
-const static Image frame_21{Hourglass_Frame_21::WIDTH, Hourglass_Frame_21::HEIGHT, Hourglass_Frame_21::DATA.data()};
-
-static constexpr uint8_t NUM_OF_FRAMES{21};
-}  // namespace
-
 Animation & get_hourglass_animation()
 {
+    const static Image frame_1{Hourglass_Frame_1::WIDTH, Hourglass_Frame_1::HEIGHT, Hourglass_Frame_1::DATA.data()};
+    const static Image frame_2{Hourglass_Frame_2::WIDTH, Hourglass_Frame_2::HEIGHT, Hourglass_Frame_2::DATA.data()};
+    const static Image frame_3{Hourglass_Frame_3::WIDTH, Hourglass_Frame_3::HEIGHT, Hourglass_Frame_3::DATA.data()};
+    const static Image frame_4{Hourglass_Frame_4::WIDTH, Hourglass_Frame_4::HEIGHT, Hourglass_Frame_4::DATA.data()};
+    const static Image frame_5{Hourglass_Frame_5::WIDTH, Hourglass_Frame_5::HEIGHT, Hourglass_Frame_5::DATA.data()};
+    const static Image frame_6{Hourglass_Frame_6::WIDTH, Hourglass_Frame_6::HEIGHT, Hourglass_Frame_6::DATA.data()};
+    const static Image frame_7{Hourglass_Frame_7::WIDTH, Hourglass_Frame_7::HEIGHT, Hourglass_Frame_7::DATA.data()};
+    const static Image frame_8{Hourglass_Frame_8::WIDTH, Hourglass_Frame_8::HEIGHT, Hourglass_Frame_8::DATA.data()};
+    const static Image frame_9{Hourglass_Frame_9::WIDTH, Hourglass_Frame_9::HEIGHT, Hourglass_Frame_9::DATA.data()};
+    const static Image frame_10{Hourglass_Frame_10::WIDTH, Hourglass_Frame_10::HEIGHT, Hourglass_Frame_10::DATA.data()};
+    const static Image frame_11{Hourglass_Frame_11::WIDTH, Hourglass_Frame_11::HEIGHT, Hourglass_Frame_11::DATA.data()};
+    const static Image frame_12{Hourglass_Frame_12::WIDTH, Hourglass_Frame_12::HEIGHT, Hourglass_Frame_12::DATA.data()};
+    const static Image frame_13{Hourglass_Frame_13::WIDTH, Hourglass_Frame_13::HEIGHT, Hourglass_Frame_13::DATA.data()};
+    const static Image frame_14{Hourglass_Frame_14::WIDTH, Hourglass_Frame_14::HEIGHT, Hourglass_Frame_14::DATA.data()};
+    const static Image frame_15{Hourglass_Frame_15::WIDTH, Hourglass_Frame_15::HEIGHT, Hourglass_Frame_15::DATA.data()};
+    const static Image frame_16{Hourglass_Frame_16::WIDTH, Hourglass_Frame_16::HEIGHT, Hourglass_Frame_16::DATA.data()};
+    const static Image frame_17{Hourglass_Frame_17::WIDTH, Hourglass_Frame_17::HEIGHT, Hourglass_Frame_17::DATA.data()};
+    const static Image frame_18{Hourglass_Frame_18::WIDTH, Hourglass_Frame_18::HEIGHT, Hourglass_Frame_18::DATA.data()};
+    const static Image frame_19{Hourglass_Frame_19::WIDTH, Hourglass_Frame_19::HEIGHT, Hourglass_Frame_19::DATA.data()};
+    const static Image frame_20{Hourglass_Frame_20::WIDTH, Hourglass_Frame_20::HEIGHT, Hourglass_Frame_20::DATA.data()};
+    const static Image frame_21{Hourglass_Frame_21::WIDTH, Hourglass_Frame_21::HEIGHT, Hourglass_Frame_21::DATA.data()};
+
+    static constexpr uint8_t NUM_OF_FRAMES{21};
+
     static std::array<std::reference_wrapper<const Image>, NUM_OF_FRAMES> frames{frame_1,  frame_2,  frame_3,  frame_4,  frame_5,  frame_6,  frame_7,
                                                                                  frame_8,  frame_9,  frame_10, frame_11, frame_12, frame_13, frame_14,
                                                                                  frame_15, frame_16, frame_17, frame_18, frame_19, frame_20, frame_21};
