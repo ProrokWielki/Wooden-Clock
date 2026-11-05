@@ -1,7 +1,7 @@
 INCLUDE(FetchContent)
 FETCHCONTENT_DECLARE(
   imgui_external
-  URL https://github.com/ocornut/imgui/archive/refs/tags/v1.91.9.tar.gz
+  URL https://github.com/ocornut/imgui/archive/refs/tags/v1.93.0.tar.gz
       EXCLUDE_FROM_ALL)
 FETCHCONTENT_MAKEAVAILABLE(imgui_external)
 
@@ -17,6 +17,8 @@ ADD_LIBRARY(
   ${imgui_external_SOURCE_DIR}/imgui_demo.cpp
   ${imgui_external_SOURCE_DIR}/backends/imgui_impl_allegro5.cpp)
 TARGET_INCLUDE_DIRECTORIES(imgui PUBLIC ${imgui_external_SOURCE_DIR})
+
+TARGET_COMPILE_OPTIONS(imgui PRIVATE -Wno-error)
 
 ADD_EXECUTABLE(
   WoodenClockSimulator
