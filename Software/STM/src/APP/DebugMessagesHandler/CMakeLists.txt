@@ -4,4 +4,4 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
   debug_messages_handler
-  PRIVATE BSP bootloader)
+  PRIVATE BSP bootloader protobuf_wrapper)
