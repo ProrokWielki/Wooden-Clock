@@ -12,6 +12,7 @@ int main()
     BSP::get().display.set_frame_buffer(BSP::get().frame_buffer1);
 
     NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+    NVIC_EnableIRQ(DMA1_Channel3_IRQn);
     NVIC_EnableIRQ(DMA1_Channel4_IRQn);
     NVIC_EnableIRQ(DMA2_Channel7_IRQn);
     NVIC_EnableIRQ(DMA2_Channel2_IRQn);
