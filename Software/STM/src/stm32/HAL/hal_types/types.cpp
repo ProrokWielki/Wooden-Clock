@@ -599,6 +599,30 @@ Peripheral to_peripheral(Usart_Types::UsartNumber usart)
     };
 }
 
+Peripheral to_peripheral(timer_types::Timer_number timer)
+{
+    switch (timer)
+    {
+        case timer_types::Timer_number::Timer_1:
+            return Peripheral::TIMER_1;
+        case timer_types::Timer_number::Timer_2:
+            return Peripheral::TIMER_2;
+        case timer_types::Timer_number::Timer_3:
+            return Peripheral::TIMER_3;
+        case timer_types::Timer_number::Timer_6:
+            return Peripheral::TIMER_6;
+        case timer_types::Timer_number::Timer_7:
+            return Peripheral::TIMER_7;
+        case timer_types::Timer_number::Timer_15:
+            return Peripheral::TIMER_15;
+        case timer_types::Timer_number::Timer_16:
+            return Peripheral::TIMER_16;
+        default:
+            assert(false && "Invalid timer number");
+            return Peripheral::USART_1;
+    };
+}
+
 uint8_t to_enable_bit_position(ClockSource clock_source)
 {
     switch (clock_source)
@@ -1124,6 +1148,22 @@ uint32_t to_value(I2C_Types::TransferDirection transfer_direction)
             return 1;
         default:
             assert(false && "Invalid transfer direction.");
+            return 0;
+    };
+}
+
+uint32_t to_value(timer_types::MasterMode master_mode)
+{
+    switch (master_mode)
+    {
+        case timer_types::MasterMode::RESET:
+            return 0;
+        case timer_types::MasterMode::ENABLE:
+            return 1;
+        case timer_types::MasterMode::UPDATE:
+            return 2;
+        default:
+            assert(false && "Invalid master mode.");
             return 0;
     };
 }

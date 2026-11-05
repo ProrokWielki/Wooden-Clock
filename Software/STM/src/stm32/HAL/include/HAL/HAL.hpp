@@ -116,6 +116,7 @@ public:
     BME280 BME280_1;
 
     Timer Timer2;
+    Timer DAC_TIMER;
 
     RTC_ rtc;
 

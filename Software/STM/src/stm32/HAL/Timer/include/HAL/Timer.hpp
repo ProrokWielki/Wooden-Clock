@@ -8,6 +8,7 @@
 #ifndef HAL_TIMER_TIMER_HPP_
 #define HAL_TIMER_TIMER_HPP_
 
+#include <HAL/Clock.hpp>
 #include <HAL/Register.hpp>
 #include <HAL/types.hpp>
 
@@ -25,7 +26,7 @@ public:
      *
      * @param timer pointer to timer structure.
      */
-    explicit Timer(timer_types::Timer_number timer);
+    explicit Timer(Clock & clock, timer_types::Timer_number timer, uint32_t frequency, timer_types::MasterMode master_mode = timer_types::MasterMode::RESET);
 
     /**
      * @brief Sets reload value.
@@ -56,6 +57,11 @@ public:
     void enable_interrupt(timer_types::Interrupt interrupt);
 
     /**
+     * @brief Set master mode.
+     */
+    void set_master_mode(timer_types::MasterMode master_mode);
+
+    /**
      * @brief Enables the timer.
      */
     void enable();
@@ -66,9 +72,12 @@ public:
     void disable();
 
 private:
+    void set_frequency(uint32_t frequency);
+
     Register<uint32_t> ARR;
     Register<uint32_t> PSC;
     Register<uint32_t> CR1;
+    Register<uint32_t> CR2;
     Register<uint32_t> SR;
     Register<uint32_t> DIER;
 };

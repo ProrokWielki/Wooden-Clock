@@ -73,6 +73,9 @@ constexpr float I2C_CLOCK_SPEED_1MHZ{1'000'000.0};
 constexpr unsigned int ESP_UART_SPEED{500'000};
 constexpr unsigned int DEBUG_UART_SPEED{115200};
 
+constexpr uint32_t DAC_TIMER_FREQUENCY{16'000};
+constexpr uint32_t TIMER_2_FREQUENCY{1'500};
+
 }  // namespace
 
 // bool HAL::new_time_set{false};
@@ -113,7 +116,8 @@ HAL::HAL()
   USART_4(clock, Usart_Types::UsartNumber::UART_4, UART4_TX, UART4_RX, DEBUG_UART_SPEED),
   SR_74HC595_1(SR_DATAIN, SR_RCLOCK, SR_SCLOCK, SR_OE, SR_CLEAR, SR_CHAIN_LENGTH), TLC59208F_1(I2C_4, TLC59208F_1_ADDRESS, TLC_RESET),
   TLC59208F_2(I2C_1, TLC59208F_2_ADDRESS, TLC_RESET), TLC59208F_3(I2C_3, TLC59208F_3_ADDRESS, TLC_RESET), TLC59208F_4(I2C_2, TLC59208F_4_ADDRESS, TLC_RESET),
-  LSM9DS1_1(SPI_1, SPI1_CS1, SPI1_CS2), BME280_1(SPI_1, SPI1_CS3), Timer2(timer_types::Timer_number::Timer_2), rtc{clock, power}
+  LSM9DS1_1(SPI_1, SPI1_CS1, SPI1_CS2), BME280_1(SPI_1, SPI1_CS3), Timer2(clock, timer_types::Timer_number::Timer_2, TIMER_2_FREQUENCY),
+  DAC_TIMER{clock, timer_types::Timer_number::Timer_6, DAC_TIMER_FREQUENCY, timer_types::MasterMode::UPDATE}, rtc{clock, power}
 {
 }
 
@@ -132,7 +136,7 @@ void HAL::init()
 
     qspi_init();
 
-    timer_init();
+    // timer_init();
     // dma_init();
     i2c_init();
     // spi_init();

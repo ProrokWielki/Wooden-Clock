@@ -6,4 +6,4 @@ TARGET_INCLUDE_DIRECTORIES(Timer PUBLIC include)
 
 TARGET_LINK_LIBRARIES(
   Timer
-  PRIVATE CmsisBridge HalTypes Register)
+  PRIVATE CmsisBridge HalTypes Register Clock)

@@ -434,6 +434,8 @@ volatile uint32_t * to_address(timer_types::Timer_number timer, timer_types::Reg
             return &(timer_address->PSC);
         case timer_types::Register::CR1:
             return &(timer_address->CR1);
+        case timer_types::Register::CR2:
+            return &(timer_address->CR2);
         case timer_types::Register::SR:
             return &(timer_address->SR);
         case timer_types::Register::DIER:

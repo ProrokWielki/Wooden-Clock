@@ -666,6 +666,7 @@ enum class Timer_number
     Timer_2,
     Timer_3,
     Timer_6,
+    Timer_7,
     Timer_15,
     Timer_16,
 };
@@ -675,6 +676,7 @@ enum class Register
     ARR,
     PSC,
     CR1,
+    CR2,
     SR,
     DIER,
 };
@@ -692,6 +694,14 @@ enum class Interrupt
     CAPTURE_COMPARE_OVERCAPTURE_3,
     CAPTURE_COMPARE_OVERCAPTURE_4,
 };
+
+enum class MasterMode
+{
+    RESET,
+    ENABLE,
+    UPDATE
+};
+
 }  // namespace timer_types
 
 namespace Usart_Types
@@ -794,6 +804,7 @@ Peripheral to_peripheral(GPIO_Types::Port port);
 Peripheral to_peripheral(I2C_Types::I2CNumber i2c);
 Peripheral to_peripheral(DMA_Types::DmaNumber dma);
 Peripheral to_peripheral(Usart_Types::UsartNumber usart);
+Peripheral to_peripheral(timer_types::Timer_number timer);
 
 uint32_t to_clock_source_value(PeripheralWithSelectableClockSource peripheral, ClockSource clock_source);
 uint32_t to_system_clock_source_value(ClockSource clock_source);
@@ -829,6 +840,7 @@ uint32_t to_value(DMA_Types::ReadDirection read_direction);
 uint32_t to_value(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request);
 uint32_t to_value(SPI_types::BaudRatePrescaller baudrate_prescaller);
 uint32_t to_value(Power_Types::WriteProtectionState state);
+uint32_t to_value(timer_types::MasterMode master_mode);
 
 PeripheralWithSelectableClockSource to_peripheral_with_clock_select(I2C_Types::I2CNumber i2c);
 
