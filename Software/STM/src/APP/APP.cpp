@@ -105,7 +105,8 @@ void system_interface_task(void *)
         {
 
             auto message = BSP::get().debug_communication_interface.get_message();
-            debug_messages_handler.handle_debug_message(message);
+            auto mode_message = ProtobufWrapper::parse_mode_message(message.data.data(), message.length);
+            debug_messages_handler.handle_debug_message(mode_message);
         }
 
         OsAbstraction::delay_ms(sleep_time_ms);
