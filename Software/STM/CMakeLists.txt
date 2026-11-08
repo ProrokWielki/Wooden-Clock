@@ -65,7 +65,7 @@ ADD_CUSTOM_TARGET(
   COMMAND
     openocd -f /usr/share/openocd/scripts/interface/jlink.cfg -c
     "transport select swd" -f /usr/share/openocd/scripts/target/stm32l4x.cfg -c
-    "program ${CMAKE_BINARY_DIR}/src/stm32/WoodenClock verify reset exit")
+    "program ${CMAKE_BINARY_DIR}/src/stm32/WoodenClock.elf reset exit")
 
 ADD_CUSTOM_TARGET(
   coverage
