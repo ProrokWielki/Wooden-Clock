@@ -20,6 +20,9 @@ proto:
 format:
 	black --config .black .
 
+format-check:
+	black --check --config .black .
+
 flake8:
 	flake8
 

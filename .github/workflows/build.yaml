@@ -124,6 +124,6 @@ jobs:
     - name: generate protobuf files
       run: cd Software/Flasher && make proto
     - name: format check 
-      run: cd Software/Flasher && make format
+      run: cd Software/Flasher && make format-check
     - name: linter check 
       run: cd Software/Flasher && make flake8
