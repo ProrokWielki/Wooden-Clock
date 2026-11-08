@@ -13,14 +13,24 @@ uint64_t S25FL129P::get_manufacturer_id()
     auto id = qspi_.read_data_from_register(QSPI::Mode::SingleLine, 0x9F, id_buffer);
 
     return (static_cast<uint64_t>(id[0]) << 32) | (static_cast<uint64_t>(id[1]) << 24) | (static_cast<uint64_t>(id[2]) << 16) |
-           (static_cast<uint64_t>(id[3]) << 8) | static_cast<uint64_t>(id[5]);
+           (static_cast<uint64_t>(id[3]) << 8) | static_cast<uint64_t>(id[4]);
 }
 
-// void S25FL129P::erase_sector(uint8_t sector)
-// {
-//     uint32_t address = sector * 0x10000;  // Each sector is 64KB (0x10000 bytes)
-//     qspi_.send_command(QSPI::Mode::SingleLine, 0x20, {reinterpret_cast<uint8_t *>(&address), reinterpret_cast<uint8_t *>(&address) + 3});
-// }
+void S25FL129P::erase_256kb_sector(uint8_t sector)
+{
+    enable_erase();
+
+    if (!is_erase_enabled())
+    {
+        return;
+    }
+
+    uint32_t address = sector * 0x40000;  // Each sector is 256kB
+    qspi_.send_command(QSPI::Mode::SingleLine, 0xD8, address);
+
+    while (is_erase_in_progress())
+        ;
+}
 
 void S25FL129P::erase_chip()
 {
