@@ -93,6 +93,33 @@ void QSPI::send_command(Mode mode, uint8_t instruction)
     CCR.write(ccr.read());
 }
 
+void QSPI::send_command(Mode mode, uint8_t instruction, uint32_t address)
+{
+    while (is_busy())
+        ;
+
+    AR.write(address);
+    Register<uint32_t> ccr{CCR.read()};
+    if (mode == Mode::SingleLine)
+    {
+        ccr.set_value(1, 8, 2);   // 1 line instruction
+        ccr.set_value(1, 10, 2);  // 1 line address
+        ccr.set_value(2, 12, 2);  // 24 bit address
+        ccr.set_value(0, 24, 2);  // no data
+        ccr.set_value(0, 26, 2);  // indirect write
+    }
+    else
+    {
+        assert(false && "Only single line mode is supported for now");
+    }
+
+    constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
+    constexpr static uint8_t INSTRUCTION_BIT_LENGTH{8};
+    ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);  // Set the instruction
+
+    CCR.write(ccr.read());
+}
+
 void QSPI::enable()
 {
     CR.set_bit(0);

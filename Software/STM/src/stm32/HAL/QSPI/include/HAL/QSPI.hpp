@@ -25,6 +25,7 @@ public:
     void disable_memory_mapped_mode();
     std::span<uint8_t> read_data_from_register(Mode mode, uint8_t instruction, std::span<uint8_t> read_data_buffer);
     void send_command(Mode mode, uint8_t instruction);
+    void send_command(Mode mode, uint8_t instruction, uint32_t address);
     void write_data(Mode mode, uint8_t instruction, const std::span<uint8_t> data_to_write);
     void write_data(Mode mode, uint8_t instruction, uint32_t address, const std::span<uint8_t> data_to_write);
     void enable();
