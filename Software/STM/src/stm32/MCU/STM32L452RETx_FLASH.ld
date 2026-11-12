@@ -41,9 +41,9 @@ _Min_Stack_Size = 0x4000; /* required amount of stack */
 MEMORY
 {
 RAM (xrw)            : ORIGIN = 0x20000000, LENGTH = 160K
-FLASH (rx)           : ORIGIN = 0x8000000, LENGTH = 512K - 4K
-SETTINGS(rx)         : ORIGIN = 0x807F000, LENGTH = 2K
-FLASHER(rx)          : ORIGIN = 0x807F800, LENGTH = 2K
+FLASH (rx)           : ORIGIN = 0x8000000, LENGTH = 512K - 56K
+SETTINGS(rx)         : ORIGIN = 0x8072000, LENGTH = 2K
+FLASHER(rx)          : ORIGIN = 0x8072800, LENGTH = 54K
 EXTERNAL_FLASH (r)   : ORIGIN = 0x90000000, LENGTH = 16M
 }
 
@@ -57,6 +57,31 @@ SECTIONS
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
   } >FLASH
+
+  .flasher_section 0x8072800 :
+  {
+    KEEP(*(.flasher_section)) /* keep my variable even if not referenced */
+
+    *STM_BootLoader*:*(.text .text.* .rodata .rodata.*)
+
+    /* std::span members: size(), data(), operator[], begin(), end(), ... */
+    *(.text._ZN*St4spanI*)
+
+    /* iterators returned by span::begin()/end() */
+    *(.text._ZN*__normal_iterator*)
+
+    *libnanopb*:*(.text .text.* .rodata .rodata.*)
+    *pb_*:*(.text .text.* .rodata .rodata.*)
+    *nanopb*:*(.text .text.* .rodata .rodata.*)
+    *_msg*:*(.text .text.* .rodata .rodata.*)
+    
+    *:*memcpy*(.text .text.* .rodata .rodata.*)
+    *:*memset*(.text .text.* .rodata .rodata.*)
+
+    *libc*:*(.text .text.* .rodata .rodata.*)
+    *libgcc*:*(.text .text.* .rodata .rodata.*)
+
+  } > FLASHER
 
   /* The program code and other data goes into FLASH */
   .text :
@@ -162,18 +187,14 @@ SECTIONS
     . = ALIGN(4);
   } >RAM
 
-  .settings_section 0x807F000 :
+  .settings_section 0x8072000 :
   {
     KEEP(*(.settings_section)) /* keep my variable even if not referenced */
   } > SETTINGS
 
-  .flasher_section 0x807F800 :
-  {
-    KEEP(*(.flasher_section)) /* keep my variable even if not referenced */
-  } > FLASHER
-
   .external_flash(READONLY) :
   {
+    *(.ARM.exidx.external_flash*)
     . = ALIGN(4);
     PROVIDE(__external_flash_start__ = .);
     
