@@ -1,0 +1,84 @@
+@startuml
+
+actor User
+
+activate STM
+
+box FLASHER #LightBlue
+    participant FLASHER
+end box
+
+box STM #LightGreen
+    participant STM
+end box
+
+
+
+
+User -> FLASHER : flash file 
+
+activate FLASHER
+
+FLASHER -> FLASHER : parse file
+
+== Flashing internal flash start==
+
+FLASHER -> STM : MODE::FLASHING
+STM -> FLASHER : STATE::IDLE
+
+FLASHER -> STM : ERASE_PAGES(FLASH::INTERNAL, first_page, num_of_pages)
+
+
+STM -> STM : unlock internal flash
+loop for each page to be erased
+    STM -> STM : erase page
+    STM --> FLASHER : STATE::PAGE_ERASED
+end
+STM -> FLASHER : STATE::IDLE
+
+loop for each 2K block to be written
+    alt page to be wrtiten
+        FLASHER -> STM : COMMAND::NEXT_TRANSFER
+        STM -> FLASHER : STATE::WAITING_FOR_NEXT_PAGE
+        FLASHER -> STM : PAGE_DATA(address, data, num_of_bytes)
+        STM -> STM : write_page(address, data, num_of_bytes)
+        STM -> FLASHER : STATE::IDLE
+    else no more data to send
+        FLASHER -> STM : COMMAND::FINISHED
+    end
+end
+
+== Flashing external flash start==
+
+STM -> FLASHER : STAT::IDLE
+FLASHER -> STM : ERASE_PAGES(FLASH::EXTERNAL, first_page, num_of_pages)
+
+loop for each sector to be erased
+    STM -> STM : erase 256kB sector
+    STM --> FLASHER : STATE::PAGE_ERASED
+end
+STM -> FLASHER : STATE::IDLE
+
+loop for each 2K block to be written
+    alt page to be wrtiten
+        FLASHER -> STM : COMMAND::NEXT_TRANSFER
+        STM -> FLASHER : STATE::WAITING_FOR_NEXT_PAGE
+        FLASHER -> STM : PAGE_DATA(address, data, num_of_bytes)
+        STM -> STM : write_data(address, data, num_of_bytes)
+        STM -> FLASHER : STATE::IDLE
+    else no more data to send
+        FLASHER -> STM : COMMAND::FINISHED
+    end
+end
+
+== Reboot ==
+
+STM -> FLASHER : STAT::FLASHING_DONE
+FLASHER -> User
+destroy FLASHER
+
+STM -> STM : reboot
+destroy STM
+
+
+@endum
