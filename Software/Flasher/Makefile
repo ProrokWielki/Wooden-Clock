@@ -26,3 +26,6 @@ format-check:
 flake8:
 	flake8
 
+ruff:
+	ruff check .
+
