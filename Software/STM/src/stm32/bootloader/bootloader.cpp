@@ -1,28 +1,18 @@
 
 #include "bootloader.hpp"
 
-#include <FreeRTOS.h>
-#include <cstdint>
-#include <task.h>
+#include "peripherals/internal_flash.hpp"
+#include "peripherals/s25fl129.hpp"
+
+#include "message_handler/message_handler.hpp"
 
 #include <stm32l452xx.h>
 
-#include "flashing_command.pb.h"
-#include "flashing_start.pb.h"
-#include "page_data.pb.h"
-#include "pb_decode.h"
-#include "pb_encode.h"
+#include <FreeRTOS.h>
+#include <task.h>
 
-#include "flashing_msg.pb.h"
-
+#include <cstdint>
 #include <span>
-
-#include "peripherals/internal_flash.hpp"
-#include "peripherals/qspi.hpp"
-#include "peripherals/s25fl129.hpp"
-#include "peripherals/uart.hpp"
-
-#include "message_handler/message_handler.hpp"
 
 __attribute__((section(".flasher_section"), noinline)) static void external_flash_disable_memory_mapped_mode()
 {

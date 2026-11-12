@@ -5,6 +5,7 @@
 #include "qspi.hpp"
 
 #include <cstdint>
+#include <span>
 
 namespace S25FL129
 {

@@ -3,6 +3,7 @@
 #include <stm32l452xx.h>
 
 #include <cstdint>
+#include <span>
 
 namespace QSPI
 {

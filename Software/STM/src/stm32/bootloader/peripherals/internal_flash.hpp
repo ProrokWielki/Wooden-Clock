@@ -1,5 +1,8 @@
 #pragma once
 
+#include "pb_decode.h"
+#include "pb_encode.h"
+
 #include <stm32l452xx.h>
 
 #include <cstdint>
