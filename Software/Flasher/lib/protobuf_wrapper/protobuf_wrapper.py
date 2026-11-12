@@ -69,16 +69,15 @@ command_enum_mapping = {
 
 
 class ProtobufWrapper:
-    def __init__(self):
-        pass
-
-    def deserialize_status(self, data):
+    @staticmethod
+    def deserialize_status(data: bytes) -> Status:
         raw_status_msg = flashing_msg.McuToPcFlashingMsg()
         raw_status_msg.ParseFromString(data)
 
         return status_enum_mapping[raw_status_msg.flashing_state]
 
-    def serialize_pages_erase(self, flash, start_page, num_of_pages):
+    @staticmethod
+    def serialize_pages_erase(flash: Flash, start_page: int, num_of_pages: int) -> bytes:
         erase_msg = flashing_msg.PcToMcuFlashingMsg()
         erase_msg.flashing_start.flash = flash_enum_mapping[flash]
         erase_msg.flashing_start.start_page = start_page
@@ -86,22 +85,25 @@ class ProtobufWrapper:
 
         return erase_msg.SerializeToString()
 
-    def serialize_page_write(self, address, data, size):
+    @staticmethod
+    def serialize_data_write(address: int, data: bytes, size: int) -> bytes:
         write_msg = flashing_msg.PcToMcuFlashingMsg()
-        write_msg.page_data.address = address
-        write_msg.page_data.page_data = data
-        write_msg.page_data.size = size
+        write_msg.write_data.address = address
+        write_msg.write_data.data = data
+        write_msg.write_data.size = size
 
         return write_msg.SerializeToString()
 
-    def serialize_mode(self, mode):
-        messsage = debug_msg.PcToMcuDebugMsg()
-        messsage.mode = mode_enum_mapping[mode]
+    @staticmethod
+    def serialize_mode(mode: Mode) -> bytes:
+        message = debug_msg.PcToMcuDebugMsg()
+        message.mode = mode_enum_mapping[mode]
 
-        return messsage.SerializeToString()
+        return message.SerializeToString()
 
-    def serialize_command(self, command):
-        messsage = flashing_msg.PcToMcuFlashingMsg()
-        messsage.flashing_command = command_enum_mapping[command]
+    @staticmethod
+    def serialize_command(command: Command) -> bytes:
+        message = flashing_msg.PcToMcuFlashingMsg()
+        message.flashing_command = command_enum_mapping[command]
 
-        return messsage.SerializeToString()
+        return message.SerializeToString()
