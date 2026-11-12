@@ -26,6 +26,7 @@ RUN apk update && \
     protobuf \
     openjdk8-jre \
     black \
-    py3-flake8
+    py3-flake8 \
+    ruff
 
 RUN pip install protobuf grpcio-tools cmakelang platformio readelf --break-system-packages

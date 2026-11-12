@@ -13,7 +13,7 @@ jobs:
       image-version: ${{ steps.version.outputs.value }}
     steps:
       - id: version
-        run: echo "value=${{ '0.5.1' }}" >> $GITHUB_OUTPUT
+        run: echo "value=${{ '0.5.2' }}" >> $GITHUB_OUTPUT
 
   x86_Clang:
     needs: setup
@@ -125,5 +125,7 @@ jobs:
       run: cd Software/Flasher && make proto
     - name: format check 
       run: cd Software/Flasher && make format-check
-    - name: linter check 
+    - name: flake8 check 
       run: cd Software/Flasher && make flake8
+    - name: ruff check 
+      run: cd Software/Flasher && make ruff
