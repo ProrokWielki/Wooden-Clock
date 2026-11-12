@@ -71,6 +71,8 @@ loop for each 2K block to be written
     end
 end
 
+STM -> FLASHER : STATE::IDLE
+
 == Reboot ==
 
 STM -> FLASHER : STAT::FLASHING_DONE

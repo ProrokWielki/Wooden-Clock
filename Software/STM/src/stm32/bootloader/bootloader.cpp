@@ -98,6 +98,7 @@ __attribute__((section(".flasher_section"), noinline)) void flash()
             flashing_command = MessageHandler::get_flashing_command_message();
         }
     }
+    MessageHandler::send_state_message(FlashingState::FlashingState_IDLE);
 
     MessageHandler::send_state_message(FlashingState::FlashingState_FLASHING_DONE);
 

@@ -68,8 +68,6 @@ external_flash_bytes = elf_parser.get_bytes(
 flasher.erase_external_flash(0, math.ceil(len(external_flash_bytes) / 256000))
 flasher.flash(external_flash_section.address_in_flash, external_flash_bytes)
 
-message_handler.send_command_message(MessageHandler.Command.FINISHED)
-
 received_status = message_handler.wait_for_status_message()
 if received_status != MessageHandler.Status.FLASHING_DONE:
     logger.error("Flashing failed.")
