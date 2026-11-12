@@ -7,4 +7,4 @@ nanopb_generate_cpp(
   detail/flashing_state.proto
   detail/flashing_start.proto
   detail/flashing_command.proto
-  detail/page_data.proto)
+  detail/write_data.proto)

@@ -2,8 +2,8 @@ syntax = "proto3";
 
 import "nanopb.proto";
 
-message PageData {
+message WriteData {
   optional fixed32 address   = 1 ;
-  bytes            page_data = 2 [(nanopb).max_size = 2048, (nanopb).fixed_length = true];
+  bytes            data      = 2 [(nanopb).max_size = 2048, (nanopb).fixed_length = true];
   optional fixed32 size      = 3 ;
 }
