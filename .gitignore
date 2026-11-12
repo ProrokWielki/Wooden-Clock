@@ -31,7 +31,9 @@ Output/
 build/
 .vscode/
 
-config/Ozone/
+**/config/Ozone/
+
+imgui.ini
 
 # Protobuf generated files
 *_pb2.py
