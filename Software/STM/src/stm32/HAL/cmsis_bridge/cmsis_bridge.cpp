@@ -482,18 +482,18 @@ volatile uint32_t * to_address(Usart_Types::UsartNumber usart, Usart_Types::Regi
             return &(usart_address->CR3);
         case Usart_Types::Register::BRR:
             return &(usart_address->BRR);
-        // case Usart_Types::Register::GTPR:
-        // return &(usart_address->GTPR);
+        case Usart_Types::Register::GTPR:
+            return &(usart_address->GTPR);
         case Usart_Types::Register::RTOR:
             return &(usart_address->RTOR);
         case Usart_Types::Register::ISR:
             return &(usart_address->ISR);
         case Usart_Types::Register::ICR:
             return &(usart_address->ICR);
-        // case Usart_Types::Register::RDR:
-        // return &(usart_address->RDR);
-        // case Usart_Types::Register::TDR:
-        // return &(usart_address->TDR);
+        case Usart_Types::Register::RDR:
+            return &(usart_address->RDR);
+        case Usart_Types::Register::TDR:
+            return &(usart_address->TDR);
         default:
             assert(false && "invalid register");
             return nullptr;
@@ -605,44 +605,4 @@ volatile uint32_t * to_address(DAC_Types::DacNumber dac_number, DAC_Types::Regis
             assert(false && "invalid DAC register");
             return nullptr;
     }
-}
-
-volatile uint16_t * to_16bit_register_address(Usart_Types::UsartNumber usart, Usart_Types::Register usart_register)
-{
-    USART_TypeDef * usart_address{};
-
-    switch (usart)
-    {
-        case Usart_Types::UsartNumber::USART_1:
-            usart_address = USART1;  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-            break;
-        case Usart_Types::UsartNumber::USART_2:
-            usart_address = USART2;  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-            break;
-        case Usart_Types::UsartNumber::USART_3:
-            usart_address = USART3;  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-            break;
-        case Usart_Types::UsartNumber::UART_4:
-            usart_address = UART4;  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-            break;
-        case Usart_Types::UsartNumber::LOW_POWER_UART_1:
-            usart_address = LPUART1;  // NOLINT(cppcoreguidelines-pro-type-cstyle-cast)
-            break;
-        default:
-            assert(false && "invalid usart number");
-            return nullptr;
-    }
-
-    switch (usart_register)
-    {
-        case Usart_Types::Register::GTPR:
-            return &(usart_address->GTPR);
-        case Usart_Types::Register::RDR:
-            return &(usart_address->RDR);
-        case Usart_Types::Register::TDR:
-            return &(usart_address->TDR);
-        default:
-            assert(false && "invalid register");
-            return nullptr;
-    };
 }

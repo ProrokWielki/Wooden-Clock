@@ -58,10 +58,10 @@ private:
     Register<uint32_t> CR2;
     Register<uint32_t> CR3;
     Register<uint32_t> BRR;
-    Register<uint16_t> GTPR;
+    Register<uint32_t> GTPR;
     Register<uint32_t> RTOR;
     Register<uint32_t> ISR;
     Register<uint32_t> ICR;
-    Register<uint16_t> RDR;
-    Register<uint16_t> TDR;
+    Register<uint32_t> RDR;
+    Register<uint32_t> TDR;
 };

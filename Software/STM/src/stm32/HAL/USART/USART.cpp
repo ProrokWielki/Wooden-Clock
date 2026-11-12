@@ -12,9 +12,9 @@
 USART::USART(Clock & clock, Usart_Types::UsartNumber usart_number, GPIO & tx_pin, GPIO & rx_pin, uint32_t baud_rate)
 : clock_{clock}, CR1(to_address(usart_number, Usart_Types::Register::CR1)), CR2(to_address(usart_number, Usart_Types::Register::CR2)),
   CR3(to_address(usart_number, Usart_Types::Register::CR3)), BRR(to_address(usart_number, Usart_Types::Register::BRR)),
-  GTPR(to_16bit_register_address(usart_number, Usart_Types::Register::GTPR)), RTOR(to_address(usart_number, Usart_Types::Register::RTOR)),
+  GTPR(to_address(usart_number, Usart_Types::Register::GTPR)), RTOR(to_address(usart_number, Usart_Types::Register::RTOR)),
   ISR(to_address(usart_number, Usart_Types::Register::ISR)), ICR(to_address(usart_number, Usart_Types::Register::ICR)),
-  RDR(to_16bit_register_address(usart_number, Usart_Types::Register::RDR)), TDR(to_16bit_register_address(usart_number, Usart_Types::Register::TDR))
+  RDR(to_address(usart_number, Usart_Types::Register::RDR)), TDR(to_address(usart_number, Usart_Types::Register::TDR))
 {
     constexpr static uint8_t ENABLE_BIT_POSITION{0};  // Bit position for USART enable in CR1 register
     constexpr static uint8_t TE_BIT_POSITION{3};      // Bit position for Transmitter Enable in CR1 register
