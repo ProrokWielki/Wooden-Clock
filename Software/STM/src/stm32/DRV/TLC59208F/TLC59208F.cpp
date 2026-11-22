@@ -41,17 +41,20 @@ void TLC59208F::set_register_value(uint8_t registerAddress, uint8_t valueToBeSet
     i2c_.write_data(dataToBeSend);
 }
 
-void TLC59208F::set_registers_values(const uint8_t registerStartAddress, uint8_t const * const valuesToBeSet, const uint8_t numberOfValues)
+void TLC59208F::set_registers_values(const uint8_t registerStartAddress, const std::span<const uint8_t> data_to_send)
 {
     std::array<uint8_t, 16> dataToBeSend{};
 
-    dataToBeSend[0] = registerStartAddress | 0x80;
-    memcpy(&(dataToBeSend[1]), valuesToBeSet, (numberOfValues + 1) * sizeof(uint8_t));
+    constexpr uint8_t WRITE_BIT(0x80);
+    dataToBeSend[0] = registerStartAddress | WRITE_BIT;
+    memcpy(&(dataToBeSend[1]), data_to_send.data(), (data_to_send.size() + 1) * sizeof(uint8_t));
 
-    i2c_.write_data({dataToBeSend.begin(), dataToBeSend.begin() + numberOfValues + 1});
+    const std::span<const uint8_t> data_to_send_span{dataToBeSend.data(), data_to_send.size() + 1};
+
+    i2c_.write_data(data_to_send_span);
 }
 
-void TLC59208F::set_all_leds_values(const std::array<uint8_t, NUM_OF_LEDS> & allLedsValues)
+void TLC59208F::set_all_leds_values(const std::array<const uint8_t, NUM_OF_LEDS> & allLedsValues)
 {
     // ledValues_[0] is the register address, it should stay unchanged.
     memcpy(&(ledValues_[1]), allLedsValues.data(), allLedsValues.size() * sizeof(uint8_t));
