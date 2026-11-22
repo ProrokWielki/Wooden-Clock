@@ -43,6 +43,8 @@ private:
     void set_baud_rate(uint32_t baud_rate);
 
     [[nodiscard]] bool is_read_buffer_not_empty() const;
+    [[nodiscard]] bool is_transmit_data_register_empty() const;
+
     void handle_read_buffer_not_empty();
 
     [[nodiscard]] bool is_idle_interrupt() const;

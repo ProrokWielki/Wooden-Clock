@@ -71,7 +71,7 @@ void USART::send_data(std::span<const uint8_t> data)
 
 void USART::send_data(char data)
 {
-    while (!ISR.get_bit(7))
+    while (not is_transmit_data_register_empty())
         ;
     TDR.write<uint8_t>(data);
 }
@@ -159,4 +159,10 @@ void USART::clear_all_interrupts()
 {
     constexpr uint32_t ALL_INTERRUPTS_CLEAR_VALUE{0x00121bdf};
     ICR.write(ALL_INTERRUPTS_CLEAR_VALUE);
+}
+
+bool USART::is_transmit_data_register_empty() const
+{
+    constexpr uint8_t TRAMISIT_REGISTER_DATA_EMPTY_BIT_POSITION{7};
+    return ISR.get_bit(TRAMISIT_REGISTER_DATA_EMPTY_BIT_POSITION);
 }
