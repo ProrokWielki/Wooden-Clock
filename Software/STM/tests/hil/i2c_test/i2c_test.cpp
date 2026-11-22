@@ -1,4 +1,6 @@
+#include <array>
 #include <cstdint>
+
 #include <testing_framework.hpp>
 
 #include <HAL/Clock.hpp>
@@ -28,14 +30,13 @@ RegisterTest(I2cTest, I2c1, [](Test * test) {
 
     I2C sut = I2C(clock, sys_config, I2C_Types::I2CNumber::I2C_1, I2C1_SCL, I2C1_SDA, 20000);
 
-    uint8_t device_address[] = {0x42 >> 1};
-    uint8_t register_address[] = {0x10};  // SUBADR3
-    uint8_t received_data[10] = {};
+    uint8_t device_address{0x42 >> 1};
+    uint8_t register_address{0x10};  // SUBADR3
 
-    std::span<uint8_t> received = std::span<uint8_t>(received_data, 10);
+    std::array<uint8_t, 1> read_buffer{};
 
-    sut.set_slave_address(device_address[0], I2C_Types::AddressLength::bits7);
-    sut.read_data_from_register(register_address[0], received, 1);
+    sut.set_slave_address(device_address, I2C_Types::AddressLength::bits7);
+    auto received_data = sut.read_data_from_register(register_address, read_buffer);
 
     EXPECT_EQ(received_data[0], 0b10011000);
 });
@@ -60,14 +61,13 @@ RegisterTest(I2cTest, I2c2, [](Test * test) {
 
     I2C sut = I2C(clock, sys_config, I2C_Types::I2CNumber::I2C_2, I2C2_SCL, I2C2_SDA, 20000);
 
-    uint8_t device_address[] = {0x46 >> 1};
-    uint8_t register_address[] = {0x10};  // SUBADR3
-    uint8_t received_data[10] = {};
+    uint8_t device_address{0x46 >> 1};
+    uint8_t register_address{0x10};  // SUBADR3
 
-    std::span<uint8_t> received = std::span<uint8_t>(received_data, 10);
+    std::array<uint8_t, 1> read_buffer{};
 
-    sut.set_slave_address(device_address[0], I2C_Types::AddressLength::bits7);
-    sut.read_data_from_register(register_address[0], received, 1);
+    sut.set_slave_address(device_address, I2C_Types::AddressLength::bits7);
+    auto received_data = sut.read_data_from_register(register_address, read_buffer);
 
     EXPECT_EQ(received_data[0], 0b10011000);
 });
@@ -92,14 +92,13 @@ RegisterTest(I2cTest, I2c3, [](Test * test) {
 
     I2C sut = I2C(clock, sys_config, I2C_Types::I2CNumber::I2C_3, I2C3_SCL, I2C3_SDA, 20000);
 
-    uint8_t device_address[] = {0x44 >> 1};
-    uint8_t register_address[] = {0x10};  // SUBADR3
-    uint8_t received_data[10] = {};
+    uint8_t device_address{0x44 >> 1};
+    uint8_t register_address{0x10};  // SUBADR3
 
-    std::span<uint8_t> received = std::span<uint8_t>(received_data, 10);
+    std::array<uint8_t, 1> read_buffer{};
 
-    sut.set_slave_address(device_address[0], I2C_Types::AddressLength::bits7);
-    sut.read_data_from_register(register_address[0], received, 1);
+    sut.set_slave_address(device_address, I2C_Types::AddressLength::bits7);
+    auto received_data = sut.read_data_from_register(register_address, read_buffer);
 
     EXPECT_EQ(received_data[0], 0b10011000);
 });
@@ -124,14 +123,13 @@ RegisterTest(I2cTest, I2c4, [](Test * test) {
 
     I2C sut = I2C(clock, sys_config, I2C_Types::I2CNumber::I2C_4, I2C4_SCL, I2C4_SDA, 20000);
 
-    uint8_t device_address[] = {0x40 >> 1};
-    uint8_t register_address[] = {0x10};  // SUBADR3
-    uint8_t received_data[10] = {};
+    uint8_t device_address{0x40 >> 1};
+    uint8_t register_address{0x10};  // SUBADR3
 
-    std::span<uint8_t> received = std::span<uint8_t>(received_data, 10);
+    std::span<uint8_t> read_buffer{};
 
-    sut.set_slave_address(device_address[0], I2C_Types::AddressLength::bits7);
-    sut.read_data_from_register(register_address[0], received, 1);
+    sut.set_slave_address(device_address, I2C_Types::AddressLength::bits7);
+    auto received_data = sut.read_data_from_register(register_address, read_buffer);
 
     EXPECT_EQ(received_data[0], 0b10011000);
 });

@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#define RegisterTest(Name, CaseName, TestBody) Test Name##CaseName{#Name, #CaseName, TestBody};
+#define RegisterTest(Name, CaseName, ...) Test Name##CaseName{#Name, #CaseName, __VA_ARGS__};
 
 #define EXPECT_EQ(lhs, rhs)                                                                                                                                    \
     test->expectations.push_back(std::make_pair<std::string, std::pair<std::string, std::string>>(                                                             \
