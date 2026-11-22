@@ -76,6 +76,7 @@ constexpr unsigned int ESP_UART_SPEED{500'000};
 constexpr unsigned int DEBUG_UART_SPEED{115200};
 
 constexpr uint32_t DAC_TIMER_FREQUENCY{16'000};
+constexpr uint32_t TIMER_2_FREQUENCY{1'920};
 
 constexpr uint32_t EXTERNAL_FLASH_SIZE{16'000'000};
 
