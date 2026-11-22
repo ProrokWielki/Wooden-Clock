@@ -19,16 +19,7 @@ BSP::BSP()
     HAL::get().USART_3.set_idle_callback([this]() { communication_interface.message_end(); });
 
     HAL::get().USART_4.set_buffer_not_empty_callback([this](uint8_t data) { debug_communication_interface.add_byte(data); });
-    HAL::get().USART_4.set_idle_callback([this]() {
-        const char last_char = debug_communication_interface.get_last_received_char();
-        HAL::get().USART_4.send_data(last_char);
-        if (last_char == '\r')
-        {
-            debug_communication_interface.discard_last_received_char();
-            debug_communication_interface.message_end(true);
-            HAL::get().USART_4.send_data('\n');
-        }
-    });
+    HAL::get().USART_4.set_idle_callback([this]() { debug_communication_interface.message_end(); });
 }
 
 BSP & BSP::get()
@@ -36,11 +27,6 @@ BSP & BSP::get()
     static BSP instance;
     return instance;
 }
-
-// bool & BSP::up{HAL::up};
-// bool & BSP::down{HAL::down};
-// bool & BSP::left{HAL::left};
-// bool & BSP::right{HAL::right};
 
 void BSP::init()
 {

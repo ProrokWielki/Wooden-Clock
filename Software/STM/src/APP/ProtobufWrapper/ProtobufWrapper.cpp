@@ -19,9 +19,12 @@ time_message parse_time_message(const uint8_t * data, size_t length)
         return result;
     }
 
-    result.hours = pb_time_msg.msg.time.hours;
-    result.minutes = pb_time_msg.msg.time.minutes;
-    result.seconds = pb_time_msg.msg.time.seconds;
+    if (pb_time_msg.which_msg == EspToMcuMsg_time_tag)
+    {
+        result.hours = pb_time_msg.msg.time.hours;      // NOLINT(cppcoreguidelines-pro-type-union-access)
+        result.minutes = pb_time_msg.msg.time.minutes;  // NOLINT(cppcoreguidelines-pro-type-union-access)
+        result.seconds = pb_time_msg.msg.time.seconds;  // NOLINT(cppcoreguidelines-pro-type-union-access)
+    }
 
     return result;
 }

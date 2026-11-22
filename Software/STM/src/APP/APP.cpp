@@ -53,7 +53,7 @@ void system_interface_task(void *)
         {
             auto message = BSP::get().communication_interface.get_message();
 
-            if (message.length == 2)
+            if (message.length == 1)
             {
                 switch (message.data[0])
                 {
