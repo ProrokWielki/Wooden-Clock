@@ -32,10 +32,15 @@ Display::Display(uint8_t width, uint8_t height, std::span<uint8_t> frameBuffer)
 
 void Display::init()
 {
-    HAL::get().TLC59208F_1.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_1_Transfer); });
-    HAL::get().TLC59208F_2.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_2_Transfer); });
-    HAL::get().TLC59208F_3.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_3_Transfer); });
-    HAL::get().TLC59208F_4.set_transfer_complete_callback([&]() { transfer_complete(Transfer::TLC59208F_4_Transfer); });
+    HAL::get().TLC59208F_1.set_stop_callback([&]() { transfer_complete(Transfer::TLC59208F_1_Transfer); });
+    HAL::get().TLC59208F_2.set_stop_callback([&]() { transfer_complete(Transfer::TLC59208F_2_Transfer); });
+    HAL::get().TLC59208F_3.set_stop_callback([&]() { transfer_complete(Transfer::TLC59208F_3_Transfer); });
+    HAL::get().TLC59208F_4.set_stop_callback([&]() { transfer_complete(Transfer::TLC59208F_4_Transfer); });
+
+    HAL::get().TLC59208F_1.set_transfer_complete_callback([]() {});
+    HAL::get().TLC59208F_2.set_transfer_complete_callback([]() {});
+    HAL::get().TLC59208F_3.set_transfer_complete_callback([]() {});
+    HAL::get().TLC59208F_4.set_transfer_complete_callback([]() {});
 }
 
 void Display::set_display_redrawn_callback(std::function<void()> callback)
@@ -48,13 +53,6 @@ void Display::draw_next_line()
 
     if (true == is_line_drawn())
     {
-
-        if (0 == currentLine_)
-        {
-            if (display_redrawn_callback)
-                display_redrawn_callback();
-        }
-
         std::ranges::fill(transferComplete.begin(), transferComplete.end(), false);
 
         const uint16_t current_line_offset = displayWidth * currentLine_;
@@ -76,6 +74,12 @@ void Display::draw_next_line()
         HAL::get().TLC59208F_2.send_cashed_leds_values();
         HAL::get().TLC59208F_3.send_cashed_leds_values();
         HAL::get().TLC59208F_4.send_cashed_leds_values();
+
+        if ((displayHeight - 1) == currentLine_)
+        {
+            if (display_redrawn_callback)
+                display_redrawn_callback();
+        }
     }
 }
 

@@ -16,6 +16,10 @@ int main()
     NVIC_EnableIRQ(DMA1_Channel4_IRQn);
     NVIC_EnableIRQ(DMA2_Channel7_IRQn);
     NVIC_EnableIRQ(DMA2_Channel2_IRQn);
+    NVIC_EnableIRQ(I2C1_EV_IRQn);
+    NVIC_EnableIRQ(I2C2_EV_IRQn);
+    NVIC_EnableIRQ(I2C3_EV_IRQn);
+    NVIC_EnableIRQ(I2C4_EV_IRQn);
     NVIC_EnableIRQ(USART3_IRQn);
     NVIC_EnableIRQ(UART4_IRQn);
     NVIC_EnableIRQ(TIM2_IRQn);

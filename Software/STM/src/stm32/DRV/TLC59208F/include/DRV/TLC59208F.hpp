@@ -37,7 +37,7 @@ public:
     void send_cashed_leds_values();
 
     void set_transfer_complete_callback(std::function<void()> callback);
-
+    void set_stop_callback(std::function<void()> callback);
     void set_half_transfer_callback(std::function<void()> callback);
 
 private:

@@ -75,6 +75,12 @@ void TLC59208F::set_transfer_complete_callback(std::function<void()> callback)
     i2c_.get_dma()->enable_interrupt(DMA_Types::Interrupt::TransferCompleted);
 }
 
+void TLC59208F::set_stop_callback(std::function<void()> callback)
+{
+    i2c_.set_stop_callback(std::move(callback));
+    i2c_.enable_interrupt(I2C_Types::Interrupt::STOPDetectedInterrupt);
+}
+
 void TLC59208F::set_half_transfer_callback(std::function<void()> callback)
 {
     i2c_.get_dma()->set_half_transfer_callback(std::move(callback));

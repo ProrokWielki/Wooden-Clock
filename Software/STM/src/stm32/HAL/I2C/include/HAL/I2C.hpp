@@ -100,7 +100,13 @@ public:
 
     void read_data_from_register(uint8_t register_address, std::span<uint8_t> & received_data, uint16_t num_of_bytes_to_read);
 
-    void set_frequency(double frequency);
+    void set_frequency(float frequency);
+
+    void set_stop_callback(std::function<void()> callback);
+
+    void clear_transfer_stop_interrupt();
+
+    void transfer_stop_callback();
 
     DMA * get_dma();
 
@@ -126,6 +132,8 @@ private:
     void set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHold, uint8_t u8SCLHigh, uint8_t u8SCLLow);
 
     void set_mode(I2C_Types::Mode mode);
+
+    std::function<void()> stop_callback_{};
 
     Register<uint32_t> CR1;
     Register<uint32_t> CR2;

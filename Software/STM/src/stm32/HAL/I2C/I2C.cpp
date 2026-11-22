@@ -269,6 +269,26 @@ void I2C::set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHol
     TIMINGR.set_value(u8SCLLow, SCL_LOW_VALUE_POSITION, SCL_LOW_FIELD_BIT_LENGTH);
 }
 
+void I2C::set_stop_callback(std::function<void()> callback)
+{
+    stop_callback_ = std::move(callback);
+}
+
+void I2C::transfer_stop_callback()
+{
+    if (stop_callback_)
+    {
+        stop_callback_();
+    }
+    clear_transfer_stop_interrupt();
+}
+
+void I2C::clear_transfer_stop_interrupt()
+{
+    constexpr uint8_t CLEAR_STOP_FLAG_POSTION{5};
+    ICR.set_bit(CLEAR_STOP_FLAG_POSTION);
+}
+
 DMA * I2C::get_dma()
 {
     return dma_;
@@ -318,7 +338,7 @@ void I2C::stop_transfer()
     CR2.set_bit(STOP_BIT_POSITION);
 }
 
-void I2C::set_frequency(double frequency)
+void I2C::set_frequency(float frequency)
 {
 
     constexpr uint8_t max_prescaler = 16;

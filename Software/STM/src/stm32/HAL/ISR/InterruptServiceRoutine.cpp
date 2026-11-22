@@ -37,6 +37,27 @@ void DMA2_Channel2_IRQHandler(void)  // NOLINT(readability-identifier-naming)
 {
     HAL::get().DMA2_2.transfer_complete_callback();
 }
+
+void I2C1_EV_IRQHandler()  // NOLINT(readability-identifier-naming)
+{
+    HAL::get().I2C_1.transfer_stop_callback();
+}
+
+void I2C2_EV_IRQHandler()  // NOLINT(readability-identifier-naming)
+{
+    HAL::get().I2C_2.transfer_stop_callback();
+}
+
+void I2C3_EV_IRQHandler()  // NOLINT(readability-identifier-naming)
+{
+    HAL::get().I2C_3.transfer_stop_callback();
+}
+
+void I2C4_EV_IRQHandler()  // NOLINT(readability-identifier-naming)
+{
+    HAL::get().I2C_4.transfer_stop_callback();
+}
+
 void USART3_IRQHandler(void)  // NOLINT(readability-identifier-naming)
 {
     HAL::get().USART_3.handle_interrupts();
