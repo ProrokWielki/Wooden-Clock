@@ -41,7 +41,7 @@ public:
      * @param u8FieldStartPosition Position in register from where to start writing the value
      * @param u8FieldBitLength Length in bits of the field to which the value is written.
      */
-    void set_value(T value, uint8_t u8FieldStartPosition, uint8_t u8FieldBitLength)
+    void set_value(T value, uint8_t u8FieldStartPosition, uint8_t u8FieldBitLength) volatile
     {
         const uint32_t masked_value = value & get_mask(u8FieldBitLength);
         const uint32_t register_value_with_cleared_bits_to_set = (*register_) & ~(get_mask(u8FieldBitLength) << u8FieldStartPosition);
@@ -55,7 +55,7 @@ public:
      *
      * @return Value of wanted field in register.
      */
-    [[nodiscard]] T get_value(uint8_t u8FieldStartPosition, uint8_t u8FieldBitLength) const
+    [[nodiscard]] T get_value(uint8_t u8FieldStartPosition, uint8_t u8FieldBitLength) const volatile
     {
         const T register_value = *register_;
         const T value_mask = get_mask(u8FieldBitLength) << u8FieldStartPosition;
@@ -67,7 +67,7 @@ public:
      *
      * @param u8Position Position of bit to be toggled.
      */
-    void toggle_bit(uint8_t u8Position)
+    void toggle_bit(uint8_t u8Position) volatile
     {
         *register_ ^= (1U << u8Position);
     }
@@ -76,7 +76,7 @@ public:
      *
      * @param u8Position Position of the bit to be set
      */
-    void set_bit(uint8_t u8Position)
+    void set_bit(uint8_t u8Position) volatile
     {
         *register_ |= (1U << u8Position);
     }
@@ -85,7 +85,7 @@ public:
      *
      * @param u8Position Position of the bit to be cleared
      */
-    void clear_bit(uint8_t u8Position)
+    void clear_bit(uint8_t u8Position) volatile
     {
         *register_ &= ~(1U << u8Position);
     }
@@ -95,7 +95,7 @@ public:
      * @param position Position of the bit to be changed
      * @param value Value to be set.
      */
-    void set_bit_value(bool value, uint8_t position)
+    void set_bit_value(bool value, uint8_t position) volatile
     {
         if (value)
         {
@@ -113,7 +113,7 @@ public:
      * @param u8Position bit position
      * @return bit value
      */
-    [[nodiscard]] uint8_t get_bit(uint8_t u8Position) const
+    [[nodiscard]] uint8_t get_bit(uint8_t u8Position) const volatile
     {
         return ((*register_ & (1 << u8Position)) >> u8Position);
     }
@@ -122,7 +122,7 @@ public:
      * @brief Writes data to register
      * @param value: value to be written to register
      */
-    void write(T value)
+    void write(T value) volatile
     {
         *register_ = value;
     }
@@ -132,7 +132,7 @@ public:
      * @param value: value to be written to register
      */
     template<typename TYPE_TO_WRITE_AS>
-    void write(TYPE_TO_WRITE_AS value)
+    void write(TYPE_TO_WRITE_AS value) volatile
     {
         *(volatile TYPE_TO_WRITE_AS * const)register_ = value;
     }
@@ -141,7 +141,7 @@ public:
      * @brief Reads data from the register.
      * @return Register value.
      */
-    [[nodiscard]] T read() const
+    [[nodiscard]] T read() const volatile
     {
         return *register_;
     }
@@ -151,7 +151,7 @@ public:
      * @return Register value.
      */
     template<typename TYPE_TO_READ_AS>
-    [[nodiscard]] TYPE_TO_READ_AS read() const
+    [[nodiscard]] TYPE_TO_READ_AS read() const volatile
     {
         return *((volatile TYPE_TO_READ_AS * const)(register_));
     }
