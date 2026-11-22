@@ -82,11 +82,6 @@ constexpr uint32_t EXTERNAL_FLASH_SIZE{16'000'000};
 
 }  // namespace
 
-// bool HAL::new_time_set{false};
-// uint8_t HAL::new_hour{0};
-// uint8_t HAL::new_minutes{0};
-// bool HAL::parse_time{false};
-
 HAL::HAL()
 : clock{}, power{}, sys_config{}, I2C1_SCL(clock, sys_config, GPIO_Types::Port::A, I2C_1_SCL_PIN_NUMBER),
   I2C1_SDA(clock, sys_config, GPIO_Types::Port::A, I2C_1_SDA_PIN_NUMBER), I2C2_SCL(clock, sys_config, GPIO_Types::Port::B, I2C_2_SCL_PIN_NUMBER),
@@ -136,67 +131,30 @@ HAL & HAL::get()
 void HAL::init()
 {
     clock_init();
-    // SystemCoreClockUpdate();
 
     gpio_init();
 
     qspi_init();
 
-    // timer_init();
-    // dma_init();
-    i2c_init();
-    // spi_init();
-    // rtc_init();
-
-    // uint8_t who_am_i_m;
-    // uint8_t who_am_i_g;
-
     tlc59208f_init();
 
     sr_74hc595_init();
-    // lsm9ds1_init();
 
     DMA2_7.enable_request(DMA_Types::Request::I2C_1_TX);
     DMA1_4.enable_request(DMA_Types::Request::I2C_2_TX);
     DMA1_2.enable_request(DMA_Types::Request::I2C_3_TX);
     DMA2_2.enable_request(DMA_Types::Request::I2C_4_TX);
 
-    // DMA2_4.enable_request(DMA::);
-
-    // DMA1_CSELR->CSELR |= ((3 << 12) | (3 << 4));
-
-    // TIM2->DIER |= (1 << 0);
     Timer2.enable_interrupt(timer_types::Interrupt::UPDATE);
 
-    // clock.enable_clock_for(Peripheral::USART_3);
-
-    // USART3->BRR = 0xA0;
-    // USART3->CR1 = 0x2f;
-
-    // who_am_i_m = LSM9DS1_1.get_who_am_i_m();
-    // who_am_i_g = LSM9DS1_1.get_who_am_i_g();
-
     BME280_1.init();
-
-    // BME280_1.get_id();
-
-    // auto hum = BME280_1.get_humidity();
-    // auto temp = BME280_1.get_temperature();
-    // auto pressure = BME280_1.get_pressure();
 }
 
 void HAL::qspi_init()
 {
 
     auto id = external_flash.get_manufacturer_id();
-    // external_flash.erase_chip();
-    // std::array<uint8_t, 8> data_to_write{0xDE, 0xAD, 0xBE, 0xEF, 0xBA, 0xAD, 0xF0, 0x0D};
-    // external_flash.write_data(0, data_to_write);
-
     external_flash.switch_to_memory_mapped_mode();
-    uint32_t data = *reinterpret_cast<volatile uint32_t *>(0x90000000);
-
-    (void)(data);
     (void)(id);
 }
 
@@ -250,72 +208,8 @@ void HAL::clock_init()
     // RCC->CFGR |= (3 << 0);
 }
 
-void HAL::i2c_init()
-{
-    // RCC->CCIPR |= RCC_CCIPR_I2C1SEL_0;
-    // RCC->CCIPR |= RCC_CCIPR_I2C2SEL_0;
-    // RCC->CCIPR |= RCC_CCIPR_I2C3SEL_0;
-    // RCC->CCIPR2 |= RCC_CCIPR2_I2C4SEL_0;
-
-    // /* Clock enable */
-    // RCC->APB1ENR1 |= RCC_APB1ENR1_I2C1EN;  // Enable clock for I2C1
-    // RCC->APB1ENR1 |= RCC_APB1ENR1_I2C2EN;  // Enable clock for I2C2
-    // RCC->APB1ENR1 |= RCC_APB1ENR1_I2C3EN;  // Enable clock for I2C3
-    // RCC->APB1ENR2 |= RCC_APB1ENR2_I2C4EN;  // Enable clock for I2C4
-
-    // clock.set_clock_source_for(Peripheral::I2C_1, ClockSource::PCLK);
-    // clock.set_clock_source_for(Peripheral::I2C_2, ClockSource::PCLK);
-    // clock.set_clock_source_for(Peripheral::I2C_3, ClockSource::PCLK);
-    // clock.set_clock_source_for(Peripheral::I2C_4, ClockSource::PCLK);
-
-    // /* Clock enable */
-    // clock.enable_clock_for(Peripheral::I2C_1);
-    // clock.enable_clock_for(Peripheral::I2C_2);
-    // clock.enable_clock_for(Peripheral::I2C_3);
-    // clock.enable_clock_for(Peripheral::I2C_4);
-
-    /* Fast-mode Plus enable */
-    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C1_FMP;  // Enable FM+ for I2C1
-    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C2_FMP;  // Enable FM+ for I2C2
-    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C3_FMP;  // Enable FM+ for I2C3
-    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C4_FMP;  // Enable FM+ for I2C4
-
-    // SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C_PB6_FMP |  // Enable FM+ on PB6
-    //                  SYSCFG_CFGR1_I2C_PB7_FMP;   // Enable FM+ on PB7
-
-    /* I2C set timing*/
-    // I2C_1.set_timing(4, 1, 0, 3, 6);
-    // I2C_2.set_timing(4, 1, 0, 3, 6);
-    // I2C_3.set_timing(4, 1, 0, 3, 6);
-    // I2C_4.set_timing(4, 1, 0, 3, 6);
-
-    /* I2C periphery enable */
-    // I2C_1.enable();
-    // I2C_2.enable();
-    // I2C_3.enable();
-    // I2C_4.enable();
-}
-
 void HAL::gpio_init()
 {
-    /* Clock enable */
-    // clock.enable_clock_for(Peripheral::GPIO_A);
-    // clock.enable_clock_for(Peripheral::GPIO_B);
-    // clock.enable_clock_for(Peripheral::GPIO_C);
-    // clock.enable_clock_for(Peripheral::GPIO_E);
-
-    // I2C1_SCL.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF4);
-    // I2C1_SDA.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF4);
-
-    // I2C2_SCL.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF4);
-    // I2C2_SDA.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF4);
-
-    // I2C3_SCL.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF4);
-    // I2C3_SDA.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF4);
-
-    // I2C4_SCL.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF5);
-    // I2C4_SDA.set_as_I2C_pin(GPIO_Types::AlternateFunction::AF5);
-
     SPI1_MISO.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);
     SPI1_MOSI.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);
     SPI1_SCK.set_as_spi_pin(GPIO_Types::AlternateFunction::AF5);
@@ -338,36 +232,6 @@ void HAL::gpio_init()
     QSPI_IO3.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
     QSPI_CLK.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
     QSPI_CS.set_as_spi_pin(GPIO_Types::AlternateFunction::AF10);
-
-    // UART3_RX.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF7);  // ToDo not spi :)
-    // UART3_TX.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF7);
-
-    // UART4_RX.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF7);  // ToDo not spi :)
-    // UART4_TX.set_as_SPI_pin(GPIO_Types::AlternateFunction::AF7);
-}
-
-// void HAL::dma_init()
-// {
-//     clock.enable_clock_for(Peripheral::DMA_1);
-//     clock.enable_clock_for(Peripheral::DMA_2);
-// }
-
-void HAL::timer_init()
-{
-    clock.enable_clock_for(Peripheral::TIMER_2);
-
-    Timer2.set_reload_value(625);    // 625
-    Timer2.set_prescaler_value(79);  // 79
-    Timer2.enable();
-}
-
-void HAL::nvic_init()
-{
-    // NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-    // NVIC_EnableIRQ(DMA1_Channel4_IRQn);
-    // NVIC_EnableIRQ(DMA2_Channel7_IRQn);
-    // NVIC_EnableIRQ(DMA2_Channel2_IRQn);
-    // NVIC_EnableIRQ(TIM2_IRQn);
 }
 
 void HAL::tlc59208f_init()
