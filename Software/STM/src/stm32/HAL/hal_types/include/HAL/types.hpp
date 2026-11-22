@@ -886,4 +886,6 @@ uint32_t to_value(DAC_Types::DacTrigger trigger);
 
 PeripheralWithSelectableClockSource to_peripheral_with_clock_select(I2C_Types::I2CNumber i2c);
 
+DMA_Types::Request to_request(DAC_Types::DacChannel channel);
+
 bool is_request_valid(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request);

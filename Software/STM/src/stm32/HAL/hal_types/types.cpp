@@ -1475,6 +1475,21 @@ uint32_t to_value(DMA_Types::ReadDirection read_direction)
     }
 }
 
+DMA_Types::Request to_request(DAC_Types::DacChannel channel)
+{
+    switch (channel)
+    {
+        case DAC_Types::DacChannel::CHANNEL_1:
+            return DMA_Types::Request::DAC_CH1;
+
+        case DAC_Types::DacChannel::CHANNEL_2:
+            return DMA_Types::Request::DAC_CH2;
+        default:
+            assert(false && "Invalid DAC channel");
+            return DMA_Types::Request::DAC_CH1;
+    }
+}
+
 bool is_request_valid(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request)
 {
     switch (dma_number)

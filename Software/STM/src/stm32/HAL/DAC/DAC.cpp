@@ -64,7 +64,7 @@ void DAC::play_dma(const std::span<const uint8_t> & data)
 {
     enable();
 
-    dma_->enable_request(DMA_Types::Request::DAC_CH1);
+    dma_->enable_request(to_request(dac_channel_));
 
     dma_->enable_memory_increment();
 
