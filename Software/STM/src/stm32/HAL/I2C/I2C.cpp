@@ -45,7 +45,7 @@ static constexpr uint8_t ANALOG_FILTER_STATE_BIT_POSITION{12};
 
 using namespace I2C_Types;
 
-I2C::I2C(Clock & clock, SysConfig & sys_config, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double frequency, DMA * dma)
+I2C::I2C(Clock & clock, SysConfig & sys_config, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, float frequency, DMA * dma)
 : CR1(to_address(i2c, I2C_Types::Register::CR1)), CR2(to_address(i2c, I2C_Types::Register::CR2)), ICR(to_address(i2c, I2C_Types::Register::ICR)),
   ISR(to_address(i2c, I2C_Types::Register::ISR)), OAR1(to_address(i2c, I2C_Types::Register::OAR1)), OAR2(to_address(i2c, I2C_Types::Register::OAR2)),
   PECR(to_address(i2c, I2C_Types::Register::PECR)), RXDR(to_address(i2c, I2C_Types::Register::RXDR)), TIMEOUTR(to_address(i2c, I2C_Types::Register::TIMEOUTR)),
@@ -145,7 +145,7 @@ void I2C::set_slave_address(uint16_t slave_address, AddressLength address_length
     }
 }
 
-void I2C::write_data(std::span<uint8_t> data)
+void I2C::write_data(const std::span<const uint8_t> data)
 {
     uint8_t u8TransferSize{};
     size_t bytes_to_send{data.size()};
@@ -344,21 +344,21 @@ void I2C::set_frequency(float frequency)
     constexpr uint8_t max_prescaler = 16;
     constexpr uint8_t max_num_of_ticks = 255;
 
-    const double scl_low_period = 1.f / frequency / 2.f;
-    const double clock_period = 1.f / 80'000'000.f;  // clock_frequency
+    const float scl_low_period = 1.f / frequency / 2.f;
+    const float clock_period = 1.f / 80'000'000.f;  // clock_frequency
 
     uint8_t found_prescaller = std::numeric_limits<uint8_t>::max();
     uint8_t found_num_of_ticks = std::numeric_limits<uint8_t>::max();
-    double error = std::numeric_limits<double>::max();
+    float error = std::numeric_limits<float>::max();
 
     for (uint8_t prescaller{1}; prescaller <= max_prescaler; ++prescaller)
     {
-        const double prescaled_clock_low_period = clock_period * prescaller;
-        const double num_of_ticks = int(scl_low_period / prescaled_clock_low_period);
+        const float prescaled_clock_low_period{clock_period * static_cast<float>(prescaller)};
+        const float num_of_ticks{scl_low_period / prescaled_clock_low_period};
 
         if (num_of_ticks <= max_num_of_ticks and num_of_ticks > 0)
         {
-            const double current_error = std::abs((prescaled_clock_low_period * int(num_of_ticks)) - scl_low_period);
+            const float current_error = std::abs((prescaled_clock_low_period * std::floor(num_of_ticks)) - scl_low_period);
 
             if (current_error < error)
             {

@@ -92,11 +92,11 @@ void USART::set_baud_rate(uint32_t baud_rate)
     const uint32_t usart_div_wo_oversampling{clock_.get_clock_frequency() / baud_rate};
     const uint32_t usart_div_with_oversampling{2 * clock_.get_clock_frequency() / baud_rate};
 
-    const double real_baud_wo_oversampling{static_cast<double>(clock_.get_clock_frequency()) / static_cast<double>(usart_div_wo_oversampling)};
-    const double real_baud_with_oversampling{2.0 * (static_cast<double>(clock_.get_clock_frequency()) / static_cast<double>(usart_div_wo_oversampling))};
+    const float real_baud_wo_oversampling{static_cast<float>(clock_.get_clock_frequency()) / static_cast<float>(usart_div_wo_oversampling)};
+    const float real_baud_with_oversampling{2.0f * (static_cast<float>(clock_.get_clock_frequency()) / static_cast<float>(usart_div_wo_oversampling))};
 
-    const double usart_div_wo_oversampling_error{std::abs(baud_rate - real_baud_wo_oversampling)};
-    const double usart_div_with_oversampling_error{std::abs(baud_rate - real_baud_with_oversampling)};
+    const float usart_div_wo_oversampling_error{std::abs(static_cast<float>(baud_rate) - real_baud_wo_oversampling)};
+    const float usart_div_with_oversampling_error{std::abs(static_cast<float>(baud_rate) - real_baud_with_oversampling)};
 
     if (usart_div_wo_oversampling_error <= usart_div_with_oversampling_error)
     {

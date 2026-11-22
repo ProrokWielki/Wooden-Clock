@@ -31,7 +31,7 @@ class I2C
 {
 public:
     /// Constructor.
-    I2C(Clock & clock, SysConfig & sys_config, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, double frequency, DMA * dma = nullptr);
+    I2C(Clock & clock, SysConfig & sys_config, I2C_Types::I2CNumber i2c, GPIO & scl, GPIO & sda, float frequency, DMA * dma = nullptr);
 
     /// Enables the I2C.
     void enable();
@@ -87,7 +87,7 @@ public:
      * @param pu8Data Pointer to the data to be sent.
      * @param u16NumberOfBytes Number of the bytes to be sent
      */
-    void write_data(std::span<uint8_t> data);
+    void write_data(const std::span<const uint8_t> data);
 
     /**
      * @brief  Writes the data to the slave, using DMA.
@@ -151,8 +151,6 @@ private:
 
     I2C_Types::I2CNumber i2c_number_;
     SysConfig & sys_config;
-
-    // uint32_t addressTXDR;
 };
 
 #endif /* HAL_I2C_I2C_HPP_ */

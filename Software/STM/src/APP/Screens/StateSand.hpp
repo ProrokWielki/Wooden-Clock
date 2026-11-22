@@ -29,7 +29,7 @@ class Particle
 {
 public:
     Particle() = default;
-    Particle(double x, double y) : x_{x}, y_{y}
+    Particle(float x, float y) : x_{x}, y_{y}
     {
     }
 
@@ -38,23 +38,53 @@ public:
         return x_ == other.x_ && y_ == other.y_;
     }
 
-    void set_position(double x, double y)
+    void set_position(float x, float y)
     {
         x_ = x;
         y_ = y;
     }
 
-    void update(double accel_x, double accel_y)
+    void update(float accel_x, float accel_y)
     {
-        constexpr double delta_t = 0.2;
-        constexpr double max_speed = 0.5;
-        constexpr double min_speed = -max_speed;
+        constexpr float delta_t = 0.015;
+        constexpr float max_speed = 0.5;
+        constexpr float min_speed = -max_speed;
+
+        constexpr float dead_zone = 0.01f;
+        constexpr float friction = 0.99f;
+
+        if (std::fabs(accel_x) < dead_zone)
+        {
+            accel_x = 0.0f;
+        }
+        if (std::fabs(accel_y) < dead_zone)
+        {
+            accel_y = 0.0f;
+        }
 
         speed_x_ += accel_x * delta_t;
         speed_y_ += accel_y * delta_t;
 
-        speed_x_ = std::clamp(speed_x_, min_speed, max_speed);
-        speed_y_ = std::clamp(speed_y_, min_speed, max_speed);
+        speed_x_ = std::clamp((speed_x_ + accel_x * delta_t) * friction, min_speed, max_speed);
+        speed_y_ = std::clamp((speed_y_ + accel_y * delta_t) * friction, min_speed, max_speed);
+    }
+
+    [[nodiscard]] bool should_move()
+    {
+        const float speed = std::max(std::fabs(speed_x_), std::fabs(speed_y_));
+        if (speed < REST_SPEED)
+        {
+            move_progress_ = 0.0;
+            return false;
+        }
+
+        move_progress_ += std::min(speed / FULL_RATE_SPEED, 1.0f);
+        if (move_progress_ < 1.0)
+        {
+            return false;
+        }
+        move_progress_ -= 1.0;
+        return true;
     }
 
     void stop()
@@ -63,7 +93,7 @@ public:
         speed_y_ = 0;
     }
 
-    void stop(double x, double y)
+    void stop(float x, float y)
     {
         speed_x_ = 0;
         speed_y_ = 0;
@@ -82,11 +112,11 @@ public:
         speed_y_ = 0;
     }
 
-    [[nodiscard]] std::tuple<double, double> get_position() const
+    [[nodiscard]] std::tuple<float, float> get_position() const
     {
         return {x_, y_};
     }
-    [[nodiscard]] std::tuple<double, double> get_speed() const
+    [[nodiscard]] std::tuple<float, float> get_speed() const
     {
         return {speed_x_, speed_y_};
     }
@@ -96,16 +126,51 @@ public:
     }
 
 private:
-    double x_{};
-    double y_{};
-    double speed_x_{};
-    double speed_y_{};
+    static constexpr float MAX_SPEED{0.5};
+    static constexpr float REST_SPEED{0.02};
+    static constexpr float FULL_RATE_SPEED{0.15};
+
+    float x_{};
+    float y_{};
+    float speed_x_{};
+    float speed_y_{};
+    float move_progress_{};
 };
 
 template<size_t N>
 class ParticleContainer
 {
     constexpr static uint8_t NUM_OF_POSSIBLE_NEXT_POSITIONS{5};
+    constexpr static size_t NUM_OF_SECTORS{64};
+    struct Offset {
+        int8_t dx;
+        int8_t dy;
+    };
+
+    using Offsets = std::array<Offset, NUM_OF_POSSIBLE_NEXT_POSITIONS>;
+
+    static const std::array<Offsets, NUM_OF_SECTORS> & direction_table()
+    {
+        static const auto table = [] {
+            constexpr float PI{std::numbers::pi};
+            constexpr float DIAGONAL_OFFSET{0.5};
+            constexpr float HORIZONTAL_OFFSET{1.0};
+            constexpr float deltas[NUM_OF_POSSIBLE_NEXT_POSITIONS]{0.0, -DIAGONAL_OFFSET, DIAGONAL_OFFSET, -HORIZONTAL_OFFSET, HORIZONTAL_OFFSET};
+
+            std::array<Offsets, NUM_OF_SECTORS> t{};
+            for (size_t s{0}; s < NUM_OF_SECTORS; ++s)
+            {
+                const float gravity_vector = -PI + (static_cast<float>(s) + 0.5) * (2.0 * PI / NUM_OF_SECTORS);
+                for (size_t k{0}; k < NUM_OF_POSSIBLE_NEXT_POSITIONS; ++k)
+                {
+                    t[s][k] = {static_cast<int8_t>(std::round(std::cos(gravity_vector + deltas[k]))),
+                               static_cast<int8_t>(-std::round(std::sin(gravity_vector + deltas[k])))};
+                }
+            }
+            return t;
+        }();
+        return table;
+    }
 
 public:
     ParticleContainer()
@@ -130,11 +195,15 @@ public:
         }
     }
 
-    void update(double accel_x, double accel_y)
+    void update(float accel_x, float accel_y)
     {
         for (auto & particle : particles)
         {
             particle.update(accel_x, accel_y);
+            if (!particle.should_move())
+            {
+                continue;
+            }
             auto maybe_next_position = get_first_movable_positions(particle);
             if (maybe_next_position.has_value())
             {
@@ -163,16 +232,16 @@ public:
 
         auto [particle_x, particle_y] = particle.get_position_as_int();
 
-        static constexpr double DIAGONAL_OFFSET{0.5};
-        static constexpr double HORIZONTAL_OFFSET{1.0};
+        constexpr float PI{std::numbers::pi};
+        const auto sector = std::min(static_cast<size_t>((gravity_vector + PI) * (NUM_OF_SECTORS / (2.0 * PI))), NUM_OF_SECTORS - 1);
+        const auto & offsets = direction_table()[sector];
 
-        return {{
-        {particle_x + std::round(std::cos(gravity_vector)), particle_y - std::round(std::sin(gravity_vector))},
-        {particle_x + std::round(std::cos(gravity_vector - DIAGONAL_OFFSET)), particle_y - std::round(std::sin(gravity_vector - DIAGONAL_OFFSET))},
-        {particle_x + std::round(std::cos(gravity_vector + DIAGONAL_OFFSET)), particle_y - std::round(std::sin(gravity_vector + DIAGONAL_OFFSET))},
-        {particle_x + std::round(std::cos(gravity_vector - HORIZONTAL_OFFSET)), particle_y - std::round(std::sin(gravity_vector - HORIZONTAL_OFFSET))},
-        {particle_x + std::round(std::cos(gravity_vector + HORIZONTAL_OFFSET)), particle_y - std::round(std::sin(gravity_vector + HORIZONTAL_OFFSET))},
-        }};
+        std::array<std::tuple<int8_t, int8_t>, NUM_OF_POSSIBLE_NEXT_POSITIONS> result{};
+        for (size_t i{0}; i < NUM_OF_POSSIBLE_NEXT_POSITIONS; ++i)
+        {
+            result[i] = {static_cast<int8_t>(particle_x + offsets[i].dx), static_cast<int8_t>(particle_y + offsets[i].dy)};
+        }
+        return result;
     }
 
     [[nodiscard]] std::span<std::tuple<int8_t, int8_t>> get_valid_next_positions(const Particle & particle) const
@@ -191,6 +260,15 @@ public:
             valid_next_positions.at(valid_next_positions_index++) = position;
         }
         return {valid_next_positions.data(), valid_next_positions_index};
+    }
+
+    [[nodiscard]] inline uint32_t fast_rand() const
+    {
+        static uint32_t state{2463534242u};
+        state ^= state << 13;
+        state ^= state >> 17;
+        state ^= state << 5;
+        return state;
     }
 
     [[nodiscard]] std::optional<std::tuple<int8_t, int8_t>> get_first_movable_positions(const Particle & particle) const
@@ -223,18 +301,8 @@ public:
         {
             return std::nullopt;
         }
-        return movable_positions.at(rand() % movable_positions_index);
+        return movable_positions.at(fast_rand() % movable_positions_index);
     }
-
-    // for (size_t i{0}; i < N; ++i)
-    // {
-    //     if (particles_updated[i] == false)
-    //     {
-    //         auto [particle_x, particle_y] = particles[i].get_position();
-    //         particles[i].stop(particle_x, particle_y);
-    //     }
-    // }
-    // }
 
     [[nodiscard]] const std::array<Particle, N> & get_particles() const
     {
@@ -268,7 +336,7 @@ public:
         auto [x, y, z] = accel_.get_linear_accelerations();
         particles_.update(-x, y);
 
-        auto paricless = particles_.get_particles();
+        const auto & paricless = particles_.get_particles();
 
         for (const auto & particle : paricless)
         {
@@ -281,8 +349,6 @@ public:
             empty_frame_buffer.at(std::min(display_y, max_y_index()) * BSP::DISPLAY_WIDTH + std::min(display_x, max_x_index())) =
             std::numeric_limits<uint8_t>::max();
         }
-
-        // validate();
     }
 
 private:
