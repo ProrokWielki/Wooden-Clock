@@ -17,10 +17,15 @@ public:
     void switch_to_memory_mapped_mode();
 
 private:
-    bool is_erase_in_progress();
-    bool is_erase_enabled();
-    bool is_write_in_progress();
-    bool is_write_enabled();
+    [[nodiscard]] bool is_erase_in_progress() const;
+    [[nodiscard]] bool is_erase_enabled() const;
+    [[nodiscard]] bool is_write_in_progress() const;
+    [[nodiscard]] bool is_write_enabled() const;
+
+    void switch_to_quad_mode();
+    void write_register(const std::span<const uint8_t> data);
+    [[nodiscard]] uint8_t get_status_register_value() const;
+    [[nodiscard]] uint8_t get_configuration_register_value() const;
 
     void enable_write();
     void enable_erase();

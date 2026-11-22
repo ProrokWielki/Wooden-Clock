@@ -792,7 +792,56 @@ enum class Register
     ABR,
     DR,
 };
+
+enum class AddressLines
+{
+    NO_ADDRESS,
+    LINES_1,
+    LINES_2,
+    LINES_4
 };
+
+enum class AddressSize
+{
+    BITS_8,
+    BITS_16,
+    BITS_24,
+    BITS_32
+};
+
+enum class DataLines
+{
+    NO_DATA,
+    LINES_1,
+    LINES_2,
+    LINES_4
+};
+
+enum class InstructionLines
+{
+    NO_INSTRUCTION,
+    LINES_1,
+    LINES_2,
+    LINES_4
+};
+
+enum class Mode
+{
+    INDIRECT_WRITE,
+    INDIRECT_READ,
+    AUTO_POLLING,
+    MEMORY_MAPPED
+};
+
+enum class AlternateBytes
+{
+    NO_ALTERNATE_BYTES,
+    ALTERNATE_BYTES_ON_1_LINE,
+    ALTERNATE_BYTES_ON_2_LINE,
+    ALTERNATE_BYTES_ON_4_LINE,
+};
+
+};  // namespace QSPI_types
 
 namespace DAC_Types
 {
@@ -879,10 +928,17 @@ uint32_t to_value(DMA_Types::DataSize memory_size);
 uint32_t to_value(DMA_Types::DataSize peripheral_size);
 uint32_t to_value(DMA_Types::ReadDirection read_direction);
 uint32_t to_value(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, DMA_Types::Request request);
+uint32_t to_value(DAC_Types::DacTrigger trigger);
 uint32_t to_value(SPI_types::BaudRatePrescaller baudrate_prescaller);
 uint32_t to_value(Power_Types::WriteProtectionState state);
 uint32_t to_value(timer_types::MasterMode master_mode);
 uint32_t to_value(DAC_Types::DacTrigger trigger);
+uint32_t to_value(QSPI_types::AddressLines num_of_address_lines);
+uint32_t to_value(QSPI_types::AddressSize addresss_size);
+uint32_t to_value(QSPI_types::DataLines num_of_data_lines);
+uint32_t to_value(QSPI_types::InstructionLines num_of_instruction_lines);
+uint32_t to_value(QSPI_types::Mode mode);
+uint32_t to_value(QSPI_types::AlternateBytes alternates_bytes);
 
 PeripheralWithSelectableClockSource to_peripheral_with_clock_select(I2C_Types::I2CNumber i2c);
 

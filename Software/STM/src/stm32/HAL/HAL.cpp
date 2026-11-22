@@ -76,7 +76,8 @@ constexpr unsigned int ESP_UART_SPEED{500'000};
 constexpr unsigned int DEBUG_UART_SPEED{115200};
 
 constexpr uint32_t DAC_TIMER_FREQUENCY{16'000};
-constexpr uint32_t TIMER_2_FREQUENCY{1'500};
+
+constexpr uint32_t EXTERNAL_FLASH_SIZE{16'000'000};
 
 }  // namespace
 
@@ -114,7 +115,7 @@ HAL::HAL()
   SPI_1(clock, SPI_types::SPI_Number::SPI_1, SPI1_MOSI, SPI1_MISO, SPI1_SCK, SPI_types::SPIMode::master, SPI_types::SPIDataSize::_8bits,
         SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
         SPI_types::BaudRatePrescaller::Prescaller_256),
-  QUAD_SPI(clock, QSPI_IO0, QSPI_IO1, QSPI_IO2, QSPI_IO3, QSPI_CLK, QSPI_CS, QSPI_CLOCK_SPEED),
+  QUAD_SPI(clock, QSPI_IO0, QSPI_IO1, QSPI_IO2, QSPI_IO3, QSPI_CLK, QSPI_CS, QSPI_CLOCK_SPEED, EXTERNAL_FLASH_SIZE),
   USART_3(clock, Usart_Types::UsartNumber::USART_3, UART3_TX, UART3_RX, ESP_UART_SPEED),
   USART_4(clock, Usart_Types::UsartNumber::UART_4, UART4_TX, UART4_RX, DEBUG_UART_SPEED),
   DAC1{clock, DAC_Types::DacNumber::DAC_1, DAC_Types::DacChannel::CHANNEL_1, DAC_Types::DacTrigger::TIM6_TRGO, DAC_OUTPUT, &DMA1_3},

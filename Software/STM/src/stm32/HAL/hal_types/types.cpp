@@ -1169,14 +1169,14 @@ uint32_t to_value(timer_types::MasterMode master_mode)
     switch (master_mode)
     {
         case timer_types::MasterMode::RESET:
-            return 0;
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case timer_types::MasterMode::ENABLE:
-            return 1;
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case timer_types::MasterMode::UPDATE:
-            return 2;
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         default:
             assert(false && "Invalid master mode.");
-            return 0;
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     };
 }
 
@@ -1185,24 +1185,24 @@ uint32_t to_value(DAC_Types::DacTrigger trigger)
     switch (trigger)
     {
         case DAC_Types::DacTrigger::TIM6_TRGO:
-            return 0;
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DAC_Types::DacTrigger::TIM8_TRGO:
-            return 1;
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DAC_Types::DacTrigger::TIM7_TRGO:
-            return 2;
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DAC_Types::DacTrigger::TIM5_TRGO:
-            return 3;
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DAC_Types::DacTrigger::TIM2_TRGO:
-            return 4;
+            return 4;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DAC_Types::DacTrigger::TIM4_TRGO:
-            return 5;
+            return 5;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DAC_Types::DacTrigger::EXTI9:
-            return 6;
+            return 6;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DAC_Types::DacTrigger::SWTRIG:
-            return 7;
+            return 7;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         default:
             assert(false && "Invalid DAC trigger.");
-            return 0;
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     };
 }
 
@@ -1243,14 +1243,14 @@ uint8_t to_bit_position(DMA_Types::Interrupt interrupt)
     switch (interrupt)
     {
         case DMA_Types::Interrupt::TransferCompleted:
-            return 1;
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DMA_Types::Interrupt::HalfTransfer:
-            return 2;
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         case DMA_Types::Interrupt::TransferError:
-            return 3;
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         default:
             assert(false && "invalid dma interrupt");
-            return 0;
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     }
 }
 
@@ -1326,7 +1326,7 @@ uint8_t to_bit_position(timer_types::Interrupt interrupt)
             return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         default:
             assert(false && "invalid timer interrupt");
-            return 0;
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     }
 }
 
@@ -1350,7 +1350,7 @@ uint8_t to_start_position(DMA_Types::Channel channel)
             return 24;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
         default:
             assert(false && "invalid dma channel");
-            return 0;
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     };
 }
 
@@ -1372,7 +1372,7 @@ uint8_t to_bit_position(I2C_Types::I2CNumber number, I2C_Types::Mode mode)
                     return 23;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
                 default:
                     assert(false && "invalid i2c");
-                    return 0;
+                    return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
             }
         case I2C_Types::Mode::FAST:
         case I2C_Types::Mode::STANDARD:
@@ -1968,4 +1968,112 @@ uint32_t to_value(DMA_Types::DmaNumber dma_number, DMA_Types::Channel channel, D
     }
     assert(false && "invalid DMA");
     return 0;
+}
+
+uint32_t to_value(QSPI_types::AddressLines num_of_address_lines)
+{
+    switch (num_of_address_lines)
+    {
+        case QSPI_types::AddressLines::NO_ADDRESS:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AddressLines::LINES_1:
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AddressLines::LINES_2:
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AddressLines::LINES_4:
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        default:
+            assert(false && "invalid num of address lines");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    };
+}
+
+uint32_t to_value(QSPI_types::AddressSize addresss_size)
+{
+    switch (addresss_size)
+    {
+        case QSPI_types::AddressSize::BITS_8:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AddressSize::BITS_16:
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AddressSize::BITS_24:
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AddressSize::BITS_32:
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        default:
+            assert(false && "invalid address size lines");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    };
+}
+
+uint32_t to_value(QSPI_types::DataLines num_of_data_lines)
+{
+    switch (num_of_data_lines)
+    {
+        case QSPI_types::DataLines::NO_DATA:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::DataLines::LINES_1:
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::DataLines::LINES_2:
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::DataLines::LINES_4:
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        default:
+            assert(false && "invalid num of data lines");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    };
+}
+
+uint32_t to_value(QSPI_types::InstructionLines num_of_instruction_lines)
+{
+    switch (num_of_instruction_lines)
+    {
+        case QSPI_types::InstructionLines::NO_INSTRUCTION:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::InstructionLines::LINES_1:
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::InstructionLines::LINES_2:
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::InstructionLines::LINES_4:
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        default:
+            assert(false && "invalid num of instruction lines");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    };
+}
+
+uint32_t to_value(QSPI_types::Mode mode)
+{
+    switch (mode)
+    {
+        case QSPI_types::Mode::INDIRECT_WRITE:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::Mode::INDIRECT_READ:
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::Mode::AUTO_POLLING:
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::Mode::MEMORY_MAPPED:
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        default:
+            assert(false && "invalid mode");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    };
+}
+
+uint32_t to_value(QSPI_types::AlternateBytes alternates_bytes)
+{
+    switch (alternates_bytes)
+    {
+        case QSPI_types::AlternateBytes::NO_ALTERNATE_BYTES:
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AlternateBytes::ALTERNATE_BYTES_ON_1_LINE:
+            return 1;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AlternateBytes::ALTERNATE_BYTES_ON_2_LINE:
+            return 2;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        case QSPI_types::AlternateBytes::ALTERNATE_BYTES_ON_4_LINE:
+            return 3;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+        default:
+            assert(false && "invalid num of alternate bytes");
+            return 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    };
 }

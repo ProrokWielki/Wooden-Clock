@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cstdint>
+#include <limits>
 #include <span>
 
 #include <cmsis_bridge/cmsis_bridge.hpp>
@@ -10,7 +11,7 @@
 #include <HAL/Register.hpp>
 #include <HAL/types.hpp>
 
-QSPI::QSPI(Clock & clock, GPIO & IO1, GPIO & IO2, GPIO & IO3, GPIO & IO4, GPIO & SCK, GPIO & CS, uint32_t frequency)
+QSPI::QSPI(Clock & clock, GPIO & IO1, GPIO & IO2, GPIO & IO3, GPIO & IO4, GPIO & SCK, GPIO & CS, uint32_t frequency, uint32_t flash_size)
 : CR{to_address(QSPI_types::Register::CR)}, DCR{to_address(QSPI_types::Register::DCR)}, CCR{to_address(QSPI_types::Register::CCR)},
   SR{to_address(QSPI_types::Register::SR)}, DLR{to_address(QSPI_types::Register::DLR)}, DR{to_address(QSPI_types::Register::DR)},
   FCR{to_address(QSPI_types::Register::FCR)}, AR{to_address(QSPI_types::Register::AR)}
@@ -29,10 +30,17 @@ QSPI::QSPI(Clock & clock, GPIO & IO1, GPIO & IO2, GPIO & IO3, GPIO & IO4, GPIO &
     constexpr static uint8_t PRESCALER_BIT_LENGTH{8};
     CR.set_value(prescaler - 1, PRESCALER_BIT_POSITION, PRESCALER_BIT_LENGTH);
 
+    constexpr uint8_t NUM_OF_CS_HIGH_CYCLES{5};
+    constexpr uint8_t NUM_OF_CS_HIGH_CYCLES_POSITION{8};
+    constexpr uint8_t NUM_OF_CS_HIGH_CYCLES_LENGTH{3};
+    DCR.set_value(NUM_OF_CS_HIGH_CYCLES - 1, NUM_OF_CS_HIGH_CYCLES_POSITION, NUM_OF_CS_HIGH_CYCLES_LENGTH);
+
+    set_flash_size(flash_size);
+
     enable();
 }
 
-std::span<uint8_t> QSPI::read_data_from_register(Mode mode, uint8_t instruction, std::span<uint8_t> read_data_buffer)
+std::span<uint8_t> QSPI::read_data_from_register(Mode mode, uint8_t instruction, const std::span<uint8_t> read_data_buffer)
 {
     while (is_busy())
         ;
@@ -42,19 +50,17 @@ std::span<uint8_t> QSPI::read_data_from_register(Mode mode, uint8_t instruction,
     Register<uint32_t> ccr{CCR.read()};
     if (mode == Mode::SingleLine)
     {
-        ccr.set_value(1, 8, 2);   // 1 line instruction
-        ccr.set_value(0, 10, 2);  // no address
-        ccr.set_value(1, 24, 2);  // 1 line data
-        ccr.set_value(1, 26, 2);  // 1 line data
+        set_num_of_instruction_lines(ccr, QSPI_types::InstructionLines::LINES_1);
+        set_num_of_address_lines(ccr, QSPI_types::AddressLines::NO_ADDRESS);
+        set_num_of_data_lines(ccr, QSPI_types::DataLines::LINES_1);
+        set_mode(ccr, QSPI_types::Mode::INDIRECT_READ);
     }
     else
     {
         assert(false && "Only single line mode is supported for now");
     }
 
-    constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
-    constexpr static uint8_t INSTRUCTION_BIT_LENGTH{8};
-    ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);  // Set the instruction
+    set_instruction(ccr, instruction);
 
     CCR.write(ccr.read());
 
@@ -76,19 +82,17 @@ void QSPI::send_command(Mode mode, uint8_t instruction)
     Register<uint32_t> ccr{CCR.read()};
     if (mode == Mode::SingleLine)
     {
-        ccr.set_value(1, 8, 2);   // 1 line instruction
-        ccr.set_value(0, 10, 2);  // no address
-        ccr.set_value(0, 24, 2);  // no data
-        ccr.set_value(0, 26, 2);  // no data
+        set_num_of_instruction_lines(ccr, QSPI_types::InstructionLines::LINES_1);
+        set_num_of_address_lines(ccr, QSPI_types::AddressLines::NO_ADDRESS);
+        set_num_of_data_lines(ccr, QSPI_types::DataLines::NO_DATA);
+        set_mode(ccr, QSPI_types::Mode::INDIRECT_WRITE);
     }
     else
     {
         assert(false && "Only single line mode is supported for now");
     }
 
-    constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
-    constexpr static uint8_t INSTRUCTION_BIT_LENGTH{8};
-    ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);  // Set the instruction
+    set_instruction(ccr, instruction);
 
     CCR.write(ccr.read());
 }
@@ -102,20 +106,18 @@ void QSPI::send_command(Mode mode, uint8_t instruction, uint32_t address)
     Register<uint32_t> ccr{CCR.read()};
     if (mode == Mode::SingleLine)
     {
-        ccr.set_value(1, 8, 2);   // 1 line instruction
-        ccr.set_value(1, 10, 2);  // 1 line address
-        ccr.set_value(2, 12, 2);  // 24 bit address
-        ccr.set_value(0, 24, 2);  // no data
-        ccr.set_value(0, 26, 2);  // indirect write
+        set_num_of_instruction_lines(ccr, QSPI_types::InstructionLines::LINES_1);
+        set_num_of_address_lines(ccr, QSPI_types::AddressLines::LINES_1);
+        set_address_size(ccr, QSPI_types::AddressSize::BITS_24);
+        set_num_of_data_lines(ccr, QSPI_types::DataLines::NO_DATA);
+        set_mode(ccr, QSPI_types::Mode::INDIRECT_WRITE);
     }
     else
     {
         assert(false && "Only single line mode is supported for now");
     }
 
-    constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
-    constexpr static uint8_t INSTRUCTION_BIT_LENGTH{8};
-    ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);  // Set the instruction
+    set_instruction(ccr, instruction);
 
     CCR.write(ccr.read());
 }
@@ -141,24 +143,19 @@ void QSPI::enable_memory_mapped_mode(uint8_t instruction)
     while (is_busy())
         ;
 
-    DCR.set_value(23, 16, 5);  // fsize - 24 bit address
-    DCR.set_value(4, 8, 3);    // csht - 4 cycle chip select high time
+    Register<uint32_t> ccr{CCR.read()};
 
-    uint32_t cr_value = 0;
-    Register<uint32_t> ccr{&cr_value};
+    set_num_of_instruction_lines(ccr, QSPI_types::InstructionLines::LINES_1);
+    set_num_of_address_lines(ccr, QSPI_types::AddressLines::LINES_1);
+    set_address_size(ccr, QSPI_types::AddressSize::BITS_24);
+    set_alternate_bytes(ccr, QSPI_types::AlternateBytes::NO_ALTERNATE_BYTES);
+    set_num_of_data_lines(ccr, QSPI_types::DataLines::LINES_4);
+    set_mode(ccr, QSPI_types::Mode::MEMORY_MAPPED);
 
-    ccr.set_value(1, 8, 2);   // 1 line instruction
-    ccr.set_value(1, 10, 2);  // address on 1 line
-    ccr.set_value(2, 12, 2);  // 24 bit address
-    ccr.set_value(0, 14, 2);  // no alternate bytes
-    ccr.set_value(8, 18, 5);  // 8 dummy cycles
-    ccr.set_value(3, 24, 2);  // dmode - 4 lines data
-    ccr.set_value(3, 26, 2);  // memory-mapped mode
+    constexpr uint8_t NUM_OF_DUMMY_CYCLES{8};
+    set_num_of_dummy_cycles(ccr, NUM_OF_DUMMY_CYCLES);
 
-    constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
-    constexpr static uint8_t INSTRUCTION_BIT_LENGTH{8};
-    ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);  // Set the instruction
-
+    set_instruction(ccr, instruction);
     CCR.write(ccr.read());
 
     while (is_busy())
@@ -181,7 +178,7 @@ void QSPI::disable_memory_mapped_mode()
     CCR.set_value(INDIRECT_WRITE_MODE_VALUE, FMODE_POSTION, FMODE_LENGTH);
 }
 
-void QSPI::write_data(Mode mode, uint8_t instruction, const std::span<uint8_t> data_to_write)
+void QSPI::write_data(Mode mode, uint8_t instruction, const std::span<const uint8_t> data_to_write)
 {
     while (is_busy())
         ;
@@ -191,19 +188,17 @@ void QSPI::write_data(Mode mode, uint8_t instruction, const std::span<uint8_t> d
     Register<uint32_t> ccr{CCR.read()};
     if (mode == Mode::SingleLine)
     {
-        ccr.set_value(1, 8, 2);   // 1 line instruction
-        ccr.set_value(0, 10, 2);  // no address
-        ccr.set_value(1, 24, 2);  // 1 line data
-        ccr.set_value(0, 26, 2);  // 1 indirect write
+        set_num_of_instruction_lines(ccr, QSPI_types::InstructionLines::LINES_1);
+        set_num_of_address_lines(ccr, QSPI_types::AddressLines::NO_ADDRESS);
+        set_num_of_data_lines(ccr, QSPI_types::DataLines::LINES_1);
+        set_mode(ccr, QSPI_types::Mode::INDIRECT_WRITE);
     }
     else
     {
         assert(false && "Only single line mode is supported for now");
     }
 
-    constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
-    constexpr static uint8_t INSTRUCTION_BIT_LENGTH{8};
-    ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);  // Set the instruction
+    set_instruction(ccr, instruction);
 
     CCR.write(ccr.read());
 
@@ -218,7 +213,7 @@ void QSPI::write_data(Mode mode, uint8_t instruction, const std::span<uint8_t> d
         ;
 }
 
-void QSPI::write_data(Mode mode, uint8_t instruction, uint32_t address, const std::span<uint8_t> data_to_write)
+void QSPI::write_data(Mode mode, uint8_t instruction, uint32_t address, const std::span<const uint8_t> data_to_write)
 {
     while (is_busy())
         ;
@@ -229,20 +224,18 @@ void QSPI::write_data(Mode mode, uint8_t instruction, uint32_t address, const st
     Register<uint32_t> ccr{CCR.read()};
     if (mode == Mode::QuadLine)
     {
-        ccr.set_value(1, 8, 2);   // 1 line instruction
-        ccr.set_value(1, 10, 2);  // no address
-        ccr.set_value(2, 12, 2);  // 24-bit address
-        ccr.set_value(3, 24, 2);  // 4 line data
-        ccr.set_value(0, 26, 2);  // 1 indirect write
+        set_num_of_instruction_lines(ccr, QSPI_types::InstructionLines::LINES_1);
+        set_num_of_address_lines(ccr, QSPI_types::AddressLines::LINES_1);
+        set_address_size(ccr, QSPI_types::AddressSize::BITS_24);
+        set_num_of_data_lines(ccr, QSPI_types::DataLines::LINES_4);
+        set_mode(ccr, QSPI_types::Mode::INDIRECT_WRITE);
     }
     else
     {
         assert(false && "Only quad line mode is supported for now");
     }
 
-    constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
-    constexpr static uint8_t INSTRUCTION_BIT_LENGTH{8};
-    ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);  // Set the instruction
+    set_instruction(ccr, instruction);
 
     CCR.write(ccr.read());
 
@@ -255,4 +248,87 @@ void QSPI::write_data(Mode mode, uint8_t instruction, uint32_t address, const st
 
     while (!(SR.get_bit(2) || SR.get_bit(1)))
         ;
+}
+
+void QSPI::set_num_of_address_lines(Register<uint32_t> & ccr, QSPI_types::AddressLines num_of_address_lines)
+{
+    constexpr uint8_t NUM_OF_ADDRESS_LINES_POSITION{10};
+    constexpr uint8_t NUM_OF_ADDRESS_LINES_LENGTH{2};
+
+    ccr.set_value(to_value(num_of_address_lines), NUM_OF_ADDRESS_LINES_POSITION, NUM_OF_ADDRESS_LINES_LENGTH);
+}
+
+void QSPI::set_address_size(Register<uint32_t> & ccr, QSPI_types::AddressSize address_size)
+{
+    constexpr uint8_t ADDRESS_SIZE_POSITION{12};
+    constexpr uint8_t ADDRESS_SIZE_LENGTH{2};
+
+    ccr.set_value(to_value(address_size), ADDRESS_SIZE_POSITION, ADDRESS_SIZE_LENGTH);
+}
+
+void QSPI::set_num_of_instruction_lines(Register<uint32_t> & ccr, QSPI_types::InstructionLines num_of_instruction_lines)
+{
+
+    constexpr uint8_t NUM_OF_INSTRUCTION_LINES_POSITION{8};
+    constexpr uint8_t NUM_OF_INSTRUCTION_LINES_LENGTH{2};
+
+    ccr.set_value(to_value(num_of_instruction_lines), NUM_OF_INSTRUCTION_LINES_POSITION, NUM_OF_INSTRUCTION_LINES_LENGTH);
+}
+
+void QSPI::set_num_of_data_lines(Register<uint32_t> & ccr, QSPI_types::DataLines num_of_data_lines)
+{
+    constexpr uint8_t NUM_OF_DATA_LINES_POSITION{24};
+    constexpr uint8_t NUM_OF_DATA_LINES_LENGTH{2};
+
+    ccr.set_value(to_value(num_of_data_lines), NUM_OF_DATA_LINES_POSITION, NUM_OF_DATA_LINES_LENGTH);
+}
+
+void QSPI::set_alternate_bytes(Register<uint32_t> & ccr, QSPI_types::AlternateBytes alternate_bytes)
+{
+    constexpr uint8_t ALTERNATE_BYTES_POSITION{16};
+    constexpr uint8_t ALTERNATE_BYTES_LENGTH{2};
+
+    ccr.set_value(to_value(alternate_bytes), ALTERNATE_BYTES_POSITION, ALTERNATE_BYTES_LENGTH);
+}
+
+void QSPI::set_mode(Register<uint32_t> & ccr, QSPI_types::Mode mode)
+{
+    constexpr uint8_t MODE_POSITION{26};
+    constexpr uint8_t MODE_LENGTH{2};
+
+    ccr.set_value(to_value(mode), MODE_POSITION, MODE_LENGTH);
+}
+
+void QSPI::set_flash_size(uint32_t flash_size)
+{
+    constexpr uint8_t FLASH_SIZE_FIELD_LENGTH{5};
+    constexpr uint8_t FLASH_SIZE_POSITION{16};
+
+    uint8_t flash_size_value{0};
+
+    // find the postion of the last(MSB) bit in the size - basically of flash_size = 2^current_bit
+    for (uint8_t current_bit{std::numeric_limits<uint32_t>::digits - 1}; current_bit > 0; --current_bit)
+    {
+        if ((flash_size & (1 << current_bit)) != 0)
+        {
+            flash_size_value = current_bit;  // number of bytes in flash memory = 2^[FSIZE+1]
+            break;
+        }
+    }
+
+    DCR.set_value(flash_size_value, FLASH_SIZE_POSITION, FLASH_SIZE_FIELD_LENGTH);  // fsize - 24 bit address
+}
+
+void QSPI::set_num_of_dummy_cycles(Register<uint32_t> & ccr, uint8_t num_of_dummy_cycles)
+{
+    constexpr static uint8_t NUM_OF_DUMMY_CYCLES_POSITION{18};
+    constexpr static uint8_t NUM_OF_DUMMY_CYCLES_LENGTH{5};
+    ccr.set_value(num_of_dummy_cycles, NUM_OF_DUMMY_CYCLES_POSITION, NUM_OF_DUMMY_CYCLES_LENGTH);
+}
+
+void QSPI::set_instruction(Register<uint32_t> & ccr, uint8_t instruction)
+{
+    constexpr static uint8_t INSTRUCTION_BIT_POSITION{0};
+    constexpr static uint8_t INSTRUCTION_BIT_LENGTH{8};
+    ccr.set_value(instruction, INSTRUCTION_BIT_POSITION, INSTRUCTION_BIT_LENGTH);
 }
