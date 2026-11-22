@@ -106,10 +106,8 @@ void SPI::set_data_size(SPI_types::SPIDataSize data_size)
     CR2.set_value(static_cast<uint8_t>(data_size), DATA_SIZE_VALUE_POSITION, DATA_SIZE_VALUE_LENGTH);
 }
 
-void SPI::read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::span<uint8_t> & received_data, uint8_t num_of_bytes_to_read)
+std::span<uint8_t> SPI::read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::span<uint8_t> read_buffer)
 {
-    assert(received_data.size() >= num_of_bytes_to_read && "Buffer too small.");
-
     while (is_data_received())
     {
         const uint8_t discard = DR.read();
@@ -137,7 +135,7 @@ void SPI::read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::
         (void)discard;
     }
 
-    while (current_byte < num_of_bytes_to_read)
+    while (current_byte < read_buffer.size())
     {
         DR.write<uint8_t>(0);
 
@@ -146,14 +144,16 @@ void SPI::read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::
 
         while (is_data_received())
         {
-            received_data[current_byte++] = DR.read();
+            read_buffer[current_byte++] = DR.read();
         }
     }
 
     cs_pin.set_output_high();
+
+    return read_buffer;
 }
 
-void SPI::write_data_to_register(GPIO & cs_pin, uint8_t register_address, const std::span<uint8_t> & data_to_write)
+void SPI::write_data_to_register(GPIO & cs_pin, uint8_t register_address, const std::span<const uint8_t> data_to_write)
 {
 
     while (is_data_received())

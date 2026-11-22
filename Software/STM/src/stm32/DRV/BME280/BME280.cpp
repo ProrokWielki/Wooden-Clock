@@ -253,13 +253,12 @@ uint32_t BME280::read_20_bits_register(uint8_t msb_register_address, uint8_t lsb
 
 uint8_t BME280::read_data(uint8_t register_address)
 {
-    uint8_t received_data{};
-    std::span<uint8_t> received_data_buffer{&received_data, 1};
+    std::array<uint8_t, 1> read_buffer{};
 
     constexpr uint8_t READ_BIT{0x80};
 
-    spi_.read_data_from_register(chip_select_, READ_BIT | register_address, received_data_buffer, 1);
-    return received_data;
+    auto read_data = spi_.read_data_from_register(chip_select_, READ_BIT | register_address, read_buffer);
+    return read_data[0];
 }
 
 void BME280::write_register(uint8_t register_address, uint8_t data)

@@ -158,29 +158,18 @@ int16_t LSM9DS1::get_angular_velocity(Axis axis)
 
 Accelerations LSM9DS1::get_linear_acceleration()
 {
-    std::array<uint8_t, 6> accel_data{};
 
-    std::array<uint8_t, 10> single_byte_data{};
-    std::span<uint8_t> accel_buffer{single_byte_data};
-
+    std::array<uint8_t, 2> read_data_buffer{};
     constexpr float MAX_G{2.0};  // TODO: make it right
 
-    spi_.read_data_from_register(gyro_cs_, 0x2C | READ_BIT, {accel_buffer}, 1);
-    accel_data[4] = single_byte_data[0];
-    spi_.read_data_from_register(gyro_cs_, 0x2D | READ_BIT, {accel_buffer}, 1);
-    accel_data[5] = single_byte_data[0];
-    spi_.read_data_from_register(gyro_cs_, 0x28 | READ_BIT, {accel_buffer}, 1);
-    accel_data[0] = single_byte_data[0];
-    spi_.read_data_from_register(gyro_cs_, 0x29 | READ_BIT, {accel_buffer}, 1);
-    accel_data[1] = single_byte_data[0];
-    spi_.read_data_from_register(gyro_cs_, 0x2A | READ_BIT, {accel_buffer}, 1);
-    accel_data[2] = single_byte_data[0];
-    spi_.read_data_from_register(gyro_cs_, 0x2B | READ_BIT, {accel_buffer}, 1);
-    accel_data[3] = single_byte_data[0];
+    auto read_z = spi_.read_data_from_register(gyro_cs_, 0x2C | READ_BIT, read_data_buffer);
+    const uint16_t unsigned_z = (static_cast<uint16_t>(read_z[1]) << 8) | static_cast<uint16_t>(read_z[0]);
 
-    const uint16_t unsigned_x = (static_cast<uint16_t>(accel_data[1]) << 8) | static_cast<uint16_t>(accel_data[0]);
-    const uint16_t unsigned_y = (static_cast<uint16_t>(accel_data[3]) << 8) | static_cast<uint16_t>(accel_data[2]);
-    const uint16_t unsigned_z = (static_cast<uint16_t>(accel_data[5]) << 8) | static_cast<uint16_t>(accel_data[4]);
+    auto read_x = spi_.read_data_from_register(gyro_cs_, 0x28 | READ_BIT, read_data_buffer);
+    const uint16_t unsigned_x = (static_cast<uint16_t>(read_x[1]) << 8) | static_cast<uint16_t>(read_x[0]);
+
+    auto read_y = spi_.read_data_from_register(gyro_cs_, 0x2A | READ_BIT, read_data_buffer);
+    const uint16_t unsigned_y = (static_cast<uint16_t>(read_y[1]) << 8) | static_cast<uint16_t>(read_y[0]);
 
     const float x = static_cast<float>(static_cast<int16_t>(unsigned_x)) / 32768.0f * MAX_G;
     const float y = static_cast<float>(static_cast<int16_t>(unsigned_y)) / 32768.0f * MAX_G;
@@ -203,22 +192,19 @@ int16_t LSM9DS1::get_magnetic_field(Axis axis)
 
 uint8_t LSM9DS1::read_register(GyroscopeRegister register_address)
 {
-    std::array<uint8_t, 2> data_buffer{};
-    std::span<uint8_t> received_data{data_buffer};
+    std::array<uint8_t, 1> read_buffer{};
+    auto read_value = spi_.read_data_from_register(gyro_cs_, static_cast<uint8_t>(register_address) | READ_BIT, read_buffer);
 
-    spi_.read_data_from_register(gyro_cs_, static_cast<uint8_t>(register_address) | READ_BIT, received_data, 1);
-
-    return received_data[0];
+    return read_value[0];
 }
 
 uint8_t LSM9DS1::read_register(MagnetometerRegister register_address)
 {
-    uint8_t data_buffer{};
-    std::span<uint8_t> received_data{&data_buffer, 1};
+    std::array<uint8_t, 1> read_buffer{};
 
-    spi_.read_data_from_register(magneto_cs_, static_cast<uint8_t>(register_address) | READ_BIT, received_data, 1);
+    auto read_value = spi_.read_data_from_register(magneto_cs_, static_cast<uint8_t>(register_address) | READ_BIT, read_buffer);
 
-    return received_data[0];
+    return read_value[0];
 }
 
 void LSM9DS1::write_register(GyroscopeRegister register_address, uint8_t data)

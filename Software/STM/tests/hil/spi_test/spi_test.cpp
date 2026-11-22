@@ -33,10 +33,8 @@ RegisterTest(I2cTest, SpiGyroscope, [](Test * test) {
                   SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
                   SPI_types::BaudRatePrescaller::Prescaller_256);
 
-    uint8_t received_data_buffer[10]{};
-    std::span<uint8_t> received_data = std::span<uint8_t>(received_data_buffer, 5);
-
-    sut.read_data_from_register(SPI1_CS1, 0x0F | 1 << 7, received_data, 1);
+    std::array<uint8_t, 1> read_buffer{};
+    auto received_data = sut.read_data_from_register(SPI1_CS1, 0x0F | 1 << 7, read_buffer);
 
     EXPECT_EQ(received_data[0], 0x68);
 });
@@ -65,10 +63,8 @@ RegisterTest(SpiTest, SpiBme, [](Test * test) {
                   SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
                   SPI_types::BaudRatePrescaller::Prescaller_256);
 
-    uint8_t received_data_buffer[10]{};
-    std::span<uint8_t> received_data = std::span<uint8_t>(received_data_buffer, 5);
-
-    sut.read_data_from_register(SPI1_CS3, 0xD0 | 1 << 7, received_data, 1);
+    std::array<uint8_t, 1> read_buffer{};
+    auto received_data = sut.read_data_from_register(SPI1_CS3, 0xD0 | 1 << 7, read_buffer);
 
     EXPECT_EQ(received_data[0], 0x60);
 });
@@ -97,10 +93,8 @@ RegisterTest(SpiTest, SpiMagnetometer, [](Test * test) {
                   SPI_types::SPIPolarity::idle_high, SPI_types::SPIPhase::data_on_second_edge, SPI_types::SPIForamt::MSB_first,
                   SPI_types::BaudRatePrescaller::Prescaller_256);
 
-    uint8_t received_data_buffer[10]{};
-    std::span<uint8_t> received_data = std::span<uint8_t>(received_data_buffer, 5);
-
-    sut.read_data_from_register(SPI1_CS2, 0x0F | 1 << 7, received_data, 1);
+    std::array<uint8_t, 1> read_buffer{};
+    auto received_data = sut.read_data_from_register(SPI1_CS2, 0x0F | 1 << 7, read_buffer);
 
     EXPECT_EQ(received_data[0], 0x3D);
 });

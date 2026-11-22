@@ -21,7 +21,7 @@ class SPI
 {
 public:
     SPI(Clock & clock, SPI_types::SPI_Number spi, GPIO & MOSI, GPIO & MISO, GPIO & SCK, SPI_types::SPIMode mode, SPI_types::SPIDataSize data_size,
-        SPI_types::SPIPolarity polarity, SPI_types::SPIPhase phase, SPI_types::SPIForamt format,SPI_types::BaudRatePrescaller baudrate_prescaller);
+        SPI_types::SPIPolarity polarity, SPI_types::SPIPhase phase, SPI_types::SPIForamt format, SPI_types::BaudRatePrescaller baudrate_prescaller);
 
     void enable();
 
@@ -42,10 +42,8 @@ public:
 
     void set_baudrate(SPI_types::BaudRatePrescaller baud_rate_prescaller);
 
-    // uint8_t exchange_data(uint8_t value_to_send);
-
-    void read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::span<uint8_t> & received_data, uint8_t num_of_bytes_to_read);
-    void write_data_to_register(GPIO & cs_pin, uint8_t register_address, const std::span<uint8_t> & data_to_write);
+    std::span<uint8_t> read_data_from_register(GPIO & cs_pin, uint8_t register_address, std::span<uint8_t> read_buffer);
+    void write_data_to_register(GPIO & cs_pin, uint8_t register_address, const std::span<const uint8_t> data_to_write);
 
 private:
     Register<uint32_t> CR1;
