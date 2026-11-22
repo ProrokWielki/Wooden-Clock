@@ -106,7 +106,7 @@ float BME280::get_temperature()
 
     bme280_compensate_data(BME280_TEMP, &uncompensated_data, &compensated_data, &calibration);
 
-    return compensated_data.temperature;
+    return static_cast<float>(compensated_data.temperature);
 }
 
 float BME280::get_pressure()
@@ -126,7 +126,7 @@ float BME280::get_pressure()
 
     bme280_compensate_data(BME280_PRESS, &uncompensated_data, &compensated_data, &calibration);
 
-    return compensated_data.pressure;
+    return static_cast<float>(compensated_data.pressure);
 }
 
 float BME280::get_humidity()
@@ -145,7 +145,7 @@ float BME280::get_humidity()
 
     bme280_compensate_data(BME280_HUM, &uncompensated_data, &compensated_data, &calibration);
 
-    return compensated_data.humidity;
+    return static_cast<float>(compensated_data.humidity);
 }
 
 void BME280::get_calibration_data()

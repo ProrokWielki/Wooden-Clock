@@ -160,7 +160,7 @@ class ParticleContainer
             std::array<Offsets, NUM_OF_SECTORS> t{};
             for (size_t s{0}; s < NUM_OF_SECTORS; ++s)
             {
-                const float gravity_vector = -PI + (static_cast<float>(s) + 0.5) * (2.0 * PI / NUM_OF_SECTORS);
+                const float gravity_vector = -PI + (static_cast<float>(s) + 0.5f) * (2.0f * PI / NUM_OF_SECTORS);
                 for (size_t k{0}; k < NUM_OF_POSSIBLE_NEXT_POSITIONS; ++k)
                 {
                     t[s][k] = {static_cast<int8_t>(std::round(std::cos(gravity_vector + deltas[k]))),
