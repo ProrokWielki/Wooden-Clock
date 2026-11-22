@@ -206,12 +206,10 @@ void I2C::set_transfer_direction(TransferDirection direction)
     CR2.set_value(to_value(direction), REGISTER_OFFSET_DIRECTION_ADDRESS, DIRECTION_BIT_LENGTH);
 }
 
-void I2C::read_data(std::span<uint8_t> & received_data, uint16_t num_of_bytes_to_read)
+std::span<uint8_t> I2C::read_data(std::span<uint8_t> received_data)
 {
-    assert(received_data.size() >= num_of_bytes_to_read && "Received data won't fit into the buffer");
-
     uint8_t u8TransferSize{};
-    size_t bytes_to_read{num_of_bytes_to_read};
+    size_t bytes_to_read{received_data.size()};
     size_t current_byte{0};
 
     set_transfer_direction(I2C_Types::TransferDirection::READ);
@@ -243,12 +241,14 @@ void I2C::read_data(std::span<uint8_t> & received_data, uint16_t num_of_bytes_to
             received_data[current_byte++] = RXDR.get_value(0, std::numeric_limits<uint8_t>::digits);
         }
     }
+
+    return received_data;
 }
 
-void I2C::read_data_from_register(uint8_t register_address, std::span<uint8_t> & received_data, uint16_t num_of_bytes_to_read)
+std::span<uint8_t> I2C::read_data_from_register(uint8_t register_address, std::span<uint8_t> received_data)
 {
     write_data({&register_address, 1});
-    read_data(received_data, num_of_bytes_to_read);
+    return read_data(received_data);
 }
 
 void I2C::set_timing(uint8_t u8Prescaler, uint8_t u8DataSetup, uint8_t u8DataHold, uint8_t u8SCLHigh, uint8_t u8SCLLow)

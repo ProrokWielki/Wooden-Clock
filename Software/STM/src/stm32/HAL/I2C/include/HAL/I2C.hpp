@@ -96,9 +96,9 @@ public:
      */
     void write_data_dma(std::span<uint8_t> data);
 
-    void read_data(std::span<uint8_t> & received_data, uint16_t num_of_bytes_to_read);
+    std::span<uint8_t> read_data(std::span<uint8_t> received_data);
 
-    void read_data_from_register(uint8_t register_address, std::span<uint8_t> & received_data, uint16_t num_of_bytes_to_read);
+    std::span<uint8_t> read_data_from_register(uint8_t register_address, std::span<uint8_t> received_data);
 
     void set_frequency(float frequency);
 

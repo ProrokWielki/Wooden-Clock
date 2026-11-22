@@ -236,26 +236,20 @@ void HAL::gpio_init()
 
 void HAL::tlc59208f_init()
 {
-    std::array<uint8_t, 2> first{0, 0x08};
-    std::array<uint8_t, 2> second{0xAA, 0xAA};
-
     TLC59208F_1.init();
     TLC59208F_2.init();
     TLC59208F_3.init();
     TLC59208F_4.init();
 
-    constexpr uint8_t LEDOUT0_REG{0x0C};
-    constexpr uint8_t MODE1_REG{0x00};
+    TLC59208F_1.disable_low_power_mode();
+    TLC59208F_2.disable_low_power_mode();
+    TLC59208F_3.disable_low_power_mode();
+    TLC59208F_4.disable_low_power_mode();
 
-    TLC59208F_1.set_registers_values(MODE1_REG, first);
-    TLC59208F_2.set_registers_values(MODE1_REG, first);
-    TLC59208F_3.set_registers_values(MODE1_REG, first);
-    TLC59208F_4.set_registers_values(MODE1_REG, first);
-
-    TLC59208F_1.set_registers_values(LEDOUT0_REG, second);
-    TLC59208F_2.set_registers_values(LEDOUT0_REG, second);
-    TLC59208F_3.set_registers_values(LEDOUT0_REG, second);
-    TLC59208F_4.set_registers_values(LEDOUT0_REG, second);
+    TLC59208F_1.enable_led_drivers();
+    TLC59208F_2.enable_led_drivers();
+    TLC59208F_3.enable_led_drivers();
+    TLC59208F_4.enable_led_drivers();
 }
 
 void HAL::sr_74hc595_init()

@@ -40,6 +40,9 @@ public:
     void set_stop_callback(std::function<void()> callback);
     void set_half_transfer_callback(std::function<void()> callback);
 
+    void disable_low_power_mode();
+    void enable_led_drivers();
+
 private:
     I2C & i2c_;
     const uint8_t deviceAddress_;

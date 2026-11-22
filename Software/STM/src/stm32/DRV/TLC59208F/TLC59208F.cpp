@@ -47,7 +47,7 @@ void TLC59208F::set_registers_values(const uint8_t registerStartAddress, const s
 
     constexpr uint8_t WRITE_BIT(0x80);
     dataToBeSend[0] = registerStartAddress | WRITE_BIT;
-    memcpy(&(dataToBeSend[1]), data_to_send.data(), (data_to_send.size() + 1) * sizeof(uint8_t));
+    memcpy(&(dataToBeSend[1]), data_to_send.data(), data_to_send.size() * sizeof(uint8_t));
 
     const std::span<const uint8_t> data_to_send_span{dataToBeSend.data(), data_to_send.size() + 1};
 
@@ -88,4 +88,44 @@ void TLC59208F::set_half_transfer_callback(std::function<void()> callback)
 {
     i2c_.get_dma()->set_half_transfer_callback(std::move(callback));
     i2c_.get_dma()->enable_interrupt(DMA_Types::Interrupt::HalfTransfer);
+}
+
+void TLC59208F::disable_low_power_mode()
+{
+    std::array<uint8_t, 1> read_buffer{};
+
+    constexpr uint8_t MODE1_REGISTER_ADDRESS{0};
+    auto read_value = i2c_.read_data_from_register(MODE1_REGISTER_ADDRESS, read_buffer);
+    Register<uint8_t> MODE_1{std::move(read_value[0])};
+
+    constexpr uint8_t SLEEP_MODE_BIT_POSITION{4};
+    MODE_1.clear_bit(SLEEP_MODE_BIT_POSITION);
+
+    std::array<uint8_t, 1> write_buffer{MODE_1.read()};
+    set_registers_values(MODE1_REGISTER_ADDRESS, write_buffer);
+}
+
+void TLC59208F::enable_led_drivers()
+{
+    constexpr uint8_t LEDOUT0_REGISTER_ADDRESS{0x0C};
+
+    uint8_t ledout0_val{0};
+    uint8_t ledout1_val{0};
+
+    Register<uint8_t> LEDOUT0{std::move(ledout0_val)};
+    Register<uint8_t> LEDOUT1{std::move(ledout1_val)};
+
+    constexpr uint8_t NUM_OF_LEDS_IN_SINGLE_REGISTER{4};
+    for (uint8_t current_led{0}; current_led < NUM_OF_LEDS_IN_SINGLE_REGISTER; ++current_led)
+    {
+        constexpr uint8_t LED_DRIVER_ON_VALUE{2};
+        constexpr uint8_t LED_DRIVER_ON_POSITION{0};
+        constexpr uint8_t LED_DRIVER_ON_LENGTH{2};
+
+        LEDOUT0.set_value(LED_DRIVER_ON_VALUE, LED_DRIVER_ON_POSITION + (LED_DRIVER_ON_LENGTH * current_led), LED_DRIVER_ON_LENGTH);
+        LEDOUT1.set_value(LED_DRIVER_ON_VALUE, LED_DRIVER_ON_POSITION + (LED_DRIVER_ON_LENGTH * current_led), LED_DRIVER_ON_LENGTH);
+    }
+
+    std::array<uint8_t, 2> write_buffer{LEDOUT0.read(), LEDOUT1.read()};
+    set_registers_values(LEDOUT0_REGISTER_ADDRESS, write_buffer);
 }
