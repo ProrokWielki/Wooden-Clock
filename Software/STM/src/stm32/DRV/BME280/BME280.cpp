@@ -91,7 +91,7 @@ uint32_t BME280::get_raw_pressure()
     return read_20_bits_register_as<uint32_t>(RAW_PRESSURE_MSB_REGISTER_ADDRESS, RAW_PRESSURE_LSB_REGISTER_ADDRESS, RAW_PRESSURE_XLSB_REGISTER_ADDRESS);
 }
 
-double BME280::get_temperature()
+float BME280::get_temperature()
 {
     auto calibration = to_bme280_calib_data(
     calibration_data.dig_T1, calibration_data.dig_T2, calibration_data.dig_T3, calibration_data.dig_P1, calibration_data.dig_P2, calibration_data.dig_P3,
@@ -109,7 +109,7 @@ double BME280::get_temperature()
     return compensated_data.temperature;
 }
 
-double BME280::get_pressure()
+float BME280::get_pressure()
 {
 
     auto calibration = to_bme280_calib_data(
@@ -129,7 +129,7 @@ double BME280::get_pressure()
     return compensated_data.pressure;
 }
 
-double BME280::get_humidity()
+float BME280::get_humidity()
 {
     auto calibration = to_bme280_calib_data(
     calibration_data.dig_T1, calibration_data.dig_T2, calibration_data.dig_T3, calibration_data.dig_P1, calibration_data.dig_P2, calibration_data.dig_P3,

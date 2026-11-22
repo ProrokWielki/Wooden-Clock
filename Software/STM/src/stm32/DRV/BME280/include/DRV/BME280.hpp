@@ -18,9 +18,9 @@ public:
 
     uint8_t get_id();
 
-    double get_humidity();
-    double get_temperature();
-    double get_pressure();
+    float get_humidity();
+    float get_temperature();
+    float get_pressure();
 
 private:
     struct CalibrationData {

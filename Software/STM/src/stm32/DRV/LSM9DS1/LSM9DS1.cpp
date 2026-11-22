@@ -163,7 +163,7 @@ Accelerations LSM9DS1::get_linear_acceleration()
     std::array<uint8_t, 10> single_byte_data{};
     std::span<uint8_t> accel_buffer{single_byte_data};
 
-    constexpr double MAX_G{2.0};  // TODO: make it right
+    constexpr float MAX_G{2.0};  // TODO: make it right
 
     spi_.read_data_from_register(gyro_cs_, 0x2C | READ_BIT, {accel_buffer}, 1);
     accel_data[4] = single_byte_data[0];
@@ -182,9 +182,9 @@ Accelerations LSM9DS1::get_linear_acceleration()
     const uint16_t unsigned_y = (static_cast<uint16_t>(accel_data[3]) << 8) | static_cast<uint16_t>(accel_data[2]);
     const uint16_t unsigned_z = (static_cast<uint16_t>(accel_data[5]) << 8) | static_cast<uint16_t>(accel_data[4]);
 
-    const double x = static_cast<double>(static_cast<int16_t>(unsigned_x)) / 32768.0 * MAX_G;
-    const double y = static_cast<double>(static_cast<int16_t>(unsigned_y)) / 32768.0 * MAX_G;
-    const double z = static_cast<double>(static_cast<int16_t>(unsigned_z)) / 32768.0 * MAX_G;
+    const float x = static_cast<float>(static_cast<int16_t>(unsigned_x)) / 32768.0f * MAX_G;
+    const float y = static_cast<float>(static_cast<int16_t>(unsigned_y)) / 32768.0f * MAX_G;
+    const float z = static_cast<float>(static_cast<int16_t>(unsigned_z)) / 32768.0f * MAX_G;
 
     return {.x = x, .y = y, .z = z};
 }

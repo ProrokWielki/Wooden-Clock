@@ -1,18 +1,19 @@
 /**
-  * Accelerometer.hpp
-  *
-  *  Created on: 02-05-2019
-  *  @author: Paweł Warzecha
-  */
+ * Accelerometer.hpp
+ *
+ *  Created on: 02-05-2019
+ *  @author: Paweł Warzecha
+ */
 
 #pragma once
 
-namespace BSP2{
+namespace BSP2
+{
 
 struct Accelerations {
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
 };
 
 class Accelerometer
@@ -25,4 +26,4 @@ private:
     Accelerations accelerations_{};
 };
 
-}
+}  // namespace BSP2

@@ -4,7 +4,7 @@
 
 #include <BSP/Thermometer.hpp>
 
-double BSP2::Thermometer::get_temperature() const
+float BSP2::Thermometer::get_temperature() const
 {
     return temperature_;
 }

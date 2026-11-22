@@ -13,11 +13,11 @@ namespace BSP2
 class Thermometer
 {
 public:
-    [[nodiscard]] double get_temperature() const;
+    [[nodiscard]] float get_temperature() const;
     void update();
 
 private:
-    double temperature_{};
+    float temperature_{};
 };
 
 }  // namespace BSP2

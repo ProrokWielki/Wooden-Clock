@@ -39,8 +39,8 @@ public:
 
         const auto [x, y, z] = accel_.get_linear_accelerations();
 
-        const double scaled_x = (-x * 16.0) + 15.0;
-        const double scaled_y = (y * 16.0) + 15.0;
+        const float scaled_x = (-x * 16.0f) + 15.0f;
+        const float scaled_y = (y * 16.0f) + 15.0f;
 
         const auto display_x = static_cast<uint8_t>(scaled_x);
         const auto display_y = static_cast<uint8_t>(scaled_y);
