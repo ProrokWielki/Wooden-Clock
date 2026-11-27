@@ -23,10 +23,17 @@ ENDIF()
 
 TARGET_LINK_LIBRARIES(
   APP
-  PRIVATE OsAbstraction BSP EmbedGUI protobuf_wrapper debug_messages_handler)
+  PRIVATE Screens
+          OsAbstraction
+          BSP
+          ButtonHandler
+          EmbedGUI
+          protobuf_wrapper
+          debug_messages_handler)
 
 TARGET_INCLUDE_DIRECTORIES(APP PUBLIC .)
 
 ADD_SUBDIRECTORY(Assets)
 ADD_SUBDIRECTORY(ProtobufWrapper)
 ADD_SUBDIRECTORY(DebugMessagesHandler)
+ADD_SUBDIRECTORY(Screens)

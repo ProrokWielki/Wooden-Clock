@@ -17,21 +17,11 @@
 class StateMario: public RotatableCanvas
 {
 public:
-    StateMario() : mario(get_image(ImageType::MARIO))
+    StateMario();
 
-    {
-    }
-    void init() override
-    {
-        static const WidgetAndPositions im{.x = 0, .y = 0, .widget = mario};
-        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{im};
+    void init() override;
 
-        add(widgets);
-    }
-
-    void up_date() override
-    {
-    }
+    void up_date() override;
 
 private:
     const Image & mario;

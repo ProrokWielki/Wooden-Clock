@@ -16,7 +16,6 @@
 #include <BSP/BSP.hpp>
 #include <array>
 #include <functional>
-#include <widgets/Animation.hpp>
 
 class StateArrows: public Canvas
 {
@@ -24,24 +23,14 @@ public:
     /**
      * @brief Constructor.
      */
-    StateArrows() : arrows{get_animation(AnimationType::ARROWS)}
-    {
-    }
+    StateArrows();
 
     /**
      * @brief Execution of the State action.
      */
-    void init() override
-    {
-        static const WidgetAndPositions arr{.x = 0, .y = 0, .widget = arrows};
-        static const std::array<const std::reference_wrapper<const WidgetAndPositions>, 1> widgets{arr};
-        add(widgets);
-        // validate();
-    }
+    void init() override;
 
-    void up_date() override
-    {
-    }
+    void up_date() override;
 
 private:
     Animation & arrows;

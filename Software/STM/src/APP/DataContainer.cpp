@@ -28,22 +28,21 @@ SoundScreen DataContainer::sound{};
 
 namespace
 {
-constexpr static uint8_t NUM_OF_TRANSITIONS{13};
 
-constexpr static std::array<Transition, NUM_OF_TRANSITIONS> transitions{
-{{.source_canvas = &DataContainer::Mario, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::Shapes},
- {.source_canvas = &DataContainer::Shapes, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::Hourglass},
- {.source_canvas = &DataContainer::Hourglass, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::North},
- {.source_canvas = &(DataContainer::North), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::text)},
- {.source_canvas = &(DataContainer::text), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::sound)},
- {.source_canvas = &(DataContainer::sound), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::StateHour)},
- {.source_canvas = &(DataContainer::StateHour), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Arrows)},
- {.source_canvas = &(DataContainer::Arrows), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Accel)},
- {.source_canvas = &(DataContainer::Accel), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::CounterView)},
- {.source_canvas = &(DataContainer::CounterView), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Buttons)},
- {.source_canvas = &(DataContainer::Buttons), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Sand)},
- {.source_canvas = &(DataContainer::Sand), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::temperature)},
- {.source_canvas = &(DataContainer::temperature), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Mario)}}};
+constexpr static std::array transitions{
+Transition{.source_canvas = &DataContainer::Mario, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::Shapes},
+Transition{.source_canvas = &DataContainer::Shapes, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::Hourglass},
+Transition{.source_canvas = &DataContainer::Hourglass, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::North},
+Transition{.source_canvas = &(DataContainer::North), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::text)},
+Transition{.source_canvas = &(DataContainer::text), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::sound)},
+Transition{.source_canvas = &(DataContainer::sound), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::StateHour)},
+Transition{.source_canvas = &(DataContainer::StateHour), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Arrows)},
+Transition{.source_canvas = &(DataContainer::Arrows), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Accel)},
+Transition{.source_canvas = &(DataContainer::Accel), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::CounterView)},
+Transition{.source_canvas = &(DataContainer::CounterView), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Buttons)},
+Transition{.source_canvas = &(DataContainer::Buttons), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Sand)},
+Transition{.source_canvas = &(DataContainer::Sand), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::temperature)},
+Transition{.source_canvas = &(DataContainer::temperature), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::Mario)}};
 
 }  // namespace
 

@@ -10,19 +10,19 @@
 
 #include <GUI.hpp>
 
-#include "Screens/Counter.hpp"
-#include "Screens/Hour.hpp"
-#include "Screens/Shapes.hpp"
-#include "Screens/Sound.hpp"
-#include "Screens/StateAccel.hpp"
-#include "Screens/StateArrows.hpp"
-#include "Screens/StateButtons.hpp"
-#include "Screens/StateHourglass.hpp"
-#include "Screens/StateMario.hpp"
-#include "Screens/StateNorth.hpp"
-#include "Screens/StateSand.hpp"
-#include "Screens/Temperature.hpp"
-#include "Screens/Text.hpp"
+#include <Screens/Counter.hpp>
+#include <Screens/Hour.hpp>
+#include <Screens/Shapes.hpp>
+#include <Screens/Sound.hpp>
+#include <Screens/StateAccel.hpp>
+#include <Screens/StateArrows.hpp>
+#include <Screens/StateButtons.hpp>
+#include <Screens/StateHourglass.hpp>
+#include <Screens/StateMario.hpp>
+#include <Screens/StateNorth.hpp>
+#include <Screens/StateSand.hpp>
+#include <Screens/Temperature.hpp>
+#include <Screens/Text.hpp>
 
 enum class Signal
 {
