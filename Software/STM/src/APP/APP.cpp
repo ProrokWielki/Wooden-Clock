@@ -43,7 +43,7 @@ void system_interface_task(void *)
         BSP::get().button_up.update();
         BSP::get().button_down.update();
         BSP::get().button_left.update();
-        BSP::get().button_right.update();
+        // BSP::get().button_right.update();
         BSP2::Clock::update();
         BSP::get().magnetometer.update();
         BSP::get().accelerometer.update();
@@ -95,11 +95,11 @@ void system_interface_task(void *)
             DataContainer::get().stateMachine.signal_callback(Signal::BUTTON_LEFT);
             BSP::get().left = false;
         }
-        if (BSP::get().button_right.was_released() || BSP::get().right)
-        {
-            DataContainer::get().stateMachine.signal_callback(Signal::BUTTON_RIGHT);
-            BSP::get().right = false;
-        }
+        // if (BSP::get().button_right.was_released() || BSP::get().right)
+        // {
+        //     DataContainer::get().stateMachine.signal_callback(Signal::BUTTON_RIGHT);
+        //     BSP::get().right = false;
+        // }
 
         if (BSP::get().debug_communication_interface.is_message_available())
         {

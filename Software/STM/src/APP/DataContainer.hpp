@@ -8,6 +8,7 @@
 #ifndef APP_DATACONTAINER_HPP_
 #define APP_DATACONTAINER_HPP_
 
+#include "Screens/ButtonHandler/include/Screens/StateButtonHandler.hpp"
 #include <GUI.hpp>
 
 #include <Screens/Counter.hpp>
@@ -50,6 +51,7 @@ public:
     static ShapesScreen Shapes;
     static TextScreen text;
     static SoundScreen sound;
+    static StateButtonHandler ButtonHandler;
 
     GUI stateMachine;
 

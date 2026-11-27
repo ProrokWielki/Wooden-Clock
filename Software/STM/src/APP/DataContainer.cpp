@@ -25,13 +25,15 @@ Temperature DataContainer::temperature{};
 TextScreen DataContainer::text{};
 ShapesScreen DataContainer::Shapes{};
 SoundScreen DataContainer::sound{};
+StateButtonHandler DataContainer::ButtonHandler{};
 
 namespace
 {
 
 constexpr static std::array transitions{
 Transition{.source_canvas = &DataContainer::Mario, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::Shapes},
-Transition{.source_canvas = &DataContainer::Shapes, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::Hourglass},
+Transition{.source_canvas = &DataContainer::Shapes, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::ButtonHandler},
+Transition{.source_canvas = &DataContainer::ButtonHandler, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::Hourglass},
 Transition{.source_canvas = &DataContainer::Hourglass, .trigger = Signal::BUTTON_UP, .target_canvas = &DataContainer::North},
 Transition{.source_canvas = &(DataContainer::North), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::text)},
 Transition{.source_canvas = &(DataContainer::text), .trigger = Signal::BUTTON_UP, .target_canvas = &(DataContainer::sound)},

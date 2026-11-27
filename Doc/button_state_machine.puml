@@ -1,0 +1,18 @@
+@startuml
+hide empty description
+
+State Idle
+
+Idle --> Pressed : Button pressed
+Pressed --> Pressed : Button pressed - wait for long press
+Pressed --> Released : Button released - before long press trigger
+Pressed --> LongPressed : Button pressed - long pressed triggered
+LongPressed --> WaitForRelease
+Released --> Released : Button released - wait for double press
+Released --> Idle : Button released - wait for double press done
+Released --> DoublePressed : Button pressed
+DoublePressed --> WaitForRelease
+WaitForRelease --> Idle : Button released
+
+
+@enduml

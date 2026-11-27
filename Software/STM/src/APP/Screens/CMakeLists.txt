@@ -15,7 +15,8 @@ TARGET_LINK_LIBRARIES(
             ScreenShapes
             ScreenSound
             ScreenTemperature
-            ScreenText)
+            ScreenText
+            ScreenButtonHandler)
 
 ADD_SUBDIRECTORY(Acceleration)
 ADD_SUBDIRECTORY(Arrows)
@@ -30,3 +31,4 @@ ADD_SUBDIRECTORY(Shapes)
 ADD_SUBDIRECTORY(Sound)
 ADD_SUBDIRECTORY(Temperature)
 ADD_SUBDIRECTORY(Text)
+ADD_SUBDIRECTORY(ButtonHandler)
