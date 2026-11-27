@@ -15,10 +15,10 @@
 
 #include <BSP/BSP.hpp>
 
-#include "ButtonHandler/include/ButtonHandler/ButtonHandler.hpp"
 #include "Images/Images.hpp"
 #include "Widget.hpp"
 #include "texts.hpp"
+#include <ButtonHandler/ButtonHandler.hpp>
 
 class StateButtonHandler: public Canvas
 {

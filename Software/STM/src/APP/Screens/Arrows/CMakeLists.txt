@@ -6,4 +6,4 @@ TARGET_INCLUDE_DIRECTORIES(ScreenArrows PUBLIC include)
 
 TARGET_LINK_LIBRARIES(
   ScreenArrows
-  PRIVATE BSP EmbedGUI)
+  PRIVATE BSP EmbedGUI Animations)

@@ -6,4 +6,4 @@ TARGET_INCLUDE_DIRECTORIES(ScreenButtonHandler PUBLIC include)
 
 TARGET_LINK_LIBRARIES(
   ScreenButtonHandler
-  PRIVATE BSP EmbedGUI)
+  PRIVATE BSP EmbedGUI ButtonHandler)

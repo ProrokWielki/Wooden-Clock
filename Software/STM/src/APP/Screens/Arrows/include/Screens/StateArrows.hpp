@@ -11,7 +11,7 @@
 #include <Canvas.hpp>
 
 #include "../Assets/Images/Images.hpp"
-#include "Assets/Animations/Animations.hpp"
+#include "Animations.hpp"
 #include "Widget.hpp"
 #include <BSP/BSP.hpp>
 #include <array>

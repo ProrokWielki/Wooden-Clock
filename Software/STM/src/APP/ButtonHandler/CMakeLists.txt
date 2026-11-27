@@ -4,7 +4,7 @@ ADD_LIBRARY(
   include/ButtonHandler/ButtonHandler.hpp
   include/ButtonHandler/detail/ButtonStateMachine.hpp)
 
-TARGET_INCLUDE_DIRECTORIES(ButtonHandler INTERFACE includes/ButtonHandler)
+TARGET_INCLUDE_DIRECTORIES(ButtonHandler PUBLIC include)
 
 TARGET_LINK_LIBRARIES(
   ButtonHandler
