@@ -110,10 +110,10 @@ public:
 
     DMA * get_dma();
 
-protected:
 private:
-    bool is_transfer_completed();
-    bool is_data_received();
+    [[nodiscard]] bool is_transfer_completed() const;
+    [[nodiscard]] bool is_data_received() const;
+    [[nodiscard]] bool is_busy() const;
 
     void set_transfer_size(uint8_t u8TransferSize);
 

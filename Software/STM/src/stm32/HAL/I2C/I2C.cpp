@@ -147,6 +147,9 @@ void I2C::set_slave_address(uint16_t slave_address, AddressLength address_length
 
 void I2C::write_data(const std::span<const uint8_t> data)
 {
+    while (is_busy())
+        ;
+
     uint8_t u8TransferSize{};
     size_t bytes_to_send{data.size()};
     size_t current_byte{0};
@@ -180,6 +183,9 @@ void I2C::write_data(const std::span<const uint8_t> data)
                 ;
         }
     }
+
+    while (is_busy())
+        ;
 }
 
 void I2C::write_data_dma(std::span<uint8_t> data)
@@ -294,13 +300,13 @@ DMA * I2C::get_dma()
     return dma_;
 }
 
-bool I2C::is_transfer_completed()
+bool I2C::is_transfer_completed() const
 {
     static constexpr uint8_t TRANSMIT_EMPTY_BIT_POSITION{0};
     return ISR.get_bit(TRANSMIT_EMPTY_BIT_POSITION) == 1;
 }
 
-bool I2C::is_data_received()
+bool I2C::is_data_received() const
 {
     static constexpr uint8_t RECEIVE_NOT_EMPTY_BIT_POSITION{2};
     return ISR.get_bit(RECEIVE_NOT_EMPTY_BIT_POSITION) == 1;
@@ -377,4 +383,10 @@ void I2C::set_mode(I2C_Types::Mode mode)
     {
         sys_config.set_fast_mode_plus(i2c_number_);
     }
+}
+
+[[nodiscard]] bool I2C::is_busy() const
+{
+    constexpr uint8_t BUSY_BIT_POSITION{15};
+    return ISR.get_bit(BUSY_BIT_POSITION);
 }
