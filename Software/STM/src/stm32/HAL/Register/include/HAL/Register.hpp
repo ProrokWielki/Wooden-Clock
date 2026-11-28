@@ -11,6 +11,7 @@
 #define HAL_REGISTER_REGISTER_HPP_
 
 #include <cstdint>
+#include <limits>
 #include <utility>
 
 /**
@@ -170,8 +171,13 @@ private:
      */
     static T get_mask(uint8_t u8FieldBitLength)
     {
+        if (u8FieldBitLength >= std::numeric_limits<T>::digits)
+        {
+            return std::numeric_limits<T>::max();
+        }
+
         // ex. length == 2 -->  1<<2 = 0b100 --> 0b100-1 = 0b011 NICE!
-        return (1UL << u8FieldBitLength) - 1UL;
+        return static_cast<T>((1UL << u8FieldBitLength) - 1UL);
     }
 
     /// register value, only used if rvalue refenence constructor is used.
